@@ -4,41 +4,45 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>IntegraProjetos — Rede de Integração</title>
-  <meta name="theme-color" content="#111827"/>
+  <meta name="theme-color" content="#0b1220"/>
 
   <style>
     :root{
       --bg:#0b1220;
-      --panel:#0f1a2e;
-      --card:#101c33;
+      --panel:rgba(15,26,46,.74);
+      --card:rgba(16,28,51,.62);
       --stroke:rgba(255,255,255,.10);
       --stroke2:rgba(255,255,255,.18);
       --txt:#e5e7eb;
       --muted:#a9b4c2;
-      --brand:#7c3aed;
-      --brand2:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
       --shadow: 0 18px 45px rgba(0,0,0,.35);
       --radius: 18px;
+
+      --purple:rgba(124,58,237,.95);
+      --green:rgba(34,197,94,.95);
+      --orange:rgba(245,158,11,.95);
+      --blue:rgba(96,165,250,.95);
+      --red:rgba(239,68,68,.90);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      background: radial-gradient(1200px 700px at 15% 10%, rgba(124,58,237,.25), transparent 55%),
-                  radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.18), transparent 55%),
-                  radial-gradient(900px 600px at 50% 85%, rgba(245,158,11,.12), transparent 60%),
-                  var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(124,58,237,.22), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.15), transparent 55%),
+        radial-gradient(900px 600px at 50% 85%, rgba(245,158,11,.10), transparent 60%),
+        var(--bg);
       color:var(--txt);
       overflow:hidden;
     }
 
+    /* TOPBAR */
     .topbar{
       position:fixed; inset:14px 14px auto 14px;
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      background:rgba(15,26,46,.66);
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      background:var(--panel);
       border:1px solid var(--stroke);
       backdrop-filter: blur(10px);
       border-radius: 16px;
@@ -47,50 +51,74 @@
       z-index:50;
       flex-wrap:wrap;
     }
-    .brand{display:flex; align-items:center; gap:10px; min-width:260px}
+    .brand{display:flex; align-items:center; gap:10px}
     .logo{
       width:36px; height:36px; border-radius:12px;
       background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.30), transparent 55%),
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 55%),
         linear-gradient(135deg, rgba(124,58,237,.95), rgba(34,197,94,.85));
       display:grid; place-items:center;
       border:1px solid rgba(255,255,255,.15);
+      user-select:none;
     }
-    .brand h1{font-size:14px; margin:0; letter-spacing:.3px}
+    .brand h1{font-size:14px; margin:0}
     .brand p{margin:0; font-size:12px; color:var(--muted)}
-    .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 
     button{
-      appearance:none; border:1px solid var(--stroke);
-      background:rgba(16,28,51,.7);
+      appearance:none;
+      border:1px solid var(--stroke);
+      background:rgba(16,28,51,.70);
       color:var(--txt);
       border-radius:12px;
       padding:9px 10px;
-      font-weight:650;
+      font-weight:750;
       font-size:12px;
       cursor:pointer;
       transition: transform .05s ease, border-color .2s ease, background .2s ease;
       user-select:none;
+      white-space:nowrap;
     }
     button:hover{border-color:var(--stroke2)}
     button:active{transform: translateY(1px)}
     .btn-primary{
-      background: linear-gradient(135deg, rgba(124,58,237,.92), rgba(34,197,94,.75));
+      background: linear-gradient(135deg, rgba(124,58,237,.92), rgba(34,197,94,.72));
       border-color: rgba(255,255,255,.18);
     }
     .btn-danger{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); }
     .btn-warn{ border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); }
 
+    .pill{
+      display:inline-flex; gap:6px; align-items:center;
+      border:1px solid var(--stroke);
+      background:rgba(16,28,51,.55);
+      padding:6px 8px; border-radius:999px; font-size:12px; color:var(--muted);
+    }
+    .status{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(16,28,51,.45);
+      color:rgba(229,231,235,.85);
+      font-size:12px;
+      user-select:none;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    /* LAYOUT */
     .wrap{
       position:fixed; inset:0;
       display:grid;
-      grid-template-columns: 1fr 380px;
-      gap:0;
+      grid-template-columns: 1fr 410px;
     }
 
     #stage{
       position:relative;
-      margin-top: 76px;
+      margin-top: 78px;
       margin-left: 14px;
       margin-bottom: 14px;
       margin-right: 7px;
@@ -102,13 +130,13 @@
     }
 
     .side{
-      margin-top: 76px;
+      margin-top: 78px;
       margin-right: 14px;
       margin-bottom: 14px;
       margin-left: 7px;
       border-radius: 18px;
       border:1px solid var(--stroke);
-      background: rgba(15,26,46,.66);
+      background: var(--panel);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
       overflow:hidden;
@@ -116,21 +144,24 @@
       flex-direction:column;
       min-width: 320px;
     }
+
     .side header{
-      padding:12px 12px 10px;
+      padding:12px;
       border-bottom:1px solid var(--stroke);
-      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
     }
     .side header h2{margin:0; font-size:13px}
-    .side header .small{font-size:12px; color:var(--muted)}
-    .side .content{padding:12px; overflow:auto}
+    .side header .small{font-size:12px; color:var(--muted); margin-top:3px}
 
-    .pill{
-      display:inline-flex; gap:6px; align-items:center;
-      border:1px solid var(--stroke);
-      background:rgba(16,28,51,.55);
-      padding:6px 8px; border-radius:999px; font-size:12px; color:var(--muted);
+    .side .toolbar{
+      padding:10px 12px;
+      border-bottom:1px solid var(--stroke);
+      display:flex; gap:8px; flex-wrap:wrap;
+      position:sticky; top:0;
+      background: rgba(15,26,46,.86);
+      z-index:5;
     }
+    .side .content{padding:12px; overflow:auto}
 
     .grid{display:grid; gap:10px;}
     .field{display:grid; gap:6px;}
@@ -145,13 +176,12 @@
       outline:none;
       font-size:13px;
     }
-    textarea{min-height:78px; resize: vertical;}
+    textarea{min-height:72px; resize: vertical;}
     .row{display:flex; gap:8px}
     .row > *{flex:1}
     .hint{font-size:12px; color:var(--muted); line-height:1.35}
     .sep{height:1px; background:var(--stroke); margin:10px 0}
 
-    .list{display:grid; gap:8px;}
     .mini{
       border:1px solid var(--stroke);
       background: rgba(16,28,51,.45);
@@ -160,11 +190,10 @@
     }
     .mini b{display:block; font-size:13px; margin-bottom:4px}
     .mini .meta{font-size:12px; color:var(--muted)}
-    .mini .k{display:inline-block; margin-right:8px; font-size:12px; color:var(--muted)}
     .mini .actions2{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
     .mini .actions2 button{padding:7px 9px; border-radius:11px}
 
-    /* Modal compatível (sem <dialog>) */
+    /* modal */
     .modal{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -175,8 +204,8 @@
     }
     .modal[open]{display:grid}
     .modal .box{
-      width:min(780px, calc(100vw - 24px));
-      max-height: min(86vh, 900px);
+      width:min(820px, calc(100vw - 24px));
+      max-height: min(88vh, 920px);
       overflow:auto;
       border-radius: 18px;
       border:1px solid var(--stroke);
@@ -193,6 +222,7 @@
     .box header h3{margin:0; font-size:14px}
     .box .body{padding:10px 6px 6px}
 
+    /* legenda */
     .legend{
       position:absolute; left:12px; bottom:12px;
       display:flex; gap:8px; flex-wrap:wrap;
@@ -209,25 +239,20 @@
       color:var(--muted);
       backdrop-filter: blur(8px);
     }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.20);
-      background: rgba(124,58,237,.9);
-    }
 
+    /* mobile */
     @media (max-width: 980px){
       .wrap{grid-template-columns:1fr}
       .side{
         position:fixed; inset:auto 14px 14px 14px;
-        height: 44vh;
+        height: 50vh;
         margin:0;
         z-index:60;
       }
       #stage{
         margin-right:14px;
-        margin-bottom: calc(44vh + 22px);
+        margin-bottom: calc(50vh + 22px);
       }
-      .brand{min-width:unset}
     }
   </style>
 </head>
@@ -235,21 +260,29 @@
 
   <div class="topbar">
     <div class="brand">
-      <div class="logo" aria-hidden="true">●</div>
+      <div class="logo">●</div>
       <div>
         <h1>IntegraProjetos — Rede visual de integração</h1>
-        <p>Arraste as bolinhas • clique para ver/editar • crie ligações com motivo, perguntas e resultados</p>
+        <p>Arraste as bolinhas • clique para ver/editar • crie ligações escolhendo origem e destino</p>
       </div>
     </div>
 
     <div class="actions">
       <button class="btn-primary" id="btnAdd">+ Adicionar pessoa</button>
+      <button id="btnAddLink">+ Criar ligação</button>
       <button id="btnAuto">Auto-organizar</button>
-      <button id="btnClearSel">Limpar seleção</button>
+      <button id="btnFit">Ajustar (Fit)</button>
+      <button id="btnAnim">Animar: ON</button>
       <button id="btnExportJson">Baixar JSON</button>
-      <button id="btnExportSvg">Baixar SVG</button>
       <button class="btn-warn" id="btnImport">Importar JSON</button>
-      <button class="btn-danger" id="btnReset">Resetar tudo</button>
+
+      <span class="status" id="saveStatus">
+        <span class="dot" id="saveDot" style="background:rgba(34,197,94,.95)"></span>
+        <span id="saveText">Salvo ✓</span>
+      </span>
+
+      <button class="btn-danger" id="btnResetClean">Reset limpo</button>
+      <button class="btn-danger" id="btnResetSeed">Reset modelo</button>
     </div>
   </div>
 
@@ -258,70 +291,36 @@
       <svg id="svg" width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="none"></svg>
 
       <div class="legend" aria-hidden="true">
-        <span class="tag"><span class="dot" style="background:rgba(124,58,237,.95)"></span>Ligação: dados/integração</span>
-        <span class="tag"><span class="dot" style="background:rgba(34,197,94,.95)"></span>Ligação: produto/jogo</span>
-        <span class="tag"><span class="dot" style="background:rgba(245,158,11,.95)"></span>Ligação: extensão/visibilidade</span>
-        <span class="tag"><span class="dot" style="background:rgba(96,165,250,.95)"></span>Ligação: análise científica</span>
+        <span class="tag"><span class="dot" style="background:var(--purple)"></span>Dados/integração</span>
+        <span class="tag"><span class="dot" style="background:var(--green)"></span>Produto/jogo</span>
+        <span class="tag"><span class="dot" style="background:var(--orange)"></span>Extensão/visibilidade</span>
+        <span class="tag"><span class="dot" style="background:var(--blue)"></span>Análise científica</span>
       </div>
     </div>
 
     <aside class="side">
       <header>
         <div>
-          <h2 id="sideTitle">Selecione uma pessoa</h2>
-          <div class="small" id="sideSub">Clique numa bolinha para ver detalhes e criar ligações.</div>
+          <h2 id="sideTitle">Gerenciar pessoas</h2>
+          <div class="small" id="sideSub">Use a lista para focar/editar/excluir. Clique numa bolinha para ver detalhes.</div>
         </div>
         <span class="pill" id="countPill">0 pessoas</span>
       </header>
 
-      <div class="content" id="sideContent">
-        <div class="hint">
-          Dica: <b>arraste</b> as bolinhas para posicionar. Use <b>“Criar ligação”</b> no painel para definir:
-          <i>por quê liga</i>, <i>tipo</i>, <i>perguntas</i> e <i>resultados esperados</i>.
-        </div>
-
-        <div class="sep"></div>
-
-        <div class="field">
-          <label>Buscar pessoa</label>
-          <input type="text" id="search" placeholder="Ex.: Letícia, carbono, jogos..." />
-        </div>
-
-        <div class="row" style="margin-top:10px">
-          <div class="field">
-            <label>Filtrar por nível</label>
-            <select id="filterLevel">
-              <option value="">Todos</option>
-              <option>Graduação</option>
-              <option>Mestrado</option>
-              <option>Doutorado</option>
-              <option>Pós-doutorado</option>
-              <option>Professor</option>
-              <option>Colaborador</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Filtrar por área</label>
-            <select id="filterArea">
-              <option value="">Todas</option>
-              <option>Clima & Saúde</option>
-              <option>Extensão & Visibilidade</option>
-              <option>Atividade Física & Ambiente</option>
-              <option>Carbono (dados)</option>
-              <option>Carbono (processos)</option>
-              <option>Jogos & Educação</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="sep"></div>
-
-        <div class="list" id="peopleList"></div>
+      <!-- toolbar fixa -->
+      <div class="toolbar">
+        <button id="tbEdit" disabled>Editar</button>
+        <button id="tbDelete" class="btn-danger" disabled>Excluir</button>
+        <button id="tbLink" disabled>Criar ligação</button>
+        <button id="tbFocus" disabled>Focar</button>
+        <button id="tbClear">Voltar p/ lista</button>
       </div>
+
+      <div class="content" id="sideContent"></div>
     </aside>
   </div>
 
-  <!-- Modal: Add/Edit Person -->
+  <!-- Modal Pessoa -->
   <div class="modal" id="modalPerson">
     <div class="box">
       <header>
@@ -353,49 +352,44 @@
 
           <div class="row">
             <div class="field">
-              <label>Área (categoria)</label>
-              <select id="p_area">
-                <option>Clima & Saúde</option>
-                <option>Extensão & Visibilidade</option>
-                <option>Atividade Física & Ambiente</option>
-                <option>Carbono (dados)</option>
-                <option>Carbono (processos)</option>
-                <option>Jogos & Educação</option>
-              </select>
+              <label>Área</label>
+              <input type="text" id="p_area" placeholder="Ex.: Clima & Saúde" />
             </div>
             <div class="field">
-              <label>Cor da bolinha (hex ou rgba)</label>
+              <label>Cor da bolinha (opcional)</label>
               <input type="text" id="p_color" placeholder="Ex.: rgba(124,58,237,.95) ou #22c55e" />
             </div>
           </div>
 
           <div class="field">
-            <label>Título do trabalho (curto)</label>
+            <label>Título do trabalho</label>
             <input type="text" id="p_title" placeholder="Ex.: Impacto do calor na mortalidade em MT" />
           </div>
 
           <div class="field">
             <label>Objetivos</label>
-            <textarea id="p_objectives" placeholder="Descreva objetivos e escopo..."></textarea>
+            <textarea id="p_objectives"></textarea>
           </div>
 
           <div class="field">
             <label>Resultados esperados</label>
-            <textarea id="p_expected" placeholder="Ex.: planilhas organizadas, gráficos, jogo 3D..."></textarea>
+            <textarea id="p_expected"></textarea>
           </div>
 
           <div class="field">
-            <label>Tags (separe por vírgula)</label>
-            <input type="text" id="p_tags" placeholder="Ex.: planilhas, gráficos, mortalidade, carbono, jogos" />
+            <label>Tags (vírgula)</label>
+            <input type="text" id="p_tags" placeholder="planilhas, gráficos, carbono..." />
           </div>
 
-          <div class="hint">Tudo é editável e você pode excluir depois. Exporta/Importa via JSON.</div>
+          <div class="hint">
+            Dica: depois de salvar, clique na pessoa → use “Criar ligação” e escolha <b>origem</b> e <b>destino</b>.
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Create/Edit Link -->
+  <!-- Modal Ligação -->
   <div class="modal" id="modalLink">
     <div class="box">
       <header>
@@ -409,18 +403,18 @@
         <div class="grid">
           <div class="row">
             <div class="field">
-              <label>De (origem)</label>
+              <label>Origem</label>
               <select id="l_from"></select>
             </div>
             <div class="field">
-              <label>Para (destino)</label>
+              <label>Destino</label>
               <select id="l_to"></select>
             </div>
           </div>
 
           <div class="row">
             <div class="field">
-              <label>Tipo de ligação</label>
+              <label>Tipo</label>
               <select id="l_type">
                 <option value="dados">Dados / Integração</option>
                 <option value="analise">Análise científica</option>
@@ -431,7 +425,7 @@
               </select>
             </div>
             <div class="field">
-              <label>Intensidade (1–5)</label>
+              <label>Intensidade</label>
               <select id="l_weight">
                 <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option>
               </select>
@@ -442,20 +436,13 @@
             <label>Por que liga?</label>
             <textarea id="l_reason"></textarea>
           </div>
-
           <div class="field">
             <label>Perguntas</label>
             <textarea id="l_questions"></textarea>
           </div>
-
           <div class="field">
             <label>Resultados esperados da ligação</label>
             <textarea id="l_outputs"></textarea>
-          </div>
-
-          <div class="field">
-            <label>Links/arquivos (uma URL por linha)</label>
-            <textarea id="l_files" placeholder="https://..."></textarea>
           </div>
         </div>
       </div>
@@ -466,22 +453,20 @@
 
 <script>
 /* =========================
-   Fix principal:
-   - Sem structuredClone (compatível Android)
-   - Modal sem <dialog>
+   IntegraProjetos v2 (mobile-first)
+   - Gerenciar/editar/excluir pessoas
+   - Criar ligações escolhendo origem/destino
+   - Fit / Auto-organizar / Animar ON/OFF
+   - Reset limpo e Reset modelo
 ========================= */
 
-const STORAGE_KEY = "integraprojetos_v1";
+const STORAGE_KEY = "integraprojetos_v2";
+const SEED_KEY = "integraprojetos_seed_v2"; // só pra manter o seed separado
 
-/* ---- util ---- */
 function uid(){
   return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
-function deepClone(obj){
-  // compatível com qualquer browser
-  return JSON.parse(JSON.stringify(obj));
-}
-function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
 function escapeHTML(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -490,6 +475,7 @@ function escapeHTML(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
+function clamp(v,a,b){ return Math.max(a, Math.min(b,v)); }
 function linkColor(type){
   switch(type){
     case "dados": return "rgba(124,58,237,.95)";
@@ -497,7 +483,7 @@ function linkColor(type){
     case "extensao": return "rgba(245,158,11,.95)";
     case "analise": return "rgba(96,165,250,.95)";
     case "campo": return "rgba(239,68,68,.85)";
-    default: return "rgba(229,231,235,.35)";
+    default: return "rgba(229,231,235,.30)";
   }
 }
 function shortType(type){
@@ -508,16 +494,6 @@ function shortType(type){
     case "analise": return "análise";
     case "campo": return "campo";
     default: return "outro";
-  }
-}
-function longType(type){
-  switch(type){
-    case "dados": return "Dados / Integração";
-    case "produto": return "Produto / Jogo";
-    case "extensao": return "Extensão / Visibilidade";
-    case "analise": return "Análise científica";
-    case "campo": return "Coleta / Campo";
-    default: return "Outro";
   }
 }
 function downloadBlob(text, filename, mime){
@@ -532,9 +508,9 @@ function downloadBlob(text, filename, mime){
   setTimeout(()=>URL.revokeObjectURL(url), 800);
 }
 
-/* ---- Seed (os 7 alunos que você passou) ---- */
+/* ==== Seed: seus 7 alunos + SEM ligações (pra você decidir) ==== */
 const SEED = {
-  meta: { app: "IntegraProjetos", version: 1, updatedAt: new Date().toISOString() },
+  meta: { app:"IntegraProjetos", version:2, updatedAt:new Date().toISOString() },
   nodes: [
     { id: uid(), name:"Letícia Zen", level:"Graduação", area:"Clima & Saúde",
       title:"Impacto do calor na mortalidade em MT (dados secundários)",
@@ -582,58 +558,17 @@ const SEED = {
   links: []
 };
 
-function mkLink(fromName, toName, type, weight, reason, questions, outputs, filesText){
-  const from = SEED.nodes.find(n => n.name.toLowerCase() === fromName.toLowerCase());
-  const to = SEED.nodes.find(n => n.name.toLowerCase() === toName.toLowerCase());
-  if(!from || !to) return null;
-  return { id: uid(), from: from.id, to: to.id, type, weight, reason, questions, outputs,
-    files: (filesText||"").split("\n").map(s=>s.trim()).filter(Boolean)
-  };
-}
-SEED.links = [
-  mkLink("Matheus","Letícia Zen","dados",4,
-    "Matheus padroniza e integra planilhas que alimentam análises de Letícia.",
-    "Quais variáveis entram? Qual período? Qual padrão de colunas e unidades?",
-    "Dataset unificado + dicionário de dados + planilha final pronta para gráficos.",
-    ""
-  ),
-  mkLink("Luan","Vanessa","produto",3,
-    "Integração entre jogos digitais e jogos físicos (mesma narrativa pedagógica).",
-    "Qual faixa etária? Quais mecânicas e objetivos pedagógicos?",
-    "Protótipo digital + kit físico alinhado em conteúdo e avaliação.",
-    ""
-  ),
-  mkLink("Leandro","Matheus","dados",3,
-    "Leandro gera séries/processos que entram no padrão de integração do laboratório.",
-    "Campos mínimos? Metadados? Unidades? Como versionar?",
-    "Planilha padronizada de processos + metadados completos.",
-    ""
-  ),
-  mkLink("Antônio","Cintya","extensao",2,
-    "Resultados de escolas podem virar ação de extensão/visibilidade na pós.",
-    "Como transformar em atividade/mostra e material de divulgação?",
-    "Relato de extensão + indicadores simples e comunicáveis.",
-    ""
-  )
-].filter(Boolean);
-
-/* ---- State ---- */
-let state = loadState();
-let selectedNodeId = null;
-let editingPersonId = null;
-let editingLinkId = null;
-
-/* ---- DOM ---- */
+/* ==== DOM ==== */
 const svg = document.getElementById("svg");
 const stage = document.getElementById("stage");
 const countPill = document.getElementById("countPill");
-const peopleList = document.getElementById("peopleList");
-const search = document.getElementById("search");
-const filterLevel = document.getElementById("filterLevel");
-const filterArea = document.getElementById("filterArea");
 const sideTitle = document.getElementById("sideTitle");
 const sideSub = document.getElementById("sideSub");
 const sideContent = document.getElementById("sideContent");
+
+const saveStatus = document.getElementById("saveStatus");
+const saveDot = document.getElementById("saveDot");
+const saveText = document.getElementById("saveText");
 
 const modalPerson = document.getElementById("modalPerson");
 const modalPersonTitle = document.getElementById("modalPersonTitle");
@@ -655,112 +590,157 @@ const l_weight = document.getElementById("l_weight");
 const l_reason = document.getElementById("l_reason");
 const l_questions = document.getElementById("l_questions");
 const l_outputs = document.getElementById("l_outputs");
-const l_files = document.getElementById("l_files");
 
-document.getElementById("btnAdd").addEventListener("click", () => openPersonModal(null));
-document.getElementById("btnAuto").addEventListener("click", () => { autoNudge(); persist(); });
-document.getElementById("btnClearSel").addEventListener("click", () => { selectedNodeId = null; renderAll(); });
-document.getElementById("btnExportJson").addEventListener("click", exportJSON);
-document.getElementById("btnExportSvg").addEventListener("click", exportSVG);
-document.getElementById("btnImport").addEventListener("click", () => document.getElementById("fileImport").click());
-document.getElementById("btnReset").addEventListener("click", resetAll);
+const fileImport = document.getElementById("fileImport");
 
-document.getElementById("btnClosePerson").addEventListener("click", () => closeModal(modalPerson));
-document.getElementById("btnSavePerson").addEventListener("click", savePersonFromModal);
-document.getElementById("btnCloseLink").addEventListener("click", () => closeModal(modalLink));
-document.getElementById("btnSaveLink").addEventListener("click", saveLinkFromModal);
-document.getElementById("fileImport").addEventListener("change", importJSONFile);
+/* toolbar side */
+const tbEdit = document.getElementById("tbEdit");
+const tbDelete = document.getElementById("tbDelete");
+const tbLink = document.getElementById("tbLink");
+const tbFocus = document.getElementById("tbFocus");
+const tbClear = document.getElementById("tbClear");
 
-search.addEventListener("input", renderPeopleList);
-filterLevel.addEventListener("change", renderPeopleList);
-filterArea.addEventListener("change", renderPeopleList);
+/* buttons top */
+document.getElementById("btnAdd").onclick = ()=> openPersonModal(null);
+document.getElementById("btnAddLink").onclick = ()=> openLinkModal(null);
+document.getElementById("btnAuto").onclick = ()=> { autoOrganize(true); persist(); fitToView(); };
+document.getElementById("btnFit").onclick = ()=> fitToView();
+document.getElementById("btnAnim").onclick = ()=> toggleAnim();
+document.getElementById("btnExportJson").onclick = exportJSON;
+document.getElementById("btnImport").onclick = ()=> fileImport.click();
+document.getElementById("btnResetClean").onclick = resetClean;
+document.getElementById("btnResetSeed").onclick = resetSeed;
 
-/* ---- SVG layers ---- */
+document.getElementById("btnClosePerson").onclick = ()=> closeModal(modalPerson);
+document.getElementById("btnSavePerson").onclick = savePersonFromModal;
+
+document.getElementById("btnCloseLink").onclick = ()=> closeModal(modalLink);
+document.getElementById("btnSaveLink").onclick = saveLinkFromModal;
+
+fileImport.addEventListener("change", importJSONFile);
+
+/* side toolbar actions */
+tbEdit.onclick = ()=> openPersonModal(selectedNodeId);
+tbDelete.onclick = ()=> deletePerson(selectedNodeId);
+tbLink.onclick = ()=> openLinkModal(null, selectedNodeId);
+tbFocus.onclick = ()=> focusNow(selectedNodeId);
+tbClear.onclick = ()=> { selectedNodeId = null; renderAll(); };
+
+/* ==== SVG layers ==== */
 function makeSvg(tag, attrs={}){
   const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for(const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
   return el;
 }
+const gRoot = makeSvg("g", { id:"gRoot" });
 const gLinks = makeSvg("g", { id:"gLinks" });
 const gNodes = makeSvg("g", { id:"gNodes" });
-svg.appendChild(gLinks);
-svg.appendChild(gNodes);
+gRoot.appendChild(gLinks);
+gRoot.appendChild(gNodes);
+svg.appendChild(gRoot);
 
-/* ---- ViewBox size ---- */
+/* ==== State ==== */
+let state = loadState();
+let selectedNodeId = null;
+let editingPersonId = null;
+let editingLinkId = null;
+
 let view = { w:1200, h:800 };
 resizeSVG();
-window.addEventListener("resize", resizeSVG);
+window.addEventListener("resize", () => { resizeSVG(); renderGraph(); });
 
-/* ---- init positions + sim ---- */
-initPositions();
+let animOn = true;
+let dragging = null;
+
+/* init */
+initPositionsIfNeeded();
+autoOrganize(false); // espalha se estiver colado
+fitToView();
 startSim();
-
-/* ---- render ---- */
 renderAll();
 
-/* =======================
-   Core
-======================= */
+/* ==== persistence ==== */
 function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return deepClone(SEED);
+    if(!raw){
+      localStorage.setItem(SEED_KEY, JSON.stringify(SEED));
+      return deepClone(SEED);
+    }
     const obj = JSON.parse(raw);
-    if(!obj.nodes || !Array.isArray(obj.nodes)) return deepClone(SEED);
-    // normalize
-    return {
-      meta: obj.meta || { app:"IntegraProjetos", version:1, updatedAt:new Date().toISOString() },
-      nodes: obj.nodes.map(n => ({
-        id: n.id || uid(),
-        name: n.name || "Sem nome",
-        level: n.level || "Graduação",
-        area: n.area || "Clima & Saúde",
-        title: n.title || "",
-        objectives: n.objectives || "",
-        expected: n.expected || "",
-        tags: Array.isArray(n.tags) ? n.tags : [],
-        color: n.color || "rgba(124,58,237,.95)",
-        x: Number.isFinite(n.x) ? n.x : 0,
-        y: Number.isFinite(n.y) ? n.y : 0,
-        vx: n.vx ?? 0, vy: n.vy ?? 0,
-        fx: null, fy: null
-      })),
-      links: (obj.links||[]).map(l => ({
-        id: l.id || uid(),
-        from: l.from, to: l.to,
-        type: l.type || "dados",
-        weight: Number(l.weight || 3),
-        reason: l.reason || "",
-        questions: l.questions || "",
-        outputs: l.outputs || "",
-        files: Array.isArray(l.files) ? l.files : []
-      }))
-    };
+    if(!obj.nodes) return deepClone(SEED);
+    return normalize(obj);
   }catch(e){
-    // fallback total
     return deepClone(SEED);
   }
 }
-
+function normalize(obj){
+  return {
+    meta: obj.meta || { app:"IntegraProjetos", version:2, updatedAt:new Date().toISOString() },
+    nodes: (obj.nodes||[]).map(n => ({
+      id: n.id || uid(),
+      name: n.name || "Sem nome",
+      level: n.level || "Graduação",
+      area: n.area || "",
+      title: n.title || "",
+      objectives: n.objectives || "",
+      expected: n.expected || "",
+      tags: Array.isArray(n.tags) ? n.tags : [],
+      color: n.color || "rgba(124,58,237,.95)",
+      x: Number.isFinite(n.x) ? n.x : 0,
+      y: Number.isFinite(n.y) ? n.y : 0,
+      vx: Number.isFinite(n.vx) ? n.vx : 0,
+      vy: Number.isFinite(n.vy) ? n.vy : 0,
+      fx: null, fy: null
+    })),
+    links: (obj.links||[]).map(l => ({
+      id: l.id || uid(),
+      from: l.from,
+      to: l.to,
+      type: l.type || "dados",
+      weight: Number(l.weight || 3),
+      reason: l.reason || "",
+      questions: l.questions || "",
+      outputs: l.outputs || ""
+    }))
+  };
+}
 function persist(){
   try{
     state.meta.updatedAt = new Date().toISOString();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    setSaved(true);
   }catch(e){
-    alert("Não consegui salvar no navegador (armazenamento cheio ou bloqueado).");
+    setSaved(false, "Não salvou (storage bloqueado)");
   }
 }
+let saveTimer=null;
+function setSaved(ok, msg){
+  if(saveTimer) clearTimeout(saveTimer);
+  if(ok){
+    saveDot.style.background = "rgba(34,197,94,.95)";
+    saveText.textContent = msg || "Salvo ✓";
+  }else{
+    saveDot.style.background = "rgba(239,68,68,.90)";
+    saveText.textContent = msg || "Falha ao salvar";
+  }
+  saveTimer = setTimeout(()=>{
+    saveDot.style.background = "rgba(34,197,94,.95)";
+    saveText.textContent = "Salvo ✓";
+  }, 2200);
+}
 
+/* ==== graph helpers ==== */
 function getNode(id){ return state.nodes.find(n => n.id === id); }
 
-function initPositions(force=false){
-  state.nodes.forEach(n => {
-    const bad = !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x===0 || n.y===0;
-    if(force || bad){
-      n.x = view.w/2 + (Math.random()-.5)*360;
-      n.y = view.h/2 + (Math.random()-.5)*240;
-      n.vx = (Math.random()-.5)*1.2;
-      n.vy = (Math.random()-.5)*1.2;
+function initPositionsIfNeeded(){
+  state.nodes.forEach(n=>{
+    const bad = !Number.isFinite(n.x) || !Number.isFinite(n.y) || (n.x===0 && n.y===0);
+    if(bad){
+      n.x = view.w/2 + (Math.random()-.5)*400;
+      n.y = view.h/2 + (Math.random()-.5)*280;
+      n.vx = (Math.random()-.5)*2;
+      n.vy = (Math.random()-.5)*2;
     }
   });
 }
@@ -774,80 +754,156 @@ function resizeSVG(){
 
 function renderAll(){
   countPill.textContent = `${state.nodes.length} pessoas`;
-  renderPeopleList();
-  renderGraph();
   renderSide();
+  renderGraph();
+  updateToolbar();
 }
 
-function renderPeopleList(){
-  const q = (search.value || "").trim().toLowerCase();
-  const lvl = filterLevel.value;
-  const area = filterArea.value;
+function updateToolbar(){
+  const has = !!selectedNodeId && !!getNode(selectedNodeId);
+  tbEdit.disabled = !has;
+  tbDelete.disabled = !has;
+  tbLink.disabled = !has;
+  tbFocus.disabled = !has;
+}
 
-  const filtered = state.nodes
-    .filter(n => !lvl || n.level === lvl)
-    .filter(n => !area || n.area === area)
-    .filter(n => {
-      if(!q) return true;
-      const hay = `${n.name} ${n.level} ${n.area} ${n.title} ${(n.tags||[]).join(" ")}`.toLowerCase();
-      return hay.includes(q);
-    })
-    .sort((a,b)=> a.name.localeCompare(b.name, "pt-BR"));
+function renderSide(){
+  if(!selectedNodeId){
+    sideTitle.textContent = "Gerenciar pessoas";
+    sideSub.textContent = "Lista com botões: focar, editar, excluir. Clique numa bolinha para ver detalhes.";
+    sideContent.innerHTML = renderManageList();
+    return;
+  }
 
-  peopleList.innerHTML = "";
-  filtered.forEach(n => {
-    const el = document.createElement("div");
-    el.className = "mini";
-    el.innerHTML = `
-      <b>${escapeHTML(n.name)}</b>
-      <div class="meta">${escapeHTML(n.level)} • ${escapeHTML(n.area)}</div>
-      <div class="meta" style="margin-top:6px">${escapeHTML(n.title || "")}</div>
+  const n = getNode(selectedNodeId);
+  if(!n){
+    selectedNodeId = null;
+    renderAll();
+    return;
+  }
+
+  sideTitle.textContent = n.name;
+  sideSub.textContent = `${n.level} • ${n.area}`;
+
+  const rel = state.links.filter(l => l.from===n.id || l.to===n.id);
+
+  sideContent.innerHTML = `
+    <div class="grid">
+      <div class="mini">
+        <b>${escapeHTML(n.title || "Sem título")}</b>
+        <div class="meta">${escapeHTML(n.level)} • ${escapeHTML(n.area)}</div>
+      </div>
+
+      <div class="mini">
+        <div class="meta">Objetivos</div>
+        <div style="white-space:pre-wrap; margin-top:6px">${escapeHTML(n.objectives||"")}</div>
+      </div>
+
+      <div class="mini">
+        <div class="meta">Resultados esperados</div>
+        <div style="white-space:pre-wrap; margin-top:6px">${escapeHTML(n.expected||"")}</div>
+      </div>
+
+      <div class="mini">
+        <div class="meta">Tags</div>
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
+          ${(n.tags||[]).map(t=>`<span class="pill">${escapeHTML(t)}</span>`).join("") || `<span class="hint">Sem tags.</span>`}
+        </div>
+      </div>
+
+      <div class="mini">
+        <b>Ligações (${rel.length})</b>
+        <div class="hint" style="margin-top:4px">Você decide tudo. Clique “Criar ligação” e escolha origem/destino.</div>
+        <div style="height:8px"></div>
+        <div class="grid" id="relList"></div>
+      </div>
+    </div>
+  `;
+
+  const relList = document.getElementById("relList");
+  rel.forEach(l=>{
+    const otherId = (l.from===n.id) ? l.to : l.from;
+    const other = getNode(otherId);
+    const box = document.createElement("div");
+    box.className = "mini";
+    box.innerHTML = `
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px">
+        <div>
+          <b>${escapeHTML(other ? other.name : "—")}</b>
+          <div class="meta">${escapeHTML(shortType(l.type))} • intensidade ${escapeHTML(String(l.weight||3))}</div>
+        </div>
+        <span class="pill" style="border-color:${linkColor(l.type)}; color:rgba(229,231,235,.88)">${escapeHTML(shortType(l.type))}</span>
+      </div>
+      <div class="meta" style="margin-top:10px">Por quê</div>
+      <div style="white-space:pre-wrap; margin-top:4px">${escapeHTML(l.reason||"")}</div>
       <div class="actions2">
-        <button data-act="focus">Focar</button>
-        <button data-act="edit">Editar</button>
-        <button data-act="link">Criar ligação</button>
+        <button data-act="edit">Editar ligação</button>
+        <button class="btn-danger" data-act="del">Excluir ligação</button>
       </div>
     `;
-    el.querySelector('[data-act="focus"]').onclick = () => {
-      selectedNodeId = n.id;
-      bumpToCenter(n.id);
-      renderAll();
-    };
-    el.querySelector('[data-act="edit"]').onclick = () => openPersonModal(n.id);
-    el.querySelector('[data-act="link"]').onclick = () => openLinkModal(null, n.id);
-
-    peopleList.appendChild(el);
+    box.querySelector('[data-act="edit"]').onclick = ()=> openLinkModal(l.id);
+    box.querySelector('[data-act="del"]').onclick = ()=> deleteLink(l.id);
+    relList.appendChild(box);
   });
 }
 
+function renderManageList(){
+  const sorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+  return `
+    <div class="hint">
+      Aqui você sempre consegue <b>ver / editar / excluir</b>. O “Focar” leva a bolinha pro centro.
+    </div>
+    <div class="sep"></div>
+    <div class="grid">
+      ${sorted.map(n=>`
+        <div class="mini">
+          <b>${escapeHTML(n.name)}</b>
+          <div class="meta">${escapeHTML(n.level)} • ${escapeHTML(n.area)}</div>
+          <div class="meta" style="margin-top:6px">${escapeHTML(n.title||"")}</div>
+          <div class="actions2">
+            <button onclick="window.__focus('${n.id}')">Focar</button>
+            <button onclick="window.__select('${n.id}')">Abrir</button>
+            <button onclick="window.__edit('${n.id}')">Editar</button>
+            <button class="btn-danger" onclick="window.__del('${n.id}')">Excluir</button>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+/* expose small actions for inline buttons */
+window.__focus = (id)=> { focusNow(id); };
+window.__select = (id)=> { selectedNodeId = id; renderAll(); focusNow(id); };
+window.__edit = (id)=> { openPersonModal(id); };
+window.__del = (id)=> { deletePerson(id); };
+
+/* ==== Graph rendering ==== */
 function renderGraph(){
   gLinks.innerHTML = "";
   gNodes.innerHTML = "";
 
   // links
-  state.links.forEach(link => {
+  state.links.forEach(link=>{
     const a = getNode(link.from);
     const b = getNode(link.to);
-    if(!a || !b) return;
+    if(!a||!b) return;
 
     const line = makeSvg("line", {
       x1:a.x, y1:a.y, x2:b.x, y2:b.y,
       stroke: linkColor(link.type),
-      "stroke-width": Math.max(1.5, Number(link.weight||3) * 1.2),
-      "stroke-opacity": selectedNodeId ? ((link.from===selectedNodeId || link.to===selectedNodeId) ? .95 : .18) : .55
+      "stroke-width": Math.max(2.0, Number(link.weight||3) * 1.5),
+      "stroke-opacity": selectedNodeId ? ((link.from===selectedNodeId || link.to===selectedNodeId) ? .90 : .20) : .55
     });
     line.style.cursor = "pointer";
-    line.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openLinkModal(link.id);
-    });
+    line.addEventListener("click", (e)=>{ e.stopPropagation(); openLinkModal(link.id); });
     gLinks.appendChild(line);
 
     const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
     const t = makeSvg("text", {
-      x:mx, y:my,
-      fill: selectedNodeId && !(link.from===selectedNodeId || link.to===selectedNodeId) ? "rgba(229,231,235,.18)" : "rgba(229,231,235,.75)",
-      "font-size":"11",
+      x:mx, y:my-6,
+      fill:"rgba(229,231,235,.78)",
+      "font-size":"12",
       "text-anchor":"middle"
     });
     t.textContent = shortType(link.type);
@@ -856,18 +912,19 @@ function renderGraph(){
   });
 
   // nodes
-  state.nodes.forEach(node => {
-    const r = 18 + (node.tags?.length ? Math.min(10, node.tags.length) : 0);
+  state.nodes.forEach(node=>{
+    const base = 22;
+    const r = base + Math.min(10, (node.tags||[]).length);
     const isSel = node.id === selectedNodeId;
 
-    const group = makeSvg("g", { "data-id": node.id });
+    const group = makeSvg("g", {"data-id": node.id});
     group.style.cursor = "grab";
 
     const halo = makeSvg("circle", {
-      cx:node.x, cy:node.y, r:r+10,
+      cx:node.x, cy:node.y, r:r+14,
       fill:"transparent",
-      stroke: isSel ? "rgba(255,255,255,.35)" : "rgba(255,255,255,.08)",
-      "stroke-width": isSel ? 2.2 : 1.2
+      stroke: isSel ? "rgba(255,255,255,.40)" : "rgba(255,255,255,.08)",
+      "stroke-width": isSel ? 2.5 : 1.2
     });
     group.appendChild(halo);
 
@@ -875,13 +932,13 @@ function renderGraph(){
       cx:node.x, cy:node.y, r,
       fill: node.color || "rgba(124,58,237,.95)",
       stroke:"rgba(255,255,255,.18)",
-      "stroke-width": isSel ? 2.2 : 1.3
+      "stroke-width": isSel ? 2.5 : 1.3
     });
     group.appendChild(c);
 
     const name = makeSvg("text", {
-      x: node.x, y: node.y + r + 16,
-      fill: isSel ? "rgba(255,255,255,.92)" : "rgba(229,231,235,.80)",
+      x: node.x, y: node.y + r + 18,
+      fill: isSel ? "rgba(255,255,255,.95)" : "rgba(229,231,235,.82)",
       "font-size":"13",
       "text-anchor":"middle"
     });
@@ -889,8 +946,8 @@ function renderGraph(){
     group.appendChild(name);
 
     const sub = makeSvg("text", {
-      x: node.x, y: node.y + r + 30,
-      fill:"rgba(169,180,194,.80)",
+      x: node.x, y: node.y + r + 34,
+      fill:"rgba(169,180,194,.85)",
       "font-size":"11",
       "text-anchor":"middle"
     });
@@ -903,336 +960,16 @@ function renderGraph(){
       e.stopPropagation();
       selectedNodeId = node.id;
       renderAll();
+      focusNow(node.id);
     });
 
     gNodes.appendChild(group);
   });
 
-  svg.onclick = () => { selectedNodeId = null; renderAll(); };
+  svg.onclick = ()=> { selectedNodeId = null; renderAll(); };
 }
 
-/* ---- Side panel ---- */
-function renderSide(){
-  const n = selectedNodeId ? getNode(selectedNodeId) : null;
-  if(!n){
-    sideTitle.textContent = "Selecione uma pessoa";
-    sideSub.textContent = "Clique numa bolinha para ver detalhes e criar ligações.";
-    // mantém lista já existente
-    return;
-  }
-
-  sideTitle.textContent = n.name;
-  sideSub.textContent = `${n.level} • ${n.area}`;
-
-  const linksOut = state.links.filter(l => l.from===n.id || l.to===n.id);
-
-  sideContent.innerHTML = `
-    <div class="grid">
-      <div class="mini">
-        <div class="meta"><span class="k">Título</span></div>
-        <div style="margin-top:6px">${escapeHTML(n.title||"")}</div>
-      </div>
-
-      <div class="mini">
-        <div class="meta"><span class="k">Objetivos</span></div>
-        <div style="margin-top:6px; white-space:pre-wrap">${escapeHTML(n.objectives||"")}</div>
-      </div>
-
-      <div class="mini">
-        <div class="meta"><span class="k">Resultados esperados</span></div>
-        <div style="margin-top:6px; white-space:pre-wrap">${escapeHTML(n.expected||"")}</div>
-      </div>
-
-      <div class="mini">
-        <div class="meta"><span class="k">Tags</span></div>
-        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
-          ${(n.tags||[]).map(t => `<span class="pill">${escapeHTML(t)}</span>`).join("") || `<span class="hint">Sem tags.</span>`}
-        </div>
-      </div>
-
-      <div class="row">
-        <button class="btn-primary" id="sideEdit">Editar pessoa</button>
-        <button id="sideLink">Criar ligação</button>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="mini">
-        <b style="margin-bottom:6px">Ligações (${linksOut.length})</b>
-        <div class="hint">Clique numa ligação para editar.</div>
-        <div style="height:8px"></div>
-        <div class="list" id="sideLinks"></div>
-      </div>
-
-      <div class="row">
-        <button class="btn-danger" id="sideDelete">Excluir pessoa</button>
-        <button id="sideFocus">Focar no mapa</button>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("sideEdit").onclick = () => openPersonModal(n.id);
-  document.getElementById("sideLink").onclick = () => openLinkModal(null, n.id);
-  document.getElementById("sideDelete").onclick = () => deletePerson(n.id);
-  document.getElementById("sideFocus").onclick = () => { bumpToCenter(n.id); renderGraph(); };
-
-  const sideLinks = document.getElementById("sideLinks");
-  sideLinks.innerHTML = "";
-  linksOut.sort((a,b)=>(Number(b.weight||3)-Number(a.weight||3))).forEach(l=>{
-    const otherId = (l.from===n.id) ? l.to : l.from;
-    const other = getNode(otherId);
-    const box = document.createElement("div");
-    box.className = "mini";
-    box.innerHTML = `
-      <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start">
-        <div>
-          <b>${escapeHTML(other ? other.name : "—")}</b>
-          <div class="meta">${escapeHTML(longType(l.type))} • intensidade ${escapeHTML(String(l.weight||3))}</div>
-        </div>
-        <span class="pill" style="border-color:${linkColor(l.type)}; color:rgba(229,231,235,.88)">${escapeHTML(shortType(l.type))}</span>
-      </div>
-      <div class="meta" style="margin-top:8px"><span class="k">Por quê</span></div>
-      <div style="white-space:pre-wrap; margin-top:4px">${escapeHTML(l.reason||"")}</div>
-      <div class="actions2">
-        <button data-act="edit">Editar</button>
-        <button class="btn-danger" data-act="del">Excluir</button>
-      </div>
-    `;
-    box.querySelector('[data-act="edit"]').onclick = () => openLinkModal(l.id);
-    box.querySelector('[data-act="del"]').onclick = () => deleteLink(l.id);
-    sideLinks.appendChild(box);
-  });
-}
-
-/* ---- Modals ---- */
-function openModal(m){ m.setAttribute("open",""); }
-function closeModal(m){ m.removeAttribute("open"); }
-
-function openPersonModal(id){
-  editingPersonId = id;
-
-  if(id){
-    const n = getNode(id);
-    modalPersonTitle.textContent = "Editar pessoa";
-    p_name.value = n.name || "";
-    p_level.value = n.level || "Graduação";
-    p_area.value = n.area || "Clima & Saúde";
-    p_color.value = n.color || "";
-    p_title.value = n.title || "";
-    p_objectives.value = n.objectives || "";
-    p_expected.value = n.expected || "";
-    p_tags.value = (n.tags||[]).join(", ");
-  }else{
-    modalPersonTitle.textContent = "Adicionar pessoa";
-    p_name.value = "";
-    p_level.value = "Graduação";
-    p_area.value = "Clima & Saúde";
-    p_color.value = "rgba(124,58,237,.95)";
-    p_title.value = "";
-    p_objectives.value = "";
-    p_expected.value = "";
-    p_tags.value = "";
-  }
-
-  openModal(modalPerson);
-}
-
-function savePersonFromModal(){
-  const name = p_name.value.trim();
-  if(!name){ alert("Informe o nome."); return; }
-
-  const node = {
-    id: editingPersonId || uid(),
-    name,
-    level: p_level.value,
-    area: p_area.value,
-    color: p_color.value.trim() || "rgba(124,58,237,.95)",
-    title: p_title.value.trim(),
-    objectives: p_objectives.value.trim(),
-    expected: p_expected.value.trim(),
-    tags: p_tags.value.split(",").map(s=>s.trim()).filter(Boolean),
-  };
-
-  if(editingPersonId){
-    const idx = state.nodes.findIndex(n => n.id === editingPersonId);
-    if(idx >= 0){
-      const old = state.nodes[idx];
-      state.nodes[idx] = { ...old, ...node };
-    }
-  }else{
-    node.x = view.w/2 + (Math.random()-.5)*120;
-    node.y = view.h/2 + (Math.random()-.5)*120;
-    node.vx = 0; node.vy = 0;
-    state.nodes.push(node);
-  }
-
-  persist();
-  closeModal(modalPerson);
-  selectedNodeId = node.id;
-  renderAll();
-}
-
-function openLinkModal(linkId, defaultFromNodeId){
-  editingLinkId = linkId;
-
-  const nodesSorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
-  l_from.innerHTML = nodesSorted.map(n => `<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
-  l_to.innerHTML = nodesSorted.map(n => `<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
-
-  if(linkId){
-    const l = state.links.find(x => x.id === linkId);
-    modalLinkTitle.textContent = "Editar ligação";
-    l_from.value = l.from;
-    l_to.value = l.to;
-    l_type.value = l.type || "dados";
-    l_weight.value = String(l.weight || 3);
-    l_reason.value = l.reason || "";
-    l_questions.value = l.questions || "";
-    l_outputs.value = l.outputs || "";
-    l_files.value = (l.files || []).join("\n");
-  }else{
-    modalLinkTitle.textContent = "Criar ligação";
-    const from = defaultFromNodeId || selectedNodeId || (state.nodes[0]?.id);
-    const to = state.nodes.find(n => n.id !== from)?.id || from;
-    l_from.value = from;
-    l_to.value = to;
-    l_type.value = "dados";
-    l_weight.value = "3";
-    l_reason.value = "";
-    l_questions.value = "";
-    l_outputs.value = "";
-    l_files.value = "";
-  }
-
-  openModal(modalLink);
-}
-
-function saveLinkFromModal(){
-  const from = l_from.value;
-  const to = l_to.value;
-  if(!from || !to || from === to){ alert("Selecione origem e destino diferentes."); return; }
-
-  const link = {
-    id: editingLinkId || uid(),
-    from, to,
-    type: l_type.value,
-    weight: Number(l_weight.value || 3),
-    reason: l_reason.value.trim(),
-    questions: l_questions.value.trim(),
-    outputs: l_outputs.value.trim(),
-    files: l_files.value.split("\n").map(s=>s.trim()).filter(Boolean)
-  };
-
-  if(editingLinkId){
-    const idx = state.links.findIndex(l => l.id === editingLinkId);
-    if(idx >= 0) state.links[idx] = link;
-  }else{
-    state.links.push(link);
-  }
-
-  persist();
-  closeModal(modalLink);
-  renderAll();
-}
-
-function deleteLink(id){
-  if(!confirm("Excluir esta ligação?")) return;
-  state.links = state.links.filter(l => l.id !== id);
-  persist();
-  renderAll();
-}
-
-function deletePerson(id){
-  const n = getNode(id);
-  if(!n) return;
-  if(!confirm(`Excluir "${n.name}"? Isso remove as ligações dela.`)) return;
-
-  state.nodes = state.nodes.filter(x => x.id !== id);
-  state.links = state.links.filter(l => l.from !== id && l.to !== id);
-  if(selectedNodeId === id) selectedNodeId = null;
-  persist();
-  renderAll();
-}
-
-/* ---- Export/Import ---- */
-function exportJSON(){
-  const out = {
-    meta: { app:"IntegraProjetos", version:1, exportedAt:new Date().toISOString() },
-    nodes: state.nodes.map(n => ({...n, x:Math.round(n.x), y:Math.round(n.y)})),
-    links: state.links
-  };
-  downloadBlob(JSON.stringify(out, null, 2), "integraprojetos.json", "application/json");
-}
-
-function exportSVG(){
-  const clone = svg.cloneNode(true);
-  clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
-  clone.setAttribute("viewBox", `0 0 ${view.w} ${view.h}`);
-  const ser = new XMLSerializer();
-  downloadBlob(ser.serializeToString(clone), "integraprojetos.svg", "image/svg+xml");
-}
-
-function importJSONFile(ev){
-  const f = ev.target.files[0];
-  if(!f) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try{
-      const obj = JSON.parse(reader.result);
-      if(!obj.nodes || !obj.links) throw new Error("JSON sem nodes/links.");
-
-      state = {
-        meta: { app:"IntegraProjetos", version:1, updatedAt:new Date().toISOString() },
-        nodes: obj.nodes.map(n => ({
-          id: n.id || uid(),
-          name: n.name || "Sem nome",
-          level: n.level || "Graduação",
-          area: n.area || "Clima & Saúde",
-          title: n.title || "",
-          objectives: n.objectives || "",
-          expected: n.expected || "",
-          tags: Array.isArray(n.tags) ? n.tags : [],
-          color: n.color || "rgba(124,58,237,.95)",
-          x: Number(n.x ?? (view.w/2 + (Math.random()-.5)*160)),
-          y: Number(n.y ?? (view.h/2 + (Math.random()-.5)*160)),
-          vx: 0, vy: 0, fx:null, fy:null
-        })),
-        links: obj.links.map(l => ({
-          id: l.id || uid(),
-          from: l.from, to: l.to,
-          type: l.type || "dados",
-          weight: Number(l.weight || 3),
-          reason: l.reason || "",
-          questions: l.questions || "",
-          outputs: l.outputs || "",
-          files: Array.isArray(l.files) ? l.files : []
-        }))
-      };
-
-      selectedNodeId = null;
-      persist();
-      renderAll();
-    }catch(err){
-      alert("Falha ao importar: " + err.message);
-    }finally{
-      ev.target.value = "";
-    }
-  };
-  reader.readAsText(f);
-}
-
-function resetAll(){
-  if(!confirm("Resetar tudo e voltar ao modelo inicial?")) return;
-  state = deepClone(SEED);
-  initPositions(true);
-  selectedNodeId = null;
-  persist();
-  renderAll();
-}
-
-/* ---- Drag ---- */
-let dragging = null;
-
+/* ==== Drag ==== */
 function getPointer(ev){
   const rect = svg.getBoundingClientRect();
   const isTouch = ev.touches && ev.touches[0];
@@ -1240,15 +977,13 @@ function getPointer(ev){
   const clientY = isTouch ? ev.touches[0].clientY : ev.clientY;
   const x = (clientX - rect.left) * (view.w / rect.width);
   const y = (clientY - rect.top) * (view.h / rect.height);
-  return { x, y };
+  return {x,y};
 }
-
 function startDrag(ev, nodeId){
   ev.preventDefault();
-  const pt = getPointer(ev);
-  dragging = { id: nodeId, ox: pt.x, oy: pt.y };
   const n = getNode(nodeId);
   if(!n) return;
+  dragging = { id:nodeId };
   n.fx = n.x; n.fy = n.y;
 
   window.addEventListener("mousemove", onDragMove);
@@ -1256,18 +991,16 @@ function startDrag(ev, nodeId){
   window.addEventListener("touchmove", onDragMove, {passive:false});
   window.addEventListener("touchend", onDragEnd);
 }
-
 function onDragMove(ev){
   if(!dragging) return;
   ev.preventDefault();
   const pt = getPointer(ev);
   const n = getNode(dragging.id);
   if(!n) return;
-  n.fx = clamp(pt.x, 30, view.w - 30);
-  n.fy = clamp(pt.y, 30, view.h - 30);
+  n.fx = clamp(pt.x, 30, view.w-30);
+  n.fy = clamp(pt.y, 30, view.h-30);
   renderGraph();
 }
-
 function onDragEnd(){
   if(!dragging) return;
   const n = getNode(dragging.id);
@@ -1283,48 +1016,44 @@ function onDragEnd(){
   window.removeEventListener("touchend", onDragEnd);
 }
 
-/* ---- Simple sim ---- */
-let sim = null;
-
+/* ==== Simulation (agora ela mexe de verdade) ==== */
+let sim=null;
 function startSim(){
   if(sim) cancelAnimationFrame(sim);
-  const step = () => {
-    tick();
+  const step = ()=>{
+    if(animOn) tick();
     renderGraph();
     sim = requestAnimationFrame(step);
   };
   sim = requestAnimationFrame(step);
 }
 function tick(){
-  const centerPull = 0.0018;
-  const repel = 9000;
-  const linkK = 0.006;
-  const damping = 0.92;
+  const repel = 14000;          // mais repulsão = menos empilhado
+  const linkK = 0.012;          // força do link
+  const centerPull = 0.0028;    // puxa pro centro levemente
+  const damping = 0.90;
 
-  state.nodes.forEach(n => {
-    if(n.vx == null) n.vx = (Math.random()-.5)*0.8;
-    if(n.vy == null) n.vy = (Math.random()-.5)*0.8;
-  });
-
+  // repulsão
   for(let i=0;i<state.nodes.length;i++){
     for(let j=i+1;j<state.nodes.length;j++){
       const a=state.nodes[i], b=state.nodes[j];
       const dx=a.x-b.x, dy=a.y-b.y;
       let d2=dx*dx+dy*dy; if(d2<0.01) d2=0.01;
-      const force=repel/d2;
       const d=Math.sqrt(d2);
-      const fx=(dx/d)*force, fy=(dy/d)*force;
+      const f=repel/d2;
+      const fx=(dx/d)*f, fy=(dy/d)*f;
       if(a.fx==null){ a.vx += fx; a.vy += fy; }
       if(b.fx==null){ b.vx -= fx; b.vy -= fy; }
     }
   }
 
+  // links
   state.links.forEach(l=>{
     const a=getNode(l.from), b=getNode(l.to);
     if(!a||!b) return;
     const dx=b.x-a.x, dy=b.y-a.y;
     const dist=Math.sqrt(dx*dx+dy*dy)||1;
-    const target=180-(Number(l.weight||3)-3)*15;
+    const target=240 - (Number(l.weight||3)-3)*25;
     const k=linkK*Number(l.weight||3);
     const diff=(dist-target);
     const fx=(dx/dist)*diff*k;
@@ -1333,13 +1062,14 @@ function tick(){
     if(b.fx==null){ b.vx -= fx; b.vy -= fy; }
   });
 
+  // update
+  const cx=view.w/2, cy=view.h/2;
   state.nodes.forEach(n=>{
     if(n.fx!=null && n.fy!=null){
       n.x=n.fx; n.y=n.fy;
-      n.vx*=0.3; n.vy*=0.3;
+      n.vx*=0.25; n.vy*=0.25;
       return;
     }
-    const cx=view.w/2, cy=view.h/2;
     n.vx += (cx-n.x)*centerPull;
     n.vy += (cy-n.y)*centerPull;
     n.vx *= damping; n.vy *= damping;
@@ -1348,15 +1078,287 @@ function tick(){
   });
 }
 
-function bumpToCenter(id){
+/* ==== View helpers ==== */
+function focusNow(id){
   const n=getNode(id); if(!n) return;
-  n.vx += (view.w/2 - n.x) * 0.08;
-  n.vy += (view.h/2 - n.y) * 0.08;
+  // move imediatamente pro centro (não “empurra”)
+  const cx=view.w/2, cy=view.h/2;
+  n.x = cx + (Math.random()-.5)*10;
+  n.y = cy + (Math.random()-.5)*10;
+  n.vx = (Math.random()-.5)*1.5;
+  n.vy = (Math.random()-.5)*1.5;
+  persist();
+  renderGraph();
+}
+function fitToView(){
+  // aqui é simples: só reorganiza para dentro do retângulo útil
+  if(state.nodes.length===0) return;
+  const pad = 80;
+  let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+  state.nodes.forEach(n=>{
+    minX=Math.min(minX,n.x); minY=Math.min(minY,n.y);
+    maxX=Math.max(maxX,n.x); maxY=Math.max(maxY,n.y);
+  });
+  const cx=view.w/2, cy=view.h/2;
+  const bx=(minX+maxX)/2, by=(minY+maxY)/2;
+
+  state.nodes.forEach(n=>{
+    n.x = clamp(n.x + (cx-bx), pad, view.w-pad);
+    n.y = clamp(n.y + (cy-by), pad, view.h-pad);
+  });
+  persist();
+  renderGraph();
 }
 
-function autoNudge(){
-  state.nodes.forEach(n => { n.vx += (Math.random()-.5)*6; n.vy += (Math.random()-.5)*6; });
+/* ==== auto-organize ==== */
+function autoOrganize(force){
+  if(state.nodes.length<=1) return;
+  // se estiver muito colado ou force=true, espalha em círculo
+  let compact=true;
+  for(let i=0;i<state.nodes.length;i++){
+    for(let j=i+1;j<state.nodes.length;j++){
+      const a=state.nodes[i], b=state.nodes[j];
+      const dx=a.x-b.x, dy=a.y-b.y;
+      if(dx*dx+dy*dy > 140*140){ compact=false; break; }
+    }
+    if(!compact) break;
+  }
+  if(!compact && !force) return;
+
+  const cx=view.w/2, cy=view.h/2;
+  const R = Math.min(view.w, view.h)*0.28;
+  state.nodes.forEach((n,idx)=>{
+    const ang = (idx/state.nodes.length) * Math.PI*2;
+    n.x = cx + Math.cos(ang)*R + (Math.random()-.5)*30;
+    n.y = cy + Math.sin(ang)*R + (Math.random()-.5)*30;
+    n.vx = (Math.random()-.5)*2;
+    n.vy = (Math.random()-.5)*2;
+  });
 }
+
+/* ==== modal helpers ==== */
+function openModal(m){ m.setAttribute("open",""); }
+function closeModal(m){ m.removeAttribute("open"); }
+
+/* ==== pessoa CRUD ==== */
+function openPersonModal(id){
+  editingPersonId = id;
+
+  if(id){
+    const n=getNode(id);
+    modalPersonTitle.textContent = "Editar pessoa";
+    p_name.value = n.name || "";
+    p_level.value = n.level || "Graduação";
+    p_area.value = n.area || "";
+    p_color.value = n.color || "";
+    p_title.value = n.title || "";
+    p_objectives.value = n.objectives || "";
+    p_expected.value = n.expected || "";
+    p_tags.value = (n.tags||[]).join(", ");
+  }else{
+    modalPersonTitle.textContent = "Adicionar pessoa";
+    p_name.value = "";
+    p_level.value = "Graduação";
+    p_area.value = "";
+    p_color.value = "";
+    p_title.value = "";
+    p_objectives.value = "";
+    p_expected.value = "";
+    p_tags.value = "";
+  }
+  openModal(modalPerson);
+}
+
+function savePersonFromModal(){
+  const name = p_name.value.trim();
+  if(!name){ alert("Informe o nome."); return; }
+
+  const node = {
+    id: editingPersonId || uid(),
+    name,
+    level: p_level.value,
+    area: p_area.value.trim(),
+    color: p_color.value.trim() || "rgba(124,58,237,.95)",
+    title: p_title.value.trim(),
+    objectives: p_objectives.value.trim(),
+    expected: p_expected.value.trim(),
+    tags: p_tags.value.split(",").map(s=>s.trim()).filter(Boolean)
+  };
+
+  if(editingPersonId){
+    const idx = state.nodes.findIndex(n=>n.id===editingPersonId);
+    if(idx>=0){
+      const old = state.nodes[idx];
+      state.nodes[idx] = {...old, ...node};
+    }
+  }else{
+    node.x = view.w/2 + (Math.random()-.5)*220;
+    node.y = view.h/2 + (Math.random()-.5)*160;
+    node.vx = (Math.random()-.5)*2;
+    node.vy = (Math.random()-.5)*2;
+    state.nodes.push(node);
+  }
+
+  persist();
+  closeModal(modalPerson);
+  selectedNodeId = node.id;
+  renderAll();
+  focusNow(node.id);
+}
+
+function deletePerson(id){
+  const n=getNode(id);
+  if(!n) return;
+  if(!confirm(`Excluir "${n.name}"? Isso apaga também as ligações dela.`)) return;
+  state.nodes = state.nodes.filter(x=>x.id!==id);
+  state.links = state.links.filter(l=>l.from!==id && l.to!==id);
+  if(selectedNodeId===id) selectedNodeId=null;
+  persist();
+  renderAll();
+}
+
+/* ==== ligação CRUD ==== */
+function openLinkModal(linkId, defaultFrom){
+  editingLinkId = linkId;
+
+  const nodesSorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+  l_from.innerHTML = nodesSorted.map(n=>`<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
+  l_to.innerHTML = nodesSorted.map(n=>`<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
+
+  if(linkId){
+    const l = state.links.find(x=>x.id===linkId);
+    modalLinkTitle.textContent = "Editar ligação";
+    l_from.value = l.from;
+    l_to.value = l.to;
+    l_type.value = l.type || "dados";
+    l_weight.value = String(l.weight||3);
+    l_reason.value = l.reason || "";
+    l_questions.value = l.questions || "";
+    l_outputs.value = l.outputs || "";
+  }else{
+    modalLinkTitle.textContent = "Criar ligação";
+    const from = defaultFrom || selectedNodeId || (state.nodes[0]?.id);
+    const to = state.nodes.find(n=>n.id!==from)?.id || from;
+    l_from.value = from;
+    l_to.value = to;
+    l_type.value = "dados";
+    l_weight.value = "3";
+    l_reason.value = "";
+    l_questions.value = "";
+    l_outputs.value = "";
+  }
+
+  openModal(modalLink);
+}
+
+function saveLinkFromModal(){
+  const from = l_from.value;
+  const to = l_to.value;
+  if(!from || !to || from===to){
+    alert("Escolha origem e destino diferentes.");
+    return;
+  }
+
+  const link = {
+    id: editingLinkId || uid(),
+    from, to,
+    type: l_type.value,
+    weight: Number(l_weight.value||3),
+    reason: l_reason.value.trim(),
+    questions: l_questions.value.trim(),
+    outputs: l_outputs.value.trim()
+  };
+
+  // evita duplicata exata (from-to-type)
+  if(!editingLinkId){
+    const dup = state.links.find(l => l.from===from && l.to===to && l.type===link.type);
+    if(dup && !confirm("Já existe uma ligação igual. Quer criar mesmo assim?")) return;
+  }
+
+  if(editingLinkId){
+    const idx = state.links.findIndex(l=>l.id===editingLinkId);
+    if(idx>=0) state.links[idx]=link;
+  }else{
+    state.links.push(link);
+  }
+
+  persist();
+  closeModal(modalLink);
+  renderAll();
+}
+
+function deleteLink(id){
+  if(!confirm("Excluir esta ligação?")) return;
+  state.links = state.links.filter(l=>l.id!==id);
+  persist();
+  renderAll();
+}
+
+/* ==== export/import ==== */
+function exportJSON(){
+  const out = {
+    meta: { app:"IntegraProjetos", version:2, exportedAt:new Date().toISOString() },
+    nodes: state.nodes.map(n=>({ ...n, x:Math.round(n.x), y:Math.round(n.y) })),
+    links: state.links
+  };
+  downloadBlob(JSON.stringify(out, null, 2), "integraprojetos.json", "application/json");
+}
+function importJSONFile(ev){
+  const f = ev.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const obj = JSON.parse(reader.result);
+      state = normalize(obj);
+      initPositionsIfNeeded();
+      autoOrganize(true);
+      persist();
+      selectedNodeId=null;
+      renderAll();
+      fitToView();
+    }catch(e){
+      alert("Falha ao importar: " + e.message);
+    }finally{
+      ev.target.value = "";
+    }
+  };
+  reader.readAsText(f);
+}
+
+/* ==== reset ==== */
+function resetClean(){
+  if(!confirm("Reset limpo: apagar todas as pessoas e ligações?")) return;
+  state = {
+    meta:{ app:"IntegraProjetos", version:2, updatedAt:new Date().toISOString() },
+    nodes: [],
+    links: []
+  };
+  selectedNodeId=null;
+  persist();
+  renderAll();
+}
+function resetSeed(){
+  if(!confirm("Reset modelo: voltar para os 7 alunos iniciais (sem ligações)?")) return;
+  state = deepClone(SEED);
+  initPositionsIfNeeded();
+  autoOrganize(true);
+  selectedNodeId=null;
+  persist();
+  renderAll();
+  fitToView();
+}
+
+/* ==== anim toggle ==== */
+function toggleAnim(){
+  animOn = !animOn;
+  document.getElementById("btnAnim").textContent = "Animar: " + (animOn ? "ON" : "OFF");
+}
+
+/* ==== safety: click outside modals closes ==== */
+modalPerson.addEventListener("click", (e)=>{ if(e.target===modalPerson) closeModal(modalPerson); });
+modalLink.addEventListener("click", (e)=>{ if(e.target===modalLink) closeModal(modalLink); });
+
 </script>
 </body>
 </html>
