@@ -35,7 +35,6 @@
       overflow:hidden;
     }
 
-    /* Topbar */
     .topbar{
       position:fixed; inset:14px 14px auto 14px;
       display:flex; gap:12px; align-items:center; justify-content:space-between;
@@ -46,10 +45,9 @@
       padding:10px 12px;
       box-shadow: var(--shadow);
       z-index:50;
+      flex-wrap:wrap;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px; min-width:260px;
-    }
+    .brand{display:flex; align-items:center; gap:10px; min-width:260px}
     .logo{
       width:36px; height:36px; border-radius:12px;
       background:
@@ -61,7 +59,8 @@
     .brand h1{font-size:14px; margin:0; letter-spacing:.3px}
     .brand p{margin:0; font-size:12px; color:var(--muted)}
     .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-    button, .btn{
+
+    button{
       appearance:none; border:1px solid var(--stroke);
       background:rgba(16,28,51,.7);
       color:var(--txt);
@@ -82,7 +81,6 @@
     .btn-danger{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); }
     .btn-warn{ border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); }
 
-    /* Layout */
     .wrap{
       position:fixed; inset:0;
       display:grid;
@@ -90,7 +88,6 @@
       gap:0;
     }
 
-    /* Canvas area */
     #stage{
       position:relative;
       margin-top: 76px;
@@ -104,7 +101,6 @@
       overflow:hidden;
     }
 
-    /* Right panel */
     .side{
       margin-top: 76px;
       margin-right: 14px;
@@ -128,6 +124,7 @@
     .side header h2{margin:0; font-size:13px}
     .side header .small{font-size:12px; color:var(--muted)}
     .side .content{padding:12px; overflow:auto}
+
     .pill{
       display:inline-flex; gap:6px; align-items:center;
       border:1px solid var(--stroke);
@@ -135,12 +132,8 @@
       padding:6px 8px; border-radius:999px; font-size:12px; color:var(--muted);
     }
 
-    .grid{
-      display:grid; gap:10px;
-    }
-    .field{
-      display:grid; gap:6px;
-    }
+    .grid{display:grid; gap:10px;}
+    .field{display:grid; gap:6px;}
     label{font-size:12px; color:var(--muted)}
     input[type="text"], textarea, select{
       width:100%;
@@ -158,9 +151,7 @@
     .hint{font-size:12px; color:var(--muted); line-height:1.35}
     .sep{height:1px; background:var(--stroke); margin:10px 0}
 
-    .list{
-      display:grid; gap:8px;
-    }
+    .list{display:grid; gap:8px;}
     .mini{
       border:1px solid var(--stroke);
       background: rgba(16,28,51,.45);
@@ -173,12 +164,14 @@
     .mini .actions2{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
     .mini .actions2 button{padding:7px 9px; border-radius:11px}
 
-    /* Modal */
+    /* Modal compatível (sem <dialog>) */
     .modal{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
-      display:none; place-items:center;
+      display:none;
+      place-items:center;
       z-index:80;
+      padding:12px;
     }
     .modal[open]{display:grid}
     .modal .box{
@@ -200,7 +193,6 @@
     .box header h3{margin:0; font-size:14px}
     .box .body{padding:10px 6px 6px}
 
-    /* SVG text */
     .legend{
       position:absolute; left:12px; bottom:12px;
       display:flex; gap:8px; flex-wrap:wrap;
@@ -208,7 +200,6 @@
       pointer-events:none;
     }
     .legend .tag{
-      pointer-events:none;
       display:inline-flex; align-items:center; gap:8px;
       padding:7px 9px;
       border-radius:999px;
@@ -224,7 +215,6 @@
       background: rgba(124,58,237,.9);
     }
 
-    /* Small screens */
     @media (max-width: 980px){
       .wrap{grid-template-columns:1fr}
       .side{
@@ -237,7 +227,6 @@
         margin-right:14px;
         margin-bottom: calc(44vh + 22px);
       }
-      .topbar{flex-wrap:wrap}
       .brand{min-width:unset}
     }
   </style>
@@ -333,7 +322,7 @@
   </div>
 
   <!-- Modal: Add/Edit Person -->
-  <dialog class="modal" id="modalPerson">
+  <div class="modal" id="modalPerson">
     <div class="box">
       <header>
         <h3 id="modalPersonTitle">Adicionar pessoa</h3>
@@ -386,13 +375,13 @@
           </div>
 
           <div class="field">
-            <label>Objetivos (o que faz / missão)</label>
+            <label>Objetivos</label>
             <textarea id="p_objectives" placeholder="Descreva objetivos e escopo..."></textarea>
           </div>
 
           <div class="field">
-            <label>Resultados esperados (entregáveis)</label>
-            <textarea id="p_expected" placeholder="Ex.: planilhas organizadas, gráficos comparativos, jogo 3D..."></textarea>
+            <label>Resultados esperados</label>
+            <textarea id="p_expected" placeholder="Ex.: planilhas organizadas, gráficos, jogo 3D..."></textarea>
           </div>
 
           <div class="field">
@@ -400,17 +389,14 @@
             <input type="text" id="p_tags" placeholder="Ex.: planilhas, gráficos, mortalidade, carbono, jogos" />
           </div>
 
-          <div class="hint">
-            Observação: imagens/arquivos podem ser linkados nas <b>ligações</b> (ex.: link do Drive/GitHub).
-            Se quiser, depois eu adiciono upload de imagem por pessoa (armazenando localmente).
-          </div>
+          <div class="hint">Tudo é editável e você pode excluir depois. Exporta/Importa via JSON.</div>
         </div>
       </div>
     </div>
-  </dialog>
+  </div>
 
   <!-- Modal: Create/Edit Link -->
-  <dialog class="modal" id="modalLink">
+  <div class="modal" id="modalLink">
     <div class="box">
       <header>
         <h3 id="modalLinkTitle">Criar ligação</h3>
@@ -453,165 +439,191 @@
           </div>
 
           <div class="field">
-            <label>Por que liga? (dependência/benefício)</label>
-            <textarea id="l_reason" placeholder="Ex.: Matheus organiza planilhas que alimentam a análise de Letícia..."></textarea>
+            <label>Por que liga?</label>
+            <textarea id="l_reason"></textarea>
           </div>
 
           <div class="field">
-            <label>Perguntas (o que essa ligação precisa responder)</label>
-            <textarea id="l_questions" placeholder="Ex.: Quais variáveis entram? Qual período? Qual formato?"></textarea>
+            <label>Perguntas</label>
+            <textarea id="l_questions"></textarea>
           </div>
 
           <div class="field">
-            <label>Resultados esperados dessa ligação</label>
-            <textarea id="l_outputs" placeholder="Ex.: dataset unificado, gráficos comparáveis, protótipo do jogo..."></textarea>
+            <label>Resultados esperados da ligação</label>
+            <textarea id="l_outputs"></textarea>
           </div>
 
           <div class="field">
-            <label>Links/arquivos (cole URLs; uma por linha)</label>
+            <label>Links/arquivos (uma URL por linha)</label>
             <textarea id="l_files" placeholder="https://..."></textarea>
-          </div>
-
-          <div class="hint">
-            Depois que você me mandar mais nomes, eu posso criar um “Hub central” (ex.: LAB/UNEMAT)
-            e regras automáticas de conexão (ex.: todo mundo conecta ao HUB + conexões específicas).
           </div>
         </div>
       </div>
     </div>
-  </dialog>
+  </div>
 
-  <!-- Hidden file input for import -->
   <input type="file" id="fileImport" accept="application/json" style="display:none"/>
 
 <script>
 /* =========================
-   IntegraProjetos (single-file)
-   - No libraries
-   - SVG + simple force physics
-   - localStorage persistence
+   Fix principal:
+   - Sem structuredClone (compatível Android)
+   - Modal sem <dialog>
 ========================= */
 
 const STORAGE_KEY = "integraprojetos_v1";
 
-/** Default seed data (seus primeiros alunos) */
+/* ---- util ---- */
+function uid(){
+  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+}
+function deepClone(obj){
+  // compatível com qualquer browser
+  return JSON.parse(JSON.stringify(obj));
+}
+function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+function escapeHTML(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function linkColor(type){
+  switch(type){
+    case "dados": return "rgba(124,58,237,.95)";
+    case "produto": return "rgba(34,197,94,.95)";
+    case "extensao": return "rgba(245,158,11,.95)";
+    case "analise": return "rgba(96,165,250,.95)";
+    case "campo": return "rgba(239,68,68,.85)";
+    default: return "rgba(229,231,235,.35)";
+  }
+}
+function shortType(type){
+  switch(type){
+    case "dados": return "dados";
+    case "produto": return "produto";
+    case "extensao": return "extensão";
+    case "analise": return "análise";
+    case "campo": return "campo";
+    default: return "outro";
+  }
+}
+function longType(type){
+  switch(type){
+    case "dados": return "Dados / Integração";
+    case "produto": return "Produto / Jogo";
+    case "extensao": return "Extensão / Visibilidade";
+    case "analise": return "Análise científica";
+    case "campo": return "Coleta / Campo";
+    default: return "Outro";
+  }
+}
+function downloadBlob(text, filename, mime){
+  const blob = new Blob([text], {type:mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 800);
+}
+
+/* ---- Seed (os 7 alunos que você passou) ---- */
 const SEED = {
   meta: { app: "IntegraProjetos", version: 1, updatedAt: new Date().toISOString() },
   nodes: [
-    {
-      id: uid(),
-      name: "Letícia Zen",
-      level: "Graduação",
-      area: "Clima & Saúde",
-      title: "Análise de dados secundários: impacto do calor na mortalidade em MT",
-      objectives: "Trabalha com análise de dados secundários sobre o impacto do calor na mortalidade em MT.",
-      expected: "Organização de planilhas e produção de gráficos comparativos e analíticos.",
-      tags: ["mortalidade","calor","planilhas","gráficos","MT"],
-      color: "rgba(96,165,250,.95)" // azul
+    { id: uid(), name:"Letícia Zen", level:"Graduação", area:"Clima & Saúde",
+      title:"Impacto do calor na mortalidade em MT (dados secundários)",
+      objectives:"Trabalha com análise de dados secundários sobre o impacto do calor na mortalidade em MT.",
+      expected:"Organização de planilhas e produção de gráficos comparativos e analíticos.",
+      tags:["mortalidade","calor","planilhas","gráficos","MT"], color:"rgba(96,165,250,.95)"
     },
-    {
-      id: uid(),
-      name: "Cintya",
-      level: "Graduação",
-      area: "Extensão & Visibilidade",
-      title: "Extensão na pós-graduação: visibilidade e identificação de projetos",
-      objectives: "Produção de dados sobre a extensão na pós-graduação, com análise e identificação de projetos para dar visibilidade à pós-graduação.",
-      expected: "Identificação de projetos para a visibilidade da pós da UNEMAT.",
-      tags: ["extensão","pós-graduação","visibilidade","mapeamento"],
-      color: "rgba(245,158,11,.95)" // âmbar
+    { id: uid(), name:"Cintya", level:"Graduação", area:"Extensão & Visibilidade",
+      title:"Extensão na pós: visibilidade e identificação de projetos",
+      objectives:"Produção de dados sobre a extensão na pós-graduação, com análise e identificação de projetos para dar visibilidade à pós-graduação.",
+      expected:"Identificação de projetos para a visibilidade da pós da UNEMAT.",
+      tags:["extensão","pós-graduação","visibilidade","mapeamento"], color:"rgba(245,158,11,.95)"
     },
-    {
-      id: uid(),
-      name: "Antônio",
-      level: "Graduação",
-      area: "Atividade Física & Ambiente",
-      title: "Efeito da temperatura em atividades físicas em ambientes diversos",
-      objectives: "Avalia o efeito da temperatura em atividades físicas de áreas abertas, fechadas e em escolas.",
-      expected: "Coleta de dados em diferentes ambientes em Cáceres; organização de planilhas; análises e comparações térmicas entre ambientes.",
-      tags: ["temperatura","atividade física","Cáceres","comparação","campo"],
-      color: "rgba(34,197,94,.95)" // verde
+    { id: uid(), name:"Antônio", level:"Graduação", area:"Atividade Física & Ambiente",
+      title:"Efeito da temperatura em atividade física (aberto/fechado/escolas)",
+      objectives:"Avalia o efeito da temperatura em atividades físicas de áreas abertas, fechadas e em escolas.",
+      expected:"Coleta de dados em diferentes ambientes em Cáceres; organização de planilhas; análises e comparações térmicas entre ambientes.",
+      tags:["temperatura","atividade física","Cáceres","campo","comparação"], color:"rgba(34,197,94,.95)"
     },
-    {
-      id: uid(),
-      name: "Luan",
-      level: "Graduação",
-      area: "Jogos & Educação",
-      title: "Jogos interativos sobre carbono (rumo ao 3D)",
-      objectives: "Produção de jogos interativos sobre o carbono; análise dos itens necessários para a produção do jogo.",
-      expected: "Produzir um jogo 3D sobre carbono.",
-      tags: ["jogos","carbono","3D","educação"],
-      color: "rgba(124,58,237,.95)" // roxo
+    { id: uid(), name:"Luan", level:"Graduação", area:"Jogos & Educação",
+      title:"Jogo interativo sobre carbono (rumo ao 3D)",
+      objectives:"Produção de jogos interativos sobre o carbono; analisa itens necessários para produção do jogo.",
+      expected:"Produzir um jogo 3D sobre carbono.",
+      tags:["jogos","carbono","3D","educação"], color:"rgba(124,58,237,.95)"
     },
-    {
-      id: uid(),
-      name: "Matheus",
-      level: "Graduação",
-      area: "Carbono (dados)",
-      title: "Inspetor e integrador de planilhas de carbono do laboratório",
-      objectives: "Organização de dados de carbono em planilhas; atua como inspetor de dados e integração de planilhas do lab.",
-      expected: "Todas as planilhas devem ser revisadas por ele para integração de dados.",
-      tags: ["planilhas","carbono","qualidade de dados","integração"],
-      color: "rgba(16,185,129,.95)" // verde-água
+    { id: uid(), name:"Matheus", level:"Graduação", area:"Carbono (dados)",
+      title:"Inspetor/organizador de planilhas do laboratório (carbono)",
+      objectives:"Organização de dados de carbono em planilhas; atua como inspetor de dados e integração de planilhas do lab.",
+      expected:"Todas as planilhas deverão ser revisadas por ele para integração de dados.",
+      tags:["planilhas","carbono","integração","qualidade"], color:"rgba(16,185,129,.95)"
     },
-    {
-      id: uid(),
-      name: "Leandro",
-      level: "Graduação",
-      area: "Carbono (processos)",
-      title: "Influência da ATTZ na dinâmica do carbono na praia de Cáceres",
-      objectives: "Analisa a influência da ATTZ na dinâmica do carbono na praia de Cáceres.",
-      expected: "Identificar a dinâmica das águas e sua influência no fluxo de CO₂ de áreas alagáveis até secas.",
-      tags: ["ATTZ","CO2","hidrodinâmica","praia de Cáceres","alagável"],
-      color: "rgba(59,130,246,.95)" // azul forte
+    { id: uid(), name:"Leandro", level:"Graduação", area:"Carbono (processos)",
+      title:"ATTZ e dinâmica do carbono na praia de Cáceres",
+      objectives:"Analisa a influência da ATTZ na dinâmica do carbono em praia de Cáceres.",
+      expected:"Identificar a dinâmica das águas e sua influência no fluxo de CO₂ de áreas alagáveis até secas.",
+      tags:["ATTZ","CO2","hidrodinâmica","Cáceres","alagável"], color:"rgba(59,130,246,.95)"
     },
-    {
-      id: uid(),
-      name: "Vanessa",
-      level: "Graduação",
-      area: "Jogos & Educação",
-      title: "Jogos físicos para integração com ensino médio + monitora Guardiões do Clima",
-      objectives: "Produção de jogos físicos para integração com estudantes do ensino médio; monitora dos Guardiões do Clima.",
-      expected: "Produzir jogos sobre carbono e mudanças climáticas jogáveis por crianças e adolescentes.",
-      tags: ["jogos físicos","ensino médio","guardiões do clima","carbono","clima"],
-      color: "rgba(236,72,153,.92)" // rosa
+    { id: uid(), name:"Vanessa", level:"Graduação", area:"Jogos & Educação",
+      title:"Jogos físicos + Guardiões do Clima (ensino médio)",
+      objectives:"Produção de jogos físicos para integração com estudantes do ensino médio; monitora dos Guardiões do Clima.",
+      expected:"Produzir jogos sobre carbono e mudanças climáticas para crianças e adolescentes.",
+      tags:["jogos físicos","ensino médio","clima","carbono"], color:"rgba(236,72,153,.92)"
     }
   ],
-  links: [
-    // Sugestões iniciais (você pode editar/apagar à vontade)
-    mkLinkByName("Matheus", "Letícia Zen", "dados", 4,
-      "Matheus padroniza e integra planilhas que alimentam análises de Letícia.",
-      "Quais variáveis e formato final? Qual período e fonte? Como versionar planilhas?",
-      "Dataset unificado + dicionário de dados + planilha final pronta para gráficos.",
-      ""
-    ),
-    mkLinkByName("Luan", "Vanessa", "produto", 3,
-      "Integração entre jogos digitais e jogos físicos para ações educativas sobre carbono e clima.",
-      "Quais faixas etárias? Quais mecânicas (cartas, tabuleiro, 3D)? Quais objetivos pedagógicos?",
-      "Kit de jogo físico + protótipo digital com mesma narrativa e aprendizagem.",
-      ""
-    ),
-    mkLinkByName("Antônio", "Cintya", "extensao", 2,
-      "Os dados de conforto térmico em escolas podem virar ações de extensão e visibilidade.",
-      "Como transformar resultados em atividades de extensão? Quais indicadores simples para o público?",
-      "Relato/mostra de extensão + material de divulgação baseado em evidências.",
-      ""
-    ),
-    mkLinkByName("Leandro", "Matheus", "dados", 3,
-      "Leandro gera/organiza séries ambientais que precisam entrar no padrão de integração do laboratório.",
-      "Quais campos mínimos (data, local, fase hídrica)? Como padronizar unidades e metadados?",
-      "Planilha de processos + metadados padronizados prontos para análise e visualização.",
-      ""
-    )
-  ]
+  links: []
 };
 
-/* ----- State ----- */
+function mkLink(fromName, toName, type, weight, reason, questions, outputs, filesText){
+  const from = SEED.nodes.find(n => n.name.toLowerCase() === fromName.toLowerCase());
+  const to = SEED.nodes.find(n => n.name.toLowerCase() === toName.toLowerCase());
+  if(!from || !to) return null;
+  return { id: uid(), from: from.id, to: to.id, type, weight, reason, questions, outputs,
+    files: (filesText||"").split("\n").map(s=>s.trim()).filter(Boolean)
+  };
+}
+SEED.links = [
+  mkLink("Matheus","Letícia Zen","dados",4,
+    "Matheus padroniza e integra planilhas que alimentam análises de Letícia.",
+    "Quais variáveis entram? Qual período? Qual padrão de colunas e unidades?",
+    "Dataset unificado + dicionário de dados + planilha final pronta para gráficos.",
+    ""
+  ),
+  mkLink("Luan","Vanessa","produto",3,
+    "Integração entre jogos digitais e jogos físicos (mesma narrativa pedagógica).",
+    "Qual faixa etária? Quais mecânicas e objetivos pedagógicos?",
+    "Protótipo digital + kit físico alinhado em conteúdo e avaliação.",
+    ""
+  ),
+  mkLink("Leandro","Matheus","dados",3,
+    "Leandro gera séries/processos que entram no padrão de integração do laboratório.",
+    "Campos mínimos? Metadados? Unidades? Como versionar?",
+    "Planilha padronizada de processos + metadados completos.",
+    ""
+  ),
+  mkLink("Antônio","Cintya","extensao",2,
+    "Resultados de escolas podem virar ação de extensão/visibilidade na pós.",
+    "Como transformar em atividade/mostra e material de divulgação?",
+    "Relato de extensão + indicadores simples e comunicáveis.",
+    ""
+  )
+].filter(Boolean);
+
+/* ---- State ---- */
 let state = loadState();
 let selectedNodeId = null;
 let editingPersonId = null;
 let editingLinkId = null;
 
-/* ----- DOM ----- */
+/* ---- DOM ---- */
 const svg = document.getElementById("svg");
 const stage = document.getElementById("stage");
 const countPill = document.getElementById("countPill");
@@ -619,11 +631,10 @@ const peopleList = document.getElementById("peopleList");
 const search = document.getElementById("search");
 const filterLevel = document.getElementById("filterLevel");
 const filterArea = document.getElementById("filterArea");
-
 const sideTitle = document.getElementById("sideTitle");
 const sideSub = document.getElementById("sideSub");
+const sideContent = document.getElementById("sideContent");
 
-/* Person modal */
 const modalPerson = document.getElementById("modalPerson");
 const modalPersonTitle = document.getElementById("modalPersonTitle");
 const p_name = document.getElementById("p_name");
@@ -635,7 +646,6 @@ const p_objectives = document.getElementById("p_objectives");
 const p_expected = document.getElementById("p_expected");
 const p_tags = document.getElementById("p_tags");
 
-/* Link modal */
 const modalLink = document.getElementById("modalLink");
 const modalLinkTitle = document.getElementById("modalLinkTitle");
 const l_from = document.getElementById("l_from");
@@ -647,53 +657,120 @@ const l_questions = document.getElementById("l_questions");
 const l_outputs = document.getElementById("l_outputs");
 const l_files = document.getElementById("l_files");
 
-/* Buttons */
 document.getElementById("btnAdd").addEventListener("click", () => openPersonModal(null));
 document.getElementById("btnAuto").addEventListener("click", () => { autoNudge(); persist(); });
-document.getElementById("btnClearSel").addEventListener("click", () => { selectedNodeId = null; renderSide(); });
+document.getElementById("btnClearSel").addEventListener("click", () => { selectedNodeId = null; renderAll(); });
 document.getElementById("btnExportJson").addEventListener("click", exportJSON);
 document.getElementById("btnExportSvg").addEventListener("click", exportSVG);
 document.getElementById("btnImport").addEventListener("click", () => document.getElementById("fileImport").click());
 document.getElementById("btnReset").addEventListener("click", resetAll);
 
-document.getElementById("btnClosePerson").addEventListener("click", () => closeDialog(modalPerson));
+document.getElementById("btnClosePerson").addEventListener("click", () => closeModal(modalPerson));
 document.getElementById("btnSavePerson").addEventListener("click", savePersonFromModal);
-
-document.getElementById("btnCloseLink").addEventListener("click", () => closeDialog(modalLink));
+document.getElementById("btnCloseLink").addEventListener("click", () => closeModal(modalLink));
 document.getElementById("btnSaveLink").addEventListener("click", saveLinkFromModal);
-
 document.getElementById("fileImport").addEventListener("change", importJSONFile);
 
-search.addEventListener("input", () => renderPeopleList());
-filterLevel.addEventListener("change", () => renderPeopleList());
-filterArea.addEventListener("change", () => renderPeopleList());
+search.addEventListener("input", renderPeopleList);
+filterLevel.addEventListener("change", renderPeopleList);
+filterArea.addEventListener("change", renderPeopleList);
 
-/* ----- SVG setup ----- */
-let W = 1200, H = 800;
-let view = { w: W, h: H };
-resizeSVG();
-
-window.addEventListener("resize", () => {
-  resizeSVG();
-});
-
-/* Layers */
+/* ---- SVG layers ---- */
+function makeSvg(tag, attrs={}){
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for(const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
 const gLinks = makeSvg("g", { id:"gLinks" });
 const gNodes = makeSvg("g", { id:"gNodes" });
 svg.appendChild(gLinks);
 svg.appendChild(gNodes);
 
-/* ----- Simple force simulation ----- */
-let sim = null;
+/* ---- ViewBox size ---- */
+let view = { w:1200, h:800 };
+resizeSVG();
+window.addEventListener("resize", resizeSVG);
+
+/* ---- init positions + sim ---- */
 initPositions();
 startSim();
 
-/* Initial render */
+/* ---- render ---- */
 renderAll();
 
-/* =========================
-   Rendering
-========================= */
+/* =======================
+   Core
+======================= */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return deepClone(SEED);
+    const obj = JSON.parse(raw);
+    if(!obj.nodes || !Array.isArray(obj.nodes)) return deepClone(SEED);
+    // normalize
+    return {
+      meta: obj.meta || { app:"IntegraProjetos", version:1, updatedAt:new Date().toISOString() },
+      nodes: obj.nodes.map(n => ({
+        id: n.id || uid(),
+        name: n.name || "Sem nome",
+        level: n.level || "Graduação",
+        area: n.area || "Clima & Saúde",
+        title: n.title || "",
+        objectives: n.objectives || "",
+        expected: n.expected || "",
+        tags: Array.isArray(n.tags) ? n.tags : [],
+        color: n.color || "rgba(124,58,237,.95)",
+        x: Number.isFinite(n.x) ? n.x : 0,
+        y: Number.isFinite(n.y) ? n.y : 0,
+        vx: n.vx ?? 0, vy: n.vy ?? 0,
+        fx: null, fy: null
+      })),
+      links: (obj.links||[]).map(l => ({
+        id: l.id || uid(),
+        from: l.from, to: l.to,
+        type: l.type || "dados",
+        weight: Number(l.weight || 3),
+        reason: l.reason || "",
+        questions: l.questions || "",
+        outputs: l.outputs || "",
+        files: Array.isArray(l.files) ? l.files : []
+      }))
+    };
+  }catch(e){
+    // fallback total
+    return deepClone(SEED);
+  }
+}
+
+function persist(){
+  try{
+    state.meta.updatedAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){
+    alert("Não consegui salvar no navegador (armazenamento cheio ou bloqueado).");
+  }
+}
+
+function getNode(id){ return state.nodes.find(n => n.id === id); }
+
+function initPositions(force=false){
+  state.nodes.forEach(n => {
+    const bad = !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x===0 || n.y===0;
+    if(force || bad){
+      n.x = view.w/2 + (Math.random()-.5)*360;
+      n.y = view.h/2 + (Math.random()-.5)*240;
+      n.vx = (Math.random()-.5)*1.2;
+      n.vy = (Math.random()-.5)*1.2;
+    }
+  });
+}
+
+function resizeSVG(){
+  const rect = stage.getBoundingClientRect();
+  view.w = Math.max(700, Math.floor(rect.width));
+  view.h = Math.max(520, Math.floor(rect.height));
+  svg.setAttribute("viewBox", `0 0 ${view.w} ${view.h}`);
+}
 
 function renderAll(){
   countPill.textContent = `${state.nodes.length} pessoas`;
@@ -734,8 +811,7 @@ function renderPeopleList(){
     el.querySelector('[data-act="focus"]').onclick = () => {
       selectedNodeId = n.id;
       bumpToCenter(n.id);
-      renderSide();
-      renderGraph();
+      renderAll();
     };
     el.querySelector('[data-act="edit"]').onclick = () => openPersonModal(n.id);
     el.querySelector('[data-act="link"]').onclick = () => openLinkModal(null, n.id);
@@ -755,8 +831,7 @@ function renderGraph(){
     if(!a || !b) return;
 
     const line = makeSvg("line", {
-      x1: a.x, y1: a.y,
-      x2: b.x, y2: b.y,
+      x1:a.x, y1:a.y, x2:b.x, y2:b.y,
       stroke: linkColor(link.type),
       "stroke-width": Math.max(1.5, Number(link.weight||3) * 1.2),
       "stroke-opacity": selectedNodeId ? ((link.from===selectedNodeId || link.to===selectedNodeId) ? .95 : .18) : .55
@@ -764,24 +839,19 @@ function renderGraph(){
     line.style.cursor = "pointer";
     line.addEventListener("click", (e) => {
       e.stopPropagation();
-      editingLinkId = link.id;
       openLinkModal(link.id);
     });
     gLinks.appendChild(line);
 
-    // small label at midpoint (type)
-    const mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
     const t = makeSvg("text", {
-      x: mx, y: my,
-      fill: "rgba(229,231,235,.75)",
-      "font-size": "11",
-      "text-anchor": "middle"
+      x:mx, y:my,
+      fill: selectedNodeId && !(link.from===selectedNodeId || link.to===selectedNodeId) ? "rgba(229,231,235,.18)" : "rgba(229,231,235,.75)",
+      "font-size":"11",
+      "text-anchor":"middle"
     });
     t.textContent = shortType(link.type);
     t.style.pointerEvents = "none";
-    if(selectedNodeId && !(link.from===selectedNodeId || link.to===selectedNodeId)){
-      t.setAttribute("fill","rgba(229,231,235,.18)");
-    }
     gLinks.appendChild(t);
   });
 
@@ -794,90 +864,83 @@ function renderGraph(){
     group.style.cursor = "grab";
 
     const halo = makeSvg("circle", {
-      cx: node.x, cy: node.y,
-      r: r + 10,
-      fill: "transparent",
+      cx:node.x, cy:node.y, r:r+10,
+      fill:"transparent",
       stroke: isSel ? "rgba(255,255,255,.35)" : "rgba(255,255,255,.08)",
       "stroke-width": isSel ? 2.2 : 1.2
     });
     group.appendChild(halo);
 
     const c = makeSvg("circle", {
-      cx: node.x, cy: node.y,
-      r,
+      cx:node.x, cy:node.y, r,
       fill: node.color || "rgba(124,58,237,.95)",
-      stroke: "rgba(255,255,255,.18)",
+      stroke:"rgba(255,255,255,.18)",
       "stroke-width": isSel ? 2.2 : 1.3
     });
     group.appendChild(c);
 
     const name = makeSvg("text", {
-      x: node.x,
-      y: node.y + r + 16,
+      x: node.x, y: node.y + r + 16,
       fill: isSel ? "rgba(255,255,255,.92)" : "rgba(229,231,235,.80)",
-      "font-size": "13",
+      "font-size":"13",
       "text-anchor":"middle"
     });
     name.textContent = node.name;
     group.appendChild(name);
 
     const sub = makeSvg("text", {
-      x: node.x,
-      y: node.y + r + 30,
-      fill: "rgba(169,180,194,.80)",
-      "font-size": "11",
+      x: node.x, y: node.y + r + 30,
+      fill:"rgba(169,180,194,.80)",
+      "font-size":"11",
       "text-anchor":"middle"
     });
     sub.textContent = node.area;
     group.appendChild(sub);
 
-    // events
-    group.addEventListener("mousedown", (e) => startDrag(e, node.id));
-    group.addEventListener("touchstart", (e) => startDrag(e, node.id), {passive:false});
-
-    group.addEventListener("click", (e) => {
+    group.addEventListener("mousedown", (e)=>startDrag(e,node.id));
+    group.addEventListener("touchstart", (e)=>startDrag(e,node.id), {passive:false});
+    group.addEventListener("click", (e)=>{
       e.stopPropagation();
       selectedNodeId = node.id;
-      renderSide();
-      renderGraph();
+      renderAll();
     });
 
     gNodes.appendChild(group);
   });
 
-  // click background to clear
-  svg.onclick = () => { selectedNodeId = null; renderSide(); renderGraph(); };
+  svg.onclick = () => { selectedNodeId = null; renderAll(); };
 }
 
+/* ---- Side panel ---- */
 function renderSide(){
   const n = selectedNodeId ? getNode(selectedNodeId) : null;
-
   if(!n){
     sideTitle.textContent = "Selecione uma pessoa";
     sideSub.textContent = "Clique numa bolinha para ver detalhes e criar ligações.";
+    // mantém lista já existente
     return;
   }
 
   sideTitle.textContent = n.name;
   sideSub.textContent = `${n.level} • ${n.area}`;
 
-  const linksOut = state.links.filter(l => l.from === n.id || l.to === n.id);
+  const linksOut = state.links.filter(l => l.from===n.id || l.to===n.id);
 
-  const html = `
+  sideContent.innerHTML = `
     <div class="grid">
       <div class="mini">
         <div class="meta"><span class="k">Título</span></div>
-        <div style="margin-top:6px">${escapeHTML(n.title || "")}</div>
+        <div style="margin-top:6px">${escapeHTML(n.title||"")}</div>
       </div>
 
       <div class="mini">
         <div class="meta"><span class="k">Objetivos</span></div>
-        <div style="margin-top:6px; white-space:pre-wrap">${escapeHTML(n.objectives || "")}</div>
+        <div style="margin-top:6px; white-space:pre-wrap">${escapeHTML(n.objectives||"")}</div>
       </div>
 
       <div class="mini">
         <div class="meta"><span class="k">Resultados esperados</span></div>
-        <div style="margin-top:6px; white-space:pre-wrap">${escapeHTML(n.expected || "")}</div>
+        <div style="margin-top:6px; white-space:pre-wrap">${escapeHTML(n.expected||"")}</div>
       </div>
 
       <div class="mini">
@@ -908,8 +971,6 @@ function renderSide(){
     </div>
   `;
 
-  document.getElementById("sideContent").innerHTML = html;
-
   document.getElementById("sideEdit").onclick = () => openPersonModal(n.id);
   document.getElementById("sideLink").onclick = () => openLinkModal(null, n.id);
   document.getElementById("sideDelete").onclick = () => deletePerson(n.id);
@@ -917,166 +978,36 @@ function renderSide(){
 
   const sideLinks = document.getElementById("sideLinks");
   sideLinks.innerHTML = "";
-
-  linksOut
-    .sort((a,b)=> (Number(b.weight||3)-Number(a.weight||3)))
-    .forEach(l => {
-      const otherId = (l.from === n.id) ? l.to : l.from;
-      const other = getNode(otherId);
-      const box = document.createElement("div");
-      box.className = "mini";
-      box.style.borderColor = "rgba(255,255,255,.10)";
-      box.innerHTML = `
-        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start">
-          <div>
-            <b>${escapeHTML(other ? other.name : "—")}</b>
-            <div class="meta">${escapeHTML(longType(l.type))} • intensidade ${escapeHTML(String(l.weight||3))}</div>
-          </div>
-          <span class="pill" style="border-color:${linkColor(l.type)}; color:rgba(229,231,235,.88)">${escapeHTML(shortType(l.type))}</span>
+  linksOut.sort((a,b)=>(Number(b.weight||3)-Number(a.weight||3))).forEach(l=>{
+    const otherId = (l.from===n.id) ? l.to : l.from;
+    const other = getNode(otherId);
+    const box = document.createElement("div");
+    box.className = "mini";
+    box.innerHTML = `
+      <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start">
+        <div>
+          <b>${escapeHTML(other ? other.name : "—")}</b>
+          <div class="meta">${escapeHTML(longType(l.type))} • intensidade ${escapeHTML(String(l.weight||3))}</div>
         </div>
-        <div class="meta" style="margin-top:8px"><span class="k">Por quê</span></div>
-        <div style="white-space:pre-wrap; margin-top:4px">${escapeHTML(l.reason||"")}</div>
-        <div class="actions2">
-          <button data-act="edit">Editar</button>
-          <button class="btn-danger" data-act="del">Excluir</button>
-        </div>
-      `;
-      box.querySelector('[data-act="edit"]').onclick = () => openLinkModal(l.id);
-      box.querySelector('[data-act="del"]').onclick = () => deleteLink(l.id);
-
-      sideLinks.appendChild(box);
-    });
-}
-
-/* =========================
-   Drag
-========================= */
-let dragging = null;
-
-function startDrag(ev, nodeId){
-  ev.preventDefault();
-  const pt = getPointer(ev);
-  dragging = { id: nodeId, ox: pt.x, oy: pt.y };
-  const n = getNode(nodeId);
-  if(!n) return;
-
-  // freeze node while dragging
-  n.fx = n.x; n.fy = n.y;
-
-  window.addEventListener("mousemove", onDragMove);
-  window.addEventListener("mouseup", onDragEnd);
-  window.addEventListener("touchmove", onDragMove, {passive:false});
-  window.addEventListener("touchend", onDragEnd);
-}
-
-function onDragMove(ev){
-  if(!dragging) return;
-  ev.preventDefault();
-  const pt = getPointer(ev);
-  const n = getNode(dragging.id);
-  if(!n) return;
-
-  n.fx = clamp(pt.x, 30, view.w - 30);
-  n.fy = clamp(pt.y, 30, view.h - 30);
-
-  renderGraph();
-}
-
-function onDragEnd(){
-  if(!dragging) return;
-  const n = getNode(dragging.id);
-  if(n){
-    n.x = n.fx; n.y = n.fy;
-    n.fx = null; n.fy = null;
-    persist();
-  }
-  dragging = null;
-  window.removeEventListener("mousemove", onDragMove);
-  window.removeEventListener("mouseup", onDragEnd);
-  window.removeEventListener("touchmove", onDragMove);
-  window.removeEventListener("touchend", onDragEnd);
-}
-
-/* =========================
-   Simulation (simple physics)
-========================= */
-function startSim(){
-  if(sim) cancelAnimationFrame(sim);
-
-  const step = () => {
-    tick();
-    renderGraph();
-    sim = requestAnimationFrame(step);
-  };
-  sim = requestAnimationFrame(step);
-}
-
-function tick(){
-  // Parameters
-  const centerPull = 0.0018;
-  const repel = 9000;
-  const linkK = 0.006;
-  const damping = 0.92;
-
-  // initialize velocities
-  state.nodes.forEach(n => {
-    if(n.vx == null) n.vx = (Math.random()-.5) * 0.8;
-    if(n.vy == null) n.vy = (Math.random()-.5) * 0.8;
-  });
-
-  // repulsion
-  for(let i=0;i<state.nodes.length;i++){
-    for(let j=i+1;j<state.nodes.length;j++){
-      const a = state.nodes[i], b = state.nodes[j];
-      const dx = a.x - b.x, dy = a.y - b.y;
-      let d2 = dx*dx + dy*dy;
-      if(d2 < 0.01) d2 = 0.01;
-      const force = repel / d2;
-      const d = Math.sqrt(d2);
-      const fx = (dx/d) * force;
-      const fy = (dy/d) * force;
-      if(!a.fx){ a.vx += fx; a.vy += fy; }
-      if(!b.fx){ b.vx -= fx; b.vy -= fy; }
-    }
-  }
-
-  // links as springs
-  state.links.forEach(l => {
-    const a = getNode(l.from), b = getNode(l.to);
-    if(!a || !b) return;
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-    const target = 180 - (Number(l.weight||3)-3)*15;
-    const k = linkK * (Number(l.weight||3));
-    const diff = (dist - target);
-    const fx = (dx/dist) * diff * k;
-    const fy = (dy/dist) * diff * k;
-    if(!a.fx){ a.vx += fx; a.vy += fy; }
-    if(!b.fx){ b.vx -= fx; b.vy -= fy; }
-  });
-
-  // center pull + integrate
-  state.nodes.forEach(n => {
-    if(n.fx != null && n.fy != null){
-      n.x = n.fx; n.y = n.fy;
-      n.vx *= 0.3; n.vy *= 0.3;
-      return;
-    }
-    const cx = view.w/2, cy = view.h/2;
-    n.vx += (cx - n.x) * centerPull;
-    n.vy += (cy - n.y) * centerPull;
-
-    n.vx *= damping;
-    n.vy *= damping;
-
-    n.x = clamp(n.x + n.vx, 30, view.w - 30);
-    n.y = clamp(n.y + n.vy, 30, view.h - 30);
+        <span class="pill" style="border-color:${linkColor(l.type)}; color:rgba(229,231,235,.88)">${escapeHTML(shortType(l.type))}</span>
+      </div>
+      <div class="meta" style="margin-top:8px"><span class="k">Por quê</span></div>
+      <div style="white-space:pre-wrap; margin-top:4px">${escapeHTML(l.reason||"")}</div>
+      <div class="actions2">
+        <button data-act="edit">Editar</button>
+        <button class="btn-danger" data-act="del">Excluir</button>
+      </div>
+    `;
+    box.querySelector('[data-act="edit"]').onclick = () => openLinkModal(l.id);
+    box.querySelector('[data-act="del"]').onclick = () => deleteLink(l.id);
+    sideLinks.appendChild(box);
   });
 }
 
-/* =========================
-   Modals: Person
-========================= */
+/* ---- Modals ---- */
+function openModal(m){ m.setAttribute("open",""); }
+function closeModal(m){ m.removeAttribute("open"); }
+
 function openPersonModal(id){
   editingPersonId = id;
 
@@ -1103,15 +1034,12 @@ function openPersonModal(id){
     p_tags.value = "";
   }
 
-  openDialog(modalPerson);
+  openModal(modalPerson);
 }
 
 function savePersonFromModal(){
   const name = p_name.value.trim();
-  if(!name){
-    alert("Informe o nome.");
-    return;
-  }
+  if(!name){ alert("Informe o nome."); return; }
 
   const node = {
     id: editingPersonId || uid(),
@@ -1122,7 +1050,7 @@ function savePersonFromModal(){
     title: p_title.value.trim(),
     objectives: p_objectives.value.trim(),
     expected: p_expected.value.trim(),
-    tags: p_tags.value.split(",").map(s => s.trim()).filter(Boolean)
+    tags: p_tags.value.split(",").map(s=>s.trim()).filter(Boolean),
   };
 
   if(editingPersonId){
@@ -1132,26 +1060,21 @@ function savePersonFromModal(){
       state.nodes[idx] = { ...old, ...node };
     }
   }else{
-    // new node position near center
     node.x = view.w/2 + (Math.random()-.5)*120;
     node.y = view.h/2 + (Math.random()-.5)*120;
+    node.vx = 0; node.vy = 0;
     state.nodes.push(node);
   }
 
   persist();
-  closeDialog(modalPerson);
-
+  closeModal(modalPerson);
   selectedNodeId = node.id;
   renderAll();
 }
 
-/* =========================
-   Modals: Link
-========================= */
 function openLinkModal(linkId, defaultFromNodeId){
   editingLinkId = linkId;
 
-  // populate selects
   const nodesSorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
   l_from.innerHTML = nodesSorted.map(n => `<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
   l_to.innerHTML = nodesSorted.map(n => `<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
@@ -1170,9 +1093,8 @@ function openLinkModal(linkId, defaultFromNodeId){
   }else{
     modalLinkTitle.textContent = "Criar ligação";
     const from = defaultFromNodeId || selectedNodeId || (state.nodes[0]?.id);
-    l_from.value = from;
-    // choose a different "to"
     const to = state.nodes.find(n => n.id !== from)?.id || from;
+    l_from.value = from;
     l_to.value = to;
     l_type.value = "dados";
     l_weight.value = "3";
@@ -1182,21 +1104,17 @@ function openLinkModal(linkId, defaultFromNodeId){
     l_files.value = "";
   }
 
-  openDialog(modalLink);
+  openModal(modalLink);
 }
 
 function saveLinkFromModal(){
   const from = l_from.value;
   const to = l_to.value;
-  if(!from || !to || from === to){
-    alert("Selecione origem e destino diferentes.");
-    return;
-  }
+  if(!from || !to || from === to){ alert("Selecione origem e destino diferentes."); return; }
 
   const link = {
     id: editingLinkId || uid(),
-    from,
-    to,
+    from, to,
     type: l_type.value,
     weight: Number(l_weight.value || 3),
     reason: l_reason.value.trim(),
@@ -1204,14 +1122,6 @@ function saveLinkFromModal(){
     outputs: l_outputs.value.trim(),
     files: l_files.value.split("\n").map(s=>s.trim()).filter(Boolean)
   };
-
-  // prevent duplicates (same from-to)
-  const dup = state.links.find(x => x.id !== link.id && x.from === from && x.to === to);
-  if(dup){
-    if(!confirm("Já existe uma ligação exatamente igual (origem→destino). Quer salvar mesmo assim?")){
-      return;
-    }
-  }
 
   if(editingLinkId){
     const idx = state.links.findIndex(l => l.id === editingLinkId);
@@ -1221,7 +1131,7 @@ function saveLinkFromModal(){
   }
 
   persist();
-  closeDialog(modalLink);
+  closeModal(modalLink);
   renderAll();
 }
 
@@ -1232,13 +1142,10 @@ function deleteLink(id){
   renderAll();
 }
 
-/* =========================
-   Delete person
-========================= */
 function deletePerson(id){
   const n = getNode(id);
   if(!n) return;
-  if(!confirm(`Excluir "${n.name}"? Isso também remove as ligações dela.`)) return;
+  if(!confirm(`Excluir "${n.name}"? Isso remove as ligações dela.`)) return;
 
   state.nodes = state.nodes.filter(x => x.id !== id);
   state.links = state.links.filter(l => l.from !== id && l.to !== id);
@@ -1247,33 +1154,22 @@ function deletePerson(id){
   renderAll();
 }
 
-/* =========================
-   Export / Import
-========================= */
+/* ---- Export/Import ---- */
 function exportJSON(){
   const out = {
-    meta: { app:"IntegraProjetos", version:1, exportedAt: new Date().toISOString() },
-    nodes: state.nodes.map(n => ({
-      ...n,
-      // keep only essentials + positions
-      x: Math.round(n.x),
-      y: Math.round(n.y)
-    })),
+    meta: { app:"IntegraProjetos", version:1, exportedAt:new Date().toISOString() },
+    nodes: state.nodes.map(n => ({...n, x:Math.round(n.x), y:Math.round(n.y)})),
     links: state.links
   };
   downloadBlob(JSON.stringify(out, null, 2), "integraprojetos.json", "application/json");
 }
 
 function exportSVG(){
-  // clone svg, set viewBox to current size
   const clone = svg.cloneNode(true);
-  clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
   clone.setAttribute("viewBox", `0 0 ${view.w} ${view.h}`);
-
   const ser = new XMLSerializer();
-  const svgText = ser.serializeToString(clone);
-
-  downloadBlob(svgText, "integraprojetos.svg", "image/svg+xml");
+  downloadBlob(ser.serializeToString(clone), "integraprojetos.svg", "image/svg+xml");
 }
 
 function importJSONFile(ev){
@@ -1284,9 +1180,9 @@ function importJSONFile(ev){
     try{
       const obj = JSON.parse(reader.result);
       if(!obj.nodes || !obj.links) throw new Error("JSON sem nodes/links.");
-      // basic normalize
+
       state = {
-        meta: { app:"IntegraProjetos", version:1, updatedAt: new Date().toISOString() },
+        meta: { app:"IntegraProjetos", version:1, updatedAt:new Date().toISOString() },
         nodes: obj.nodes.map(n => ({
           id: n.id || uid(),
           name: n.name || "Sem nome",
@@ -1299,12 +1195,11 @@ function importJSONFile(ev){
           color: n.color || "rgba(124,58,237,.95)",
           x: Number(n.x ?? (view.w/2 + (Math.random()-.5)*160)),
           y: Number(n.y ?? (view.h/2 + (Math.random()-.5)*160)),
-          vx: 0, vy: 0
+          vx: 0, vy: 0, fx:null, fy:null
         })),
         links: obj.links.map(l => ({
           id: l.id || uid(),
-          from: l.from,
-          to: l.to,
+          from: l.from, to: l.to,
           type: l.type || "dados",
           weight: Number(l.weight || 3),
           reason: l.reason || "",
@@ -1313,6 +1208,7 @@ function importJSONFile(ev){
           files: Array.isArray(l.files) ? l.files : []
         }))
       };
+
       selectedNodeId = null;
       persist();
       renderAll();
@@ -1327,204 +1223,140 @@ function importJSONFile(ev){
 
 function resetAll(){
   if(!confirm("Resetar tudo e voltar ao modelo inicial?")) return;
-  state = structuredClone(SEED);
+  state = deepClone(SEED);
   initPositions(true);
   selectedNodeId = null;
   persist();
   renderAll();
 }
 
-/* =========================
-   Helpers
-========================= */
-function loadState(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw){
-    return structuredClone(SEED);
-  }
-  try{
-    const obj = JSON.parse(raw);
-    // merge with safe defaults
-    return {
-      meta: obj.meta || { app:"IntegraProjetos", version:1, updatedAt: new Date().toISOString() },
-      nodes: (obj.nodes || []).map(n => ({
-        id: n.id || uid(),
-        name: n.name || "Sem nome",
-        level: n.level || "Graduação",
-        area: n.area || "Clima & Saúde",
-        title: n.title || "",
-        objectives: n.objectives || "",
-        expected: n.expected || "",
-        tags: Array.isArray(n.tags) ? n.tags : [],
-        color: n.color || "rgba(124,58,237,.95)",
-        x: Number(n.x ?? 0),
-        y: Number(n.y ?? 0),
-        vx: n.vx ?? 0,
-        vy: n.vy ?? 0
-      })),
-      links: (obj.links || []).map(l => ({
-        id: l.id || uid(),
-        from: l.from,
-        to: l.to,
-        type: l.type || "dados",
-        weight: Number(l.weight || 3),
-        reason: l.reason || "",
-        questions: l.questions || "",
-        outputs: l.outputs || "",
-        files: Array.isArray(l.files) ? l.files : []
-      }))
-    };
-  }catch{
-    return structuredClone(SEED);
-  }
-}
-
-function persist(){
-  state.meta.updatedAt = new Date().toISOString();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-function initPositions(forceRandom=false){
-  // if missing positions or forceRandom, set around center
-  state.nodes.forEach((n, i) => {
-    const bad = !isFinite(n.x) || !isFinite(n.y) || n.x===0 || n.y===0;
-    if(forceRandom || bad){
-      n.x = view.w/2 + (Math.random()-.5) * 360;
-      n.y = view.h/2 + (Math.random()-.5) * 240;
-      n.vx = (Math.random()-.5)*1.2;
-      n.vy = (Math.random()-.5)*1.2;
-    }
-  });
-}
-
-function autoNudge(){
-  // spread nodes a bit
-  state.nodes.forEach(n => {
-    n.vx += (Math.random()-.5)*6;
-    n.vy += (Math.random()-.5)*6;
-  });
-}
-
-function bumpToCenter(id){
-  const n = getNode(id);
-  if(!n) return;
-  n.vx += (view.w/2 - n.x) * 0.08;
-  n.vy += (view.h/2 - n.y) * 0.08;
-}
-
-function resizeSVG(){
-  const rect = stage.getBoundingClientRect();
-  view.w = Math.max(700, Math.floor(rect.width));
-  view.h = Math.max(520, Math.floor(rect.height));
-  svg.setAttribute("viewBox", `0 0 ${view.w} ${view.h}`);
-}
-
-function getNode(id){ return state.nodes.find(n => n.id === id); }
-
-function makeSvg(tag, attrs={}){
-  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-  for(const [k,v] of Object.entries(attrs)){
-    el.setAttribute(k, v);
-  }
-  return el;
-}
-
-function uid(){
-  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-}
-
-function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+/* ---- Drag ---- */
+let dragging = null;
 
 function getPointer(ev){
   const rect = svg.getBoundingClientRect();
   const isTouch = ev.touches && ev.touches[0];
   const clientX = isTouch ? ev.touches[0].clientX : ev.clientX;
   const clientY = isTouch ? ev.touches[0].clientY : ev.clientY;
-  // map to viewBox coordinates
   const x = (clientX - rect.left) * (view.w / rect.width);
   const y = (clientY - rect.top) * (view.h / rect.height);
   return { x, y };
 }
 
-function openDialog(d){
-  d.setAttribute("open", "");
-}
-function closeDialog(d){
-  d.removeAttribute("open");
+function startDrag(ev, nodeId){
+  ev.preventDefault();
+  const pt = getPointer(ev);
+  dragging = { id: nodeId, ox: pt.x, oy: pt.y };
+  const n = getNode(nodeId);
+  if(!n) return;
+  n.fx = n.x; n.fy = n.y;
+
+  window.addEventListener("mousemove", onDragMove);
+  window.addEventListener("mouseup", onDragEnd);
+  window.addEventListener("touchmove", onDragMove, {passive:false});
+  window.addEventListener("touchend", onDragEnd);
 }
 
-function escapeHTML(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+function onDragMove(ev){
+  if(!dragging) return;
+  ev.preventDefault();
+  const pt = getPointer(ev);
+  const n = getNode(dragging.id);
+  if(!n) return;
+  n.fx = clamp(pt.x, 30, view.w - 30);
+  n.fy = clamp(pt.y, 30, view.h - 30);
+  renderGraph();
 }
 
-function linkColor(type){
-  switch(type){
-    case "dados": return "rgba(124,58,237,.95)";       // roxo
-    case "produto": return "rgba(34,197,94,.95)";     // verde
-    case "extensao": return "rgba(245,158,11,.95)";   // âmbar
-    case "analise": return "rgba(96,165,250,.95)";    // azul claro
-    case "campo": return "rgba(239,68,68,.85)";       // vermelho
-    default: return "rgba(229,231,235,.35)";
+function onDragEnd(){
+  if(!dragging) return;
+  const n = getNode(dragging.id);
+  if(n){
+    n.x = n.fx; n.y = n.fy;
+    n.fx = null; n.fy = null;
+    persist();
   }
-}
-function shortType(type){
-  switch(type){
-    case "dados": return "dados";
-    case "produto": return "produto";
-    case "extensao": return "extensão";
-    case "analise": return "análise";
-    case "campo": return "campo";
-    default: return "outro";
-  }
-}
-function longType(type){
-  switch(type){
-    case "dados": return "Dados / Integração";
-    case "produto": return "Produto / Jogo";
-    case "extensao": return "Extensão / Visibilidade";
-    case "analise": return "Análise científica";
-    case "campo": return "Coleta / Campo";
-    default: return "Outro";
-  }
+  dragging = null;
+  window.removeEventListener("mousemove", onDragMove);
+  window.removeEventListener("mouseup", onDragEnd);
+  window.removeEventListener("touchmove", onDragMove);
+  window.removeEventListener("touchend", onDragEnd);
 }
 
-function downloadBlob(text, filename, mime){
-  const blob = new Blob([text], {type:mime});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 800);
-}
+/* ---- Simple sim ---- */
+let sim = null;
 
-/* Seed link helper (by name, because IDs are random) */
-function mkLinkByName(fromName, toName, type, weight, reason, questions, outputs, filesText){
-  const from = SEED.nodes.find(n => n.name.toLowerCase() === fromName.toLowerCase());
-  const to = SEED.nodes.find(n => n.name.toLowerCase() === toName.toLowerCase());
-  if(!from || !to) return null;
-  return {
-    id: uid(),
-    from: from.id,
-    to: to.id,
-    type,
-    weight,
-    reason,
-    questions,
-    outputs,
-    files: (filesText||"").split("\n").map(s=>s.trim()).filter(Boolean)
+function startSim(){
+  if(sim) cancelAnimationFrame(sim);
+  const step = () => {
+    tick();
+    renderGraph();
+    sim = requestAnimationFrame(step);
   };
+  sim = requestAnimationFrame(step);
 }
-// remove nulls (in case)
-SEED.links = SEED.links.filter(Boolean);
+function tick(){
+  const centerPull = 0.0018;
+  const repel = 9000;
+  const linkK = 0.006;
+  const damping = 0.92;
 
+  state.nodes.forEach(n => {
+    if(n.vx == null) n.vx = (Math.random()-.5)*0.8;
+    if(n.vy == null) n.vy = (Math.random()-.5)*0.8;
+  });
+
+  for(let i=0;i<state.nodes.length;i++){
+    for(let j=i+1;j<state.nodes.length;j++){
+      const a=state.nodes[i], b=state.nodes[j];
+      const dx=a.x-b.x, dy=a.y-b.y;
+      let d2=dx*dx+dy*dy; if(d2<0.01) d2=0.01;
+      const force=repel/d2;
+      const d=Math.sqrt(d2);
+      const fx=(dx/d)*force, fy=(dy/d)*force;
+      if(a.fx==null){ a.vx += fx; a.vy += fy; }
+      if(b.fx==null){ b.vx -= fx; b.vy -= fy; }
+    }
+  }
+
+  state.links.forEach(l=>{
+    const a=getNode(l.from), b=getNode(l.to);
+    if(!a||!b) return;
+    const dx=b.x-a.x, dy=b.y-a.y;
+    const dist=Math.sqrt(dx*dx+dy*dy)||1;
+    const target=180-(Number(l.weight||3)-3)*15;
+    const k=linkK*Number(l.weight||3);
+    const diff=(dist-target);
+    const fx=(dx/dist)*diff*k;
+    const fy=(dy/dist)*diff*k;
+    if(a.fx==null){ a.vx += fx; a.vy += fy; }
+    if(b.fx==null){ b.vx -= fx; b.vy -= fy; }
+  });
+
+  state.nodes.forEach(n=>{
+    if(n.fx!=null && n.fy!=null){
+      n.x=n.fx; n.y=n.fy;
+      n.vx*=0.3; n.vy*=0.3;
+      return;
+    }
+    const cx=view.w/2, cy=view.h/2;
+    n.vx += (cx-n.x)*centerPull;
+    n.vy += (cy-n.y)*centerPull;
+    n.vx *= damping; n.vy *= damping;
+    n.x = clamp(n.x + n.vx, 30, view.w-30);
+    n.y = clamp(n.y + n.vy, 30, view.h-30);
+  });
+}
+
+function bumpToCenter(id){
+  const n=getNode(id); if(!n) return;
+  n.vx += (view.w/2 - n.x) * 0.08;
+  n.vy += (view.h/2 - n.y) * 0.08;
+}
+
+function autoNudge(){
+  state.nodes.forEach(n => { n.vx += (Math.random()-.5)*6; n.vy += (Math.random()-.5)*6; });
+}
 </script>
 </body>
 </html>
