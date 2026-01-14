@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>IntegraProjetos — Rede de Integração</title>
   <meta name="theme-color" content="#0b1220"/>
-
   <style>
     :root{
       --bg:#0b1220;
-      --panel:rgba(15,26,46,.74);
+      --panel:rgba(15,26,46,.78);
       --card:rgba(16,28,51,.62);
       --stroke:rgba(255,255,255,.10);
-      --stroke2:rgba(255,255,255,.18);
+      --stroke2:rgba(255,255,255,.20);
       --txt:#e5e7eb;
       --muted:#a9b4c2;
       --shadow: 0 18px 45px rgba(0,0,0,.35);
       --radius: 18px;
-
       --purple:rgba(124,58,237,.95);
       --green:rgba(34,197,94,.95);
       --orange:rgba(245,158,11,.95);
@@ -38,9 +36,8 @@
       overflow:hidden;
     }
 
-    /* TOPBAR */
     .topbar{
-      position:fixed; inset:14px 14px auto 14px;
+      position:fixed; inset:12px 12px auto 12px;
       display:flex; gap:10px; align-items:center; justify-content:space-between;
       background:var(--panel);
       border:1px solid var(--stroke);
@@ -48,10 +45,10 @@
       border-radius: 16px;
       padding:10px 12px;
       box-shadow: var(--shadow);
-      z-index:50;
+      z-index:80;
       flex-wrap:wrap;
     }
-    .brand{display:flex; align-items:center; gap:10px}
+    .brand{display:flex; align-items:center; gap:10px; min-width:260px}
     .logo{
       width:36px; height:36px; border-radius:12px;
       background:
@@ -63,6 +60,7 @@
     }
     .brand h1{font-size:14px; margin:0}
     .brand p{margin:0; font-size:12px; color:var(--muted)}
+
     .actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 
     button{
@@ -81,6 +79,8 @@
     }
     button:hover{border-color:var(--stroke2)}
     button:active{transform: translateY(1px)}
+    button:disabled{opacity:.55; cursor:not-allowed}
+
     .btn-primary{
       background: linear-gradient(135deg, rgba(124,58,237,.92), rgba(34,197,94,.72));
       border-color: rgba(255,255,255,.18);
@@ -88,12 +88,6 @@
     .btn-danger{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); }
     .btn-warn{ border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); }
 
-    .pill{
-      display:inline-flex; gap:6px; align-items:center;
-      border:1px solid var(--stroke);
-      background:rgba(16,28,51,.55);
-      padding:6px 8px; border-radius:999px; font-size:12px; color:var(--muted);
-    }
     .status{
       display:inline-flex; align-items:center; gap:8px;
       padding:6px 10px;
@@ -104,68 +98,107 @@
       font-size:12px;
       user-select:none;
     }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-    }
+    .dot{ width:10px; height:10px; border-radius:999px; border:1px solid rgba(255,255,255,.18); }
 
-    /* LAYOUT */
-    .wrap{
-      position:fixed; inset:0;
-      display:grid;
-      grid-template-columns: 1fr 410px;
-    }
-
+    /* STAGE */
     #stage{
-      position:relative;
-      margin-top: 78px;
-      margin-left: 14px;
-      margin-bottom: 14px;
-      margin-right: 7px;
+      position:fixed;
+      inset: 78px 12px 12px 12px;
       border-radius: 18px;
       border:1px solid var(--stroke);
       background: rgba(8,14,26,.35);
       box-shadow: var(--shadow);
       overflow:hidden;
+      z-index:10;
+    }
+    #svg{ width:100%; height:100%; display:block; }
+
+    /* Legend overlay */
+    .legend{
+      position:absolute; left:12px; bottom:12px;
+      display:flex; gap:8px; flex-wrap:wrap;
+      z-index:20;
+      pointer-events:none;
+    }
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 9px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(15,26,46,.62);
+      font-size:12px;
+      color:var(--muted);
+      backdrop-filter: blur(8px);
     }
 
-    .side{
-      margin-top: 78px;
-      margin-right: 14px;
-      margin-bottom: 14px;
-      margin-left: 7px;
+    /* PANEL (drawer) */
+    .drawer{
+      position:fixed;
+      left:12px; right:12px;
+      bottom:12px;
+      height: 52vh;
       border-radius: 18px;
       border:1px solid var(--stroke);
       background: var(--panel);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
       overflow:hidden;
+      z-index:70;
       display:flex;
       flex-direction:column;
-      min-width: 320px;
+      transform: translateY(0);
+      transition: transform .18s ease;
     }
+    .drawer.collapsed{ transform: translateY(calc(52vh - 64px)); }
 
-    .side header{
-      padding:12px;
+    .drawer header{
+      padding:10px 12px;
       border-bottom:1px solid var(--stroke);
-      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: rgba(15,26,46,.86);
     }
-    .side header h2{margin:0; font-size:13px}
-    .side header .small{font-size:12px; color:var(--muted); margin-top:3px}
+    .drawer header .left{
+      display:flex; flex-direction:column;
+    }
+    .drawer header h2{margin:0; font-size:13px}
+    .drawer header .small{font-size:12px; color:var(--muted); margin-top:2px}
 
-    .side .toolbar{
+    .drawer .toolbar{
       padding:10px 12px;
       border-bottom:1px solid var(--stroke);
       display:flex; gap:8px; flex-wrap:wrap;
-      position:sticky; top:0;
       background: rgba(15,26,46,.86);
-      z-index:5;
     }
-    .side .content{padding:12px; overflow:auto}
+    .drawer .content{
+      padding:12px;
+      overflow:auto;
+      flex:1;
+    }
+    .pill{
+      display:inline-flex; gap:6px; align-items:center;
+      border:1px solid var(--stroke);
+      background:rgba(16,28,51,.55);
+      padding:6px 8px; border-radius:999px; font-size:12px; color:var(--muted);
+      white-space:nowrap;
+    }
+    .mini{
+      border:1px solid var(--stroke);
+      background: rgba(16,28,51,.45);
+      border-radius: 14px;
+      padding:10px;
+    }
+    .mini b{display:block; font-size:13px; margin-bottom:4px}
+    .mini .meta{font-size:12px; color:var(--muted)}
+    .actions2{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .grid{display:grid; gap:10px}
+    .sep{height:1px; background:var(--stroke); margin:10px 0}
+    .hint{font-size:12px; color:var(--muted); line-height:1.35}
+    .row{display:flex; gap:8px}
+    .row > *{flex:1}
 
-    .grid{display:grid; gap:10px;}
-    .field{display:grid; gap:6px;}
-    label{font-size:12px; color:var(--muted)}
     input[type="text"], textarea, select{
       width:100%;
       border-radius: 12px;
@@ -177,35 +210,20 @@
       font-size:13px;
     }
     textarea{min-height:72px; resize: vertical;}
-    .row{display:flex; gap:8px}
-    .row > *{flex:1}
-    .hint{font-size:12px; color:var(--muted); line-height:1.35}
-    .sep{height:1px; background:var(--stroke); margin:10px 0}
 
-    .mini{
-      border:1px solid var(--stroke);
-      background: rgba(16,28,51,.45);
-      border-radius: 14px;
-      padding:10px;
-    }
-    .mini b{display:block; font-size:13px; margin-bottom:4px}
-    .mini .meta{font-size:12px; color:var(--muted)}
-    .mini .actions2{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
-    .mini .actions2 button{padding:7px 9px; border-radius:11px}
-
-    /* modal */
+    /* MODAL */
     .modal{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
       display:none;
       place-items:center;
-      z-index:80;
+      z-index:120;
       padding:12px;
     }
     .modal[open]{display:grid}
-    .modal .box{
-      width:min(820px, calc(100vw - 24px));
-      max-height: min(88vh, 920px);
+    .box{
+      width:min(860px, calc(100vw - 24px));
+      max-height: min(90vh, 940px);
       overflow:auto;
       border-radius: 18px;
       border:1px solid var(--stroke);
@@ -222,36 +240,13 @@
     .box header h3{margin:0; font-size:14px}
     .box .body{padding:10px 6px 6px}
 
-    /* legenda */
-    .legend{
-      position:absolute; left:12px; bottom:12px;
-      display:flex; gap:8px; flex-wrap:wrap;
-      z-index:10;
-      pointer-events:none;
-    }
-    .legend .tag{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:7px 9px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background: rgba(15,26,46,.62);
-      font-size:12px;
-      color:var(--muted);
-      backdrop-filter: blur(8px);
-    }
-
-    /* mobile */
-    @media (max-width: 980px){
-      .wrap{grid-template-columns:1fr}
-      .side{
-        position:fixed; inset:auto 14px 14px 14px;
-        height: 50vh;
-        margin:0;
-        z-index:60;
-      }
-      #stage{
-        margin-right:14px;
-        margin-bottom: calc(50vh + 22px);
+    /* Desktop: drawer vira sidebar */
+    @media (min-width: 980px){
+      #stage{ inset:78px 430px 12px 12px; }
+      .drawer{
+        top:78px; right:12px; left:auto; bottom:12px;
+        width:410px; height:auto;
+        transform:none !important;
       }
     }
   </style>
@@ -263,62 +258,63 @@
       <div class="logo">●</div>
       <div>
         <h1>IntegraProjetos — Rede visual de integração</h1>
-        <p>Arraste as bolinhas • clique para ver/editar • crie ligações escolhendo origem e destino</p>
+        <p>Arraste bolinhas • toque para ver • crie ligações escolhendo origem e destino</p>
       </div>
     </div>
 
     <div class="actions">
       <button class="btn-primary" id="btnAdd">+ Adicionar pessoa</button>
       <button id="btnAddLink">+ Criar ligação</button>
+      <button id="btnCenter">Centralizar</button>
+      <button id="btnZoomIn">Zoom +</button>
+      <button id="btnZoomOut">Zoom -</button>
       <button id="btnAuto">Auto-organizar</button>
-      <button id="btnFit">Ajustar (Fit)</button>
       <button id="btnAnim">Animar: ON</button>
       <button id="btnExportJson">Baixar JSON</button>
       <button class="btn-warn" id="btnImport">Importar JSON</button>
 
-      <span class="status" id="saveStatus">
+      <span class="status" id="saveStatus" title="Se ficar vermelho, o navegador bloqueou o armazenamento">
         <span class="dot" id="saveDot" style="background:rgba(34,197,94,.95)"></span>
         <span id="saveText">Salvo ✓</span>
       </span>
 
       <button class="btn-danger" id="btnResetClean">Reset limpo</button>
       <button class="btn-danger" id="btnResetSeed">Reset modelo</button>
+      <button id="btnTogglePanel">Mostrar rede</button>
     </div>
   </div>
 
-  <div class="wrap">
-    <div id="stage">
-      <svg id="svg" width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="none"></svg>
+  <div id="stage">
+    <svg id="svg" viewBox="0 0 1200 800" preserveAspectRatio="none"></svg>
 
-      <div class="legend" aria-hidden="true">
-        <span class="tag"><span class="dot" style="background:var(--purple)"></span>Dados/integração</span>
-        <span class="tag"><span class="dot" style="background:var(--green)"></span>Produto/jogo</span>
-        <span class="tag"><span class="dot" style="background:var(--orange)"></span>Extensão/visibilidade</span>
-        <span class="tag"><span class="dot" style="background:var(--blue)"></span>Análise científica</span>
+    <div class="legend" aria-hidden="true">
+      <span class="tag"><span class="dot" style="background:var(--purple)"></span>Dados/integração</span>
+      <span class="tag"><span class="dot" style="background:var(--green)"></span>Produto/jogo</span>
+      <span class="tag"><span class="dot" style="background:var(--orange)"></span>Extensão/visibilidade</span>
+      <span class="tag"><span class="dot" style="background:var(--blue)"></span>Análise científica</span>
+    </div>
+  </div>
+
+  <aside class="drawer" id="drawer">
+    <header>
+      <div class="left">
+        <h2 id="sideTitle">Gerenciar pessoas</h2>
+        <div class="small" id="sideSub">Toque numa pessoa para abrir. No mobile: use “Mostrar rede” se a rede sumir.</div>
       </div>
+      <span class="pill" id="countPill">0 pessoas</span>
+    </header>
+
+    <div class="toolbar">
+      <button id="tbOpen" disabled>Abrir</button>
+      <button id="tbEdit" disabled>Editar</button>
+      <button id="tbDelete" class="btn-danger" disabled>Excluir</button>
+      <button id="tbLink" disabled>Criar ligação</button>
+      <button id="tbFocus" disabled>Focar</button>
+      <button id="tbBack">Voltar p/ lista</button>
     </div>
 
-    <aside class="side">
-      <header>
-        <div>
-          <h2 id="sideTitle">Gerenciar pessoas</h2>
-          <div class="small" id="sideSub">Use a lista para focar/editar/excluir. Clique numa bolinha para ver detalhes.</div>
-        </div>
-        <span class="pill" id="countPill">0 pessoas</span>
-      </header>
-
-      <!-- toolbar fixa -->
-      <div class="toolbar">
-        <button id="tbEdit" disabled>Editar</button>
-        <button id="tbDelete" class="btn-danger" disabled>Excluir</button>
-        <button id="tbLink" disabled>Criar ligação</button>
-        <button id="tbFocus" disabled>Focar</button>
-        <button id="tbClear">Voltar p/ lista</button>
-      </div>
-
-      <div class="content" id="sideContent"></div>
-    </aside>
-  </div>
+    <div class="content" id="sideContent"></div>
+  </aside>
 
   <!-- Modal Pessoa -->
   <div class="modal" id="modalPerson">
@@ -333,12 +329,12 @@
       <div class="body">
         <div class="grid">
           <div class="row">
-            <div class="field">
-              <label>Nome</label>
+            <div>
+              <div class="hint">Nome</div>
               <input type="text" id="p_name" placeholder="Ex.: Letícia Zen" />
             </div>
-            <div class="field">
-              <label>Nível</label>
+            <div>
+              <div class="hint">Nível</div>
               <select id="p_level">
                 <option>Graduação</option>
                 <option>Mestrado</option>
@@ -351,38 +347,38 @@
           </div>
 
           <div class="row">
-            <div class="field">
-              <label>Área</label>
+            <div>
+              <div class="hint">Área</div>
               <input type="text" id="p_area" placeholder="Ex.: Clima & Saúde" />
             </div>
-            <div class="field">
-              <label>Cor da bolinha (opcional)</label>
-              <input type="text" id="p_color" placeholder="Ex.: rgba(124,58,237,.95) ou #22c55e" />
+            <div>
+              <div class="hint">Cor da bolinha (opcional)</div>
+              <input type="text" id="p_color" placeholder="Ex.: #22c55e ou rgba(...)" />
             </div>
           </div>
 
-          <div class="field">
-            <label>Título do trabalho</label>
-            <input type="text" id="p_title" placeholder="Ex.: Impacto do calor na mortalidade em MT" />
+          <div>
+            <div class="hint">Título do trabalho</div>
+            <input type="text" id="p_title" />
           </div>
 
-          <div class="field">
-            <label>Objetivos</label>
+          <div>
+            <div class="hint">Objetivos</div>
             <textarea id="p_objectives"></textarea>
           </div>
 
-          <div class="field">
-            <label>Resultados esperados</label>
+          <div>
+            <div class="hint">Resultados esperados</div>
             <textarea id="p_expected"></textarea>
           </div>
 
-          <div class="field">
-            <label>Tags (vírgula)</label>
+          <div>
+            <div class="hint">Tags (vírgula)</div>
             <input type="text" id="p_tags" placeholder="planilhas, gráficos, carbono..." />
           </div>
 
           <div class="hint">
-            Dica: depois de salvar, clique na pessoa → use “Criar ligação” e escolha <b>origem</b> e <b>destino</b>.
+            Se o teu navegador bloquear salvamento, o indicador vai ficar vermelho — aí use “Baixar JSON” e “Importar JSON”.
           </div>
         </div>
       </div>
@@ -402,19 +398,19 @@
       <div class="body">
         <div class="grid">
           <div class="row">
-            <div class="field">
-              <label>Origem</label>
+            <div>
+              <div class="hint">Origem</div>
               <select id="l_from"></select>
             </div>
-            <div class="field">
-              <label>Destino</label>
+            <div>
+              <div class="hint">Destino</div>
               <select id="l_to"></select>
             </div>
           </div>
 
           <div class="row">
-            <div class="field">
-              <label>Tipo</label>
+            <div>
+              <div class="hint">Tipo</div>
               <select id="l_type">
                 <option value="dados">Dados / Integração</option>
                 <option value="analise">Análise científica</option>
@@ -424,24 +420,24 @@
                 <option value="outro">Outro</option>
               </select>
             </div>
-            <div class="field">
-              <label>Intensidade</label>
+            <div>
+              <div class="hint">Intensidade</div>
               <select id="l_weight">
                 <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option>
               </select>
             </div>
           </div>
 
-          <div class="field">
-            <label>Por que liga?</label>
+          <div>
+            <div class="hint">Por que liga?</div>
             <textarea id="l_reason"></textarea>
           </div>
-          <div class="field">
-            <label>Perguntas</label>
+          <div>
+            <div class="hint">Perguntas</div>
             <textarea id="l_questions"></textarea>
           </div>
-          <div class="field">
-            <label>Resultados esperados da ligação</label>
+          <div>
+            <div class="hint">Resultados esperados da ligação</div>
             <textarea id="l_outputs"></textarea>
           </div>
         </div>
@@ -453,29 +449,23 @@
 
 <script>
 /* =========================
-   IntegraProjetos v2 (mobile-first)
-   - Gerenciar/editar/excluir pessoas
-   - Criar ligações escolhendo origem/destino
-   - Fit / Auto-organizar / Animar ON/OFF
-   - Reset limpo e Reset modelo
+   IntegraProjetos v3
+   - Sem onclick inline (Android para de falhar)
+   - Drawer colapsável (rede sempre visível)
+   - Zoom / Centralizar
+   - Persistência com aviso se storage bloqueado
 ========================= */
+const STORAGE_KEY = "integraprojetos_v3";
 
-const STORAGE_KEY = "integraprojetos_v2";
-const SEED_KEY = "integraprojetos_seed_v2"; // só pra manter o seed separado
-
-function uid(){
-  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-}
+function uid(){ return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16); }
 function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
 function escapeHTML(s){
   return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 function clamp(v,a,b){ return Math.max(a, Math.min(b,v)); }
+
 function linkColor(type){
   switch(type){
     case "dados": return "rgba(124,58,237,.95)";
@@ -500,17 +490,15 @@ function downloadBlob(text, filename, mime){
   const blob = new Blob([text], {type:mime});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
+  a.href = url; a.download = filename;
   document.body.appendChild(a);
-  a.click();
-  a.remove();
+  a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 800);
 }
 
-/* ==== Seed: seus 7 alunos + SEM ligações (pra você decidir) ==== */
+/* ==== Seed: seus 7 alunos (sem ligações) ==== */
 const SEED = {
-  meta: { app:"IntegraProjetos", version:2, updatedAt:new Date().toISOString() },
+  meta:{ app:"IntegraProjetos", version:3, updatedAt:new Date().toISOString() },
   nodes: [
     { id: uid(), name:"Letícia Zen", level:"Graduação", area:"Clima & Saúde",
       title:"Impacto do calor na mortalidade em MT (dados secundários)",
@@ -555,23 +543,27 @@ const SEED = {
       tags:["jogos físicos","ensino médio","clima","carbono"], color:"rgba(236,72,153,.92)"
     }
   ],
-  links: []
+  links:[]
 };
 
 /* ==== DOM ==== */
 const svg = document.getElementById("svg");
 const stage = document.getElementById("stage");
+
+const drawer = document.getElementById("drawer");
+const btnTogglePanel = document.getElementById("btnTogglePanel");
+
 const countPill = document.getElementById("countPill");
 const sideTitle = document.getElementById("sideTitle");
 const sideSub = document.getElementById("sideSub");
 const sideContent = document.getElementById("sideContent");
 
-const saveStatus = document.getElementById("saveStatus");
 const saveDot = document.getElementById("saveDot");
 const saveText = document.getElementById("saveText");
 
 const modalPerson = document.getElementById("modalPerson");
-const modalPersonTitle = document.getElementById("modalPersonTitle");
+const modalLink = document.getElementById("modalLink");
+
 const p_name = document.getElementById("p_name");
 const p_level = document.getElementById("p_level");
 const p_area = document.getElementById("p_area");
@@ -581,8 +573,6 @@ const p_objectives = document.getElementById("p_objectives");
 const p_expected = document.getElementById("p_expected");
 const p_tags = document.getElementById("p_tags");
 
-const modalLink = document.getElementById("modalLink");
-const modalLinkTitle = document.getElementById("modalLinkTitle");
 const l_from = document.getElementById("l_from");
 const l_to = document.getElementById("l_to");
 const l_type = document.getElementById("l_type");
@@ -593,38 +583,45 @@ const l_outputs = document.getElementById("l_outputs");
 
 const fileImport = document.getElementById("fileImport");
 
-/* toolbar side */
+/* toolbar drawer */
+const tbOpen = document.getElementById("tbOpen");
 const tbEdit = document.getElementById("tbEdit");
 const tbDelete = document.getElementById("tbDelete");
 const tbLink = document.getElementById("tbLink");
 const tbFocus = document.getElementById("tbFocus");
-const tbClear = document.getElementById("tbClear");
+const tbBack = document.getElementById("tbBack");
 
-/* buttons top */
-document.getElementById("btnAdd").onclick = ()=> openPersonModal(null);
-document.getElementById("btnAddLink").onclick = ()=> openLinkModal(null);
-document.getElementById("btnAuto").onclick = ()=> { autoOrganize(true); persist(); fitToView(); };
-document.getElementById("btnFit").onclick = ()=> fitToView();
-document.getElementById("btnAnim").onclick = ()=> toggleAnim();
-document.getElementById("btnExportJson").onclick = exportJSON;
-document.getElementById("btnImport").onclick = ()=> fileImport.click();
-document.getElementById("btnResetClean").onclick = resetClean;
-document.getElementById("btnResetSeed").onclick = resetSeed;
+/* top buttons */
+document.getElementById("btnAdd").addEventListener("click", ()=> openPersonModal(null));
+document.getElementById("btnAddLink").addEventListener("click", ()=> openLinkModal(null));
+document.getElementById("btnAuto").addEventListener("click", ()=> { autoOrganize(true); persist(); centerNow(); });
+document.getElementById("btnAnim").addEventListener("click", ()=> toggleAnim());
+document.getElementById("btnExportJson").addEventListener("click", exportJSON);
+document.getElementById("btnImport").addEventListener("click", ()=> fileImport.click());
+document.getElementById("btnResetClean").addEventListener("click", resetClean);
+document.getElementById("btnResetSeed").addEventListener("click", resetSeed);
 
-document.getElementById("btnClosePerson").onclick = ()=> closeModal(modalPerson);
-document.getElementById("btnSavePerson").onclick = savePersonFromModal;
+document.getElementById("btnCenter").addEventListener("click", ()=> centerNow());
+document.getElementById("btnZoomIn").addEventListener("click", ()=> setZoom(zoom*1.12));
+document.getElementById("btnZoomOut").addEventListener("click", ()=> setZoom(zoom/1.12));
 
-document.getElementById("btnCloseLink").onclick = ()=> closeModal(modalLink);
-document.getElementById("btnSaveLink").onclick = saveLinkFromModal;
+btnTogglePanel.addEventListener("click", ()=> toggleDrawer());
+
+document.getElementById("btnClosePerson").addEventListener("click", ()=> closeModal(modalPerson));
+document.getElementById("btnSavePerson").addEventListener("click", savePersonFromModal);
+
+document.getElementById("btnCloseLink").addEventListener("click", ()=> closeModal(modalLink));
+document.getElementById("btnSaveLink").addEventListener("click", saveLinkFromModal);
 
 fileImport.addEventListener("change", importJSONFile);
 
-/* side toolbar actions */
-tbEdit.onclick = ()=> openPersonModal(selectedNodeId);
-tbDelete.onclick = ()=> deletePerson(selectedNodeId);
-tbLink.onclick = ()=> openLinkModal(null, selectedNodeId);
-tbFocus.onclick = ()=> focusNow(selectedNodeId);
-tbClear.onclick = ()=> { selectedNodeId = null; renderAll(); };
+/* toolbar actions */
+tbOpen.addEventListener("click", ()=> { if(selectedNodeId) openDetails(selectedNodeId); });
+tbEdit.addEventListener("click", ()=> { if(selectedNodeId) openPersonModal(selectedNodeId); });
+tbDelete.addEventListener("click", ()=> { if(selectedNodeId) deletePerson(selectedNodeId); });
+tbLink.addEventListener("click", ()=> { if(selectedNodeId) openLinkModal(null, selectedNodeId); });
+tbFocus.addEventListener("click", ()=> { if(selectedNodeId) focusNode(selectedNodeId); });
+tbBack.addEventListener("click", ()=> { selectedNodeId = null; renderAll(); });
 
 /* ==== SVG layers ==== */
 function makeSvg(tag, attrs={}){
@@ -646,16 +643,18 @@ let editingPersonId = null;
 let editingLinkId = null;
 
 let view = { w:1200, h:800 };
-resizeSVG();
-window.addEventListener("resize", () => { resizeSVG(); renderGraph(); });
-
 let animOn = true;
 let dragging = null;
 
-/* init */
+let zoom = 1.0;
+let pan = { x:0, y:0 };
+
+resizeSVG();
+window.addEventListener("resize", ()=> { resizeSVG(); renderGraph(); });
+
 initPositionsIfNeeded();
-autoOrganize(false); // espalha se estiver colado
-fitToView();
+autoOrganize(false);
+centerNow();
 startSim();
 renderAll();
 
@@ -663,12 +662,8 @@ renderAll();
 function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw){
-      localStorage.setItem(SEED_KEY, JSON.stringify(SEED));
-      return deepClone(SEED);
-    }
+    if(!raw) return deepClone(SEED);
     const obj = JSON.parse(raw);
-    if(!obj.nodes) return deepClone(SEED);
     return normalize(obj);
   }catch(e){
     return deepClone(SEED);
@@ -676,8 +671,8 @@ function loadState(){
 }
 function normalize(obj){
   return {
-    meta: obj.meta || { app:"IntegraProjetos", version:2, updatedAt:new Date().toISOString() },
-    nodes: (obj.nodes||[]).map(n => ({
+    meta: obj.meta || { app:"IntegraProjetos", version:3, updatedAt:new Date().toISOString() },
+    nodes: (obj.nodes||[]).map(n=>({
       id: n.id || uid(),
       name: n.name || "Sem nome",
       level: n.level || "Graduação",
@@ -685,20 +680,19 @@ function normalize(obj){
       title: n.title || "",
       objectives: n.objectives || "",
       expected: n.expected || "",
-      tags: Array.isArray(n.tags) ? n.tags : [],
+      tags: Array.isArray(n.tags)? n.tags : [],
       color: n.color || "rgba(124,58,237,.95)",
-      x: Number.isFinite(n.x) ? n.x : 0,
-      y: Number.isFinite(n.y) ? n.y : 0,
-      vx: Number.isFinite(n.vx) ? n.vx : 0,
-      vy: Number.isFinite(n.vy) ? n.vy : 0,
+      x: Number.isFinite(n.x)? n.x : 0,
+      y: Number.isFinite(n.y)? n.y : 0,
+      vx: Number.isFinite(n.vx)? n.vx : 0,
+      vy: Number.isFinite(n.vy)? n.vy : 0,
       fx: null, fy: null
     })),
-    links: (obj.links||[]).map(l => ({
+    links: (obj.links||[]).map(l=>({
       id: l.id || uid(),
-      from: l.from,
-      to: l.to,
+      from: l.from, to: l.to,
       type: l.type || "dados",
-      weight: Number(l.weight || 3),
+      weight: Number(l.weight||3),
       reason: l.reason || "",
       questions: l.questions || "",
       outputs: l.outputs || ""
@@ -711,7 +705,8 @@ function persist(){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     setSaved(true);
   }catch(e){
-    setSaved(false, "Não salvou (storage bloqueado)");
+    // storage bloqueado -> avisa vermelho
+    setSaved(false, "Storage bloqueado — use Baixar JSON");
   }
 }
 let saveTimer=null;
@@ -722,29 +717,30 @@ function setSaved(ok, msg){
     saveText.textContent = msg || "Salvo ✓";
   }else{
     saveDot.style.background = "rgba(239,68,68,.90)";
-    saveText.textContent = msg || "Falha ao salvar";
+    saveText.textContent = msg || "Não salvou";
   }
   saveTimer = setTimeout(()=>{
-    saveDot.style.background = "rgba(34,197,94,.95)";
-    saveText.textContent = "Salvo ✓";
-  }, 2200);
+    if(ok){
+      saveDot.style.background = "rgba(34,197,94,.95)";
+      saveText.textContent = "Salvo ✓";
+    }
+  }, 2500);
 }
 
-/* ==== graph helpers ==== */
-function getNode(id){ return state.nodes.find(n => n.id === id); }
+/* ==== helpers ==== */
+function getNode(id){ return state.nodes.find(n=>n.id===id); }
 
 function initPositionsIfNeeded(){
   state.nodes.forEach(n=>{
     const bad = !Number.isFinite(n.x) || !Number.isFinite(n.y) || (n.x===0 && n.y===0);
     if(bad){
-      n.x = view.w/2 + (Math.random()-.5)*400;
-      n.y = view.h/2 + (Math.random()-.5)*280;
+      n.x = view.w/2 + (Math.random()-.5)*420;
+      n.y = view.h/2 + (Math.random()-.5)*320;
       n.vx = (Math.random()-.5)*2;
       n.vy = (Math.random()-.5)*2;
     }
   });
 }
-
 function resizeSVG(){
   const rect = stage.getBoundingClientRect();
   view.w = Math.max(700, Math.floor(rect.width));
@@ -752,6 +748,18 @@ function resizeSVG(){
   svg.setAttribute("viewBox", `0 0 ${view.w} ${view.h}`);
 }
 
+/* ==== Drawer ==== */
+function toggleDrawer(force){
+  if(typeof force === "boolean"){
+    drawer.classList.toggle("collapsed", force);
+  }else{
+    drawer.classList.toggle("collapsed");
+  }
+  const collapsed = drawer.classList.contains("collapsed");
+  btnTogglePanel.textContent = collapsed ? "Mostrar painel" : "Mostrar rede";
+}
+
+/* ==== Rendering ==== */
 function renderAll(){
   countPill.textContent = `${state.nodes.length} pessoas`;
   renderSide();
@@ -761,6 +769,7 @@ function renderAll(){
 
 function updateToolbar(){
   const has = !!selectedNodeId && !!getNode(selectedNodeId);
+  tbOpen.disabled = !has;
   tbEdit.disabled = !has;
   tbDelete.disabled = !has;
   tbLink.disabled = !has;
@@ -770,17 +779,46 @@ function updateToolbar(){
 function renderSide(){
   if(!selectedNodeId){
     sideTitle.textContent = "Gerenciar pessoas";
-    sideSub.textContent = "Lista com botões: focar, editar, excluir. Clique numa bolinha para ver detalhes.";
-    sideContent.innerHTML = renderManageList();
+    sideSub.textContent = "Toque em “Abrir” na pessoa. Se a rede sumir, toque “Mostrar rede”.";
+    sideContent.innerHTML = `
+      <div class="hint">
+        Lista com botões reais (sem bug de Android). Você sempre consegue abrir/editar/excluir.
+      </div>
+      <div class="sep"></div>
+      <div class="grid" id="peopleList"></div>
+    `;
+    const list = document.getElementById("peopleList");
+    const sorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+    sorted.forEach(n=>{
+      const box = document.createElement("div");
+      box.className = "mini";
+      box.innerHTML = `
+        <b>${escapeHTML(n.name)}</b>
+        <div class="meta">${escapeHTML(n.level)} • ${escapeHTML(n.area)}</div>
+        <div class="meta" style="margin-top:6px">${escapeHTML(n.title||"")}</div>
+        <div class="actions2">
+          <button data-act="open">Abrir</button>
+          <button data-act="focus">Focar</button>
+          <button data-act="edit">Editar</button>
+          <button class="btn-danger" data-act="del">Excluir</button>
+        </div>
+      `;
+      box.querySelector('[data-act="open"]').addEventListener("click", ()=>{
+        selectedNodeId = n.id; openDetails(n.id);
+      });
+      box.querySelector('[data-act="focus"]').addEventListener("click", ()=> focusNode(n.id));
+      box.querySelector('[data-act="edit"]').addEventListener("click", ()=> openPersonModal(n.id));
+      box.querySelector('[data-act="del"]').addEventListener("click", ()=> deletePerson(n.id));
+      list.appendChild(box);
+    });
     return;
   }
+  openDetails(selectedNodeId);
+}
 
-  const n = getNode(selectedNodeId);
-  if(!n){
-    selectedNodeId = null;
-    renderAll();
-    return;
-  }
+function openDetails(id){
+  const n = getNode(id);
+  if(!n){ selectedNodeId=null; renderAll(); return; }
 
   sideTitle.textContent = n.name;
   sideSub.textContent = `${n.level} • ${n.area}`;
@@ -813,8 +851,8 @@ function renderSide(){
 
       <div class="mini">
         <b>Ligações (${rel.length})</b>
-        <div class="hint" style="margin-top:4px">Você decide tudo. Clique “Criar ligação” e escolha origem/destino.</div>
-        <div style="height:8px"></div>
+        <div class="hint" style="margin-top:4px">Use “Criar ligação” e escolha origem/destino.</div>
+        <div class="sep"></div>
         <div class="grid" id="relList"></div>
       </div>
     </div>
@@ -841,53 +879,27 @@ function renderSide(){
         <button class="btn-danger" data-act="del">Excluir ligação</button>
       </div>
     `;
-    box.querySelector('[data-act="edit"]').onclick = ()=> openLinkModal(l.id);
-    box.querySelector('[data-act="del"]').onclick = ()=> deleteLink(l.id);
+    box.querySelector('[data-act="edit"]').addEventListener("click", ()=> openLinkModal(l.id));
+    box.querySelector('[data-act="del"]').addEventListener("click", ()=> deleteLink(l.id));
     relList.appendChild(box);
   });
+
+  updateToolbar();
+  renderGraph();
+  focusNode(id);
 }
 
-function renderManageList(){
-  const sorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
-  return `
-    <div class="hint">
-      Aqui você sempre consegue <b>ver / editar / excluir</b>. O “Focar” leva a bolinha pro centro.
-    </div>
-    <div class="sep"></div>
-    <div class="grid">
-      ${sorted.map(n=>`
-        <div class="mini">
-          <b>${escapeHTML(n.name)}</b>
-          <div class="meta">${escapeHTML(n.level)} • ${escapeHTML(n.area)}</div>
-          <div class="meta" style="margin-top:6px">${escapeHTML(n.title||"")}</div>
-          <div class="actions2">
-            <button onclick="window.__focus('${n.id}')">Focar</button>
-            <button onclick="window.__select('${n.id}')">Abrir</button>
-            <button onclick="window.__edit('${n.id}')">Editar</button>
-            <button class="btn-danger" onclick="window.__del('${n.id}')">Excluir</button>
-          </div>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
-/* expose small actions for inline buttons */
-window.__focus = (id)=> { focusNow(id); };
-window.__select = (id)=> { selectedNodeId = id; renderAll(); focusNow(id); };
-window.__edit = (id)=> { openPersonModal(id); };
-window.__del = (id)=> { deletePerson(id); };
-
-/* ==== Graph rendering ==== */
+/* ==== Graph render (com pan/zoom) ==== */
 function renderGraph(){
   gLinks.innerHTML = "";
   gNodes.innerHTML = "";
 
-  // links
+  gRoot.setAttribute("transform", `translate(${pan.x} ${pan.y}) scale(${zoom})`);
+
   state.links.forEach(link=>{
     const a = getNode(link.from);
     const b = getNode(link.to);
-    if(!a||!b) return;
+    if(!a || !b) return;
 
     const line = makeSvg("line", {
       x1:a.x, y1:a.y, x2:b.x, y2:b.y,
@@ -911,7 +923,6 @@ function renderGraph(){
     gLinks.appendChild(t);
   });
 
-  // nodes
   state.nodes.forEach(node=>{
     const base = 22;
     const r = base + Math.min(10, (node.tags||[]).length);
@@ -923,8 +934,8 @@ function renderGraph(){
     const halo = makeSvg("circle", {
       cx:node.x, cy:node.y, r:r+14,
       fill:"transparent",
-      stroke: isSel ? "rgba(255,255,255,.40)" : "rgba(255,255,255,.08)",
-      "stroke-width": isSel ? 2.5 : 1.2
+      stroke: isSel ? "rgba(255,255,255,.45)" : "rgba(255,255,255,.10)",
+      "stroke-width": isSel ? 2.8 : 1.2
     });
     group.appendChild(halo);
 
@@ -932,7 +943,7 @@ function renderGraph(){
       cx:node.x, cy:node.y, r,
       fill: node.color || "rgba(124,58,237,.95)",
       stroke:"rgba(255,255,255,.18)",
-      "stroke-width": isSel ? 2.5 : 1.3
+      "stroke-width": isSel ? 2.6 : 1.3
     });
     group.appendChild(c);
 
@@ -960,13 +971,46 @@ function renderGraph(){
       e.stopPropagation();
       selectedNodeId = node.id;
       renderAll();
-      focusNow(node.id);
+      // no mobile, abre painel e foca
+      toggleDrawer(false);
+      focusNode(node.id);
     });
 
     gNodes.appendChild(group);
   });
 
+  // clique no fundo limpa seleção
   svg.onclick = ()=> { selectedNodeId = null; renderAll(); };
+}
+
+/* ==== Pan/Zoom ==== */
+function setZoom(z){
+  zoom = clamp(z, 0.55, 1.9);
+  renderGraph();
+}
+function centerNow(){
+  pan.x = 0; pan.y = 0;
+  // centraliza o “bbox” da rede no meio do stage
+  if(state.nodes.length){
+    let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+    state.nodes.forEach(n=>{
+      minX=Math.min(minX,n.x); minY=Math.min(minY,n.y);
+      maxX=Math.max(maxX,n.x); maxY=Math.max(maxY,n.y);
+    });
+    const bx=(minX+maxX)/2, by=(minY+maxY)/2;
+    const cx=view.w/2, cy=view.h/2;
+    pan.x = (cx - bx) * zoom;
+    pan.y = (cy - by) * zoom;
+  }
+  renderGraph();
+}
+function focusNode(id){
+  const n = getNode(id); if(!n) return;
+  const cx=view.w/2, cy=view.h/2;
+  pan.x = (cx - n.x) * zoom;
+  pan.y = (cy - n.y) * zoom;
+  persist();
+  renderGraph();
 }
 
 /* ==== Drag ==== */
@@ -977,12 +1021,14 @@ function getPointer(ev){
   const clientY = isTouch ? ev.touches[0].clientY : ev.clientY;
   const x = (clientX - rect.left) * (view.w / rect.width);
   const y = (clientY - rect.top) * (view.h / rect.height);
-  return {x,y};
+  // ajustar para pan/zoom
+  const gx = (x - pan.x/zoom);
+  const gy = (y - pan.y/zoom);
+  return {x: gx, y: gy};
 }
 function startDrag(ev, nodeId){
   ev.preventDefault();
-  const n = getNode(nodeId);
-  if(!n) return;
+  const n = getNode(nodeId); if(!n) return;
   dragging = { id:nodeId };
   n.fx = n.x; n.fy = n.y;
 
@@ -995,8 +1041,7 @@ function onDragMove(ev){
   if(!dragging) return;
   ev.preventDefault();
   const pt = getPointer(ev);
-  const n = getNode(dragging.id);
-  if(!n) return;
+  const n = getNode(dragging.id); if(!n) return;
   n.fx = clamp(pt.x, 30, view.w-30);
   n.fy = clamp(pt.y, 30, view.h-30);
   renderGraph();
@@ -1016,7 +1061,7 @@ function onDragEnd(){
   window.removeEventListener("touchend", onDragEnd);
 }
 
-/* ==== Simulation (agora ela mexe de verdade) ==== */
+/* ==== Simulation ==== */
 let sim=null;
 function startSim(){
   if(sim) cancelAnimationFrame(sim);
@@ -1028,12 +1073,11 @@ function startSim(){
   sim = requestAnimationFrame(step);
 }
 function tick(){
-  const repel = 14000;          // mais repulsão = menos empilhado
-  const linkK = 0.012;          // força do link
-  const centerPull = 0.0028;    // puxa pro centro levemente
+  const repel = 15000;
+  const linkK = 0.012;
+  const centerPull = 0.0026;
   const damping = 0.90;
 
-  // repulsão
   for(let i=0;i<state.nodes.length;i++){
     for(let j=i+1;j<state.nodes.length;j++){
       const a=state.nodes[i], b=state.nodes[j];
@@ -1047,7 +1091,6 @@ function tick(){
     }
   }
 
-  // links
   state.links.forEach(l=>{
     const a=getNode(l.from), b=getNode(l.to);
     if(!a||!b) return;
@@ -1062,7 +1105,6 @@ function tick(){
     if(b.fx==null){ b.vx -= fx; b.vy -= fy; }
   });
 
-  // update
   const cx=view.w/2, cy=view.h/2;
   state.nodes.forEach(n=>{
     if(n.fx!=null && n.fy!=null){
@@ -1078,55 +1120,22 @@ function tick(){
   });
 }
 
-/* ==== View helpers ==== */
-function focusNow(id){
-  const n=getNode(id); if(!n) return;
-  // move imediatamente pro centro (não “empurra”)
-  const cx=view.w/2, cy=view.h/2;
-  n.x = cx + (Math.random()-.5)*10;
-  n.y = cy + (Math.random()-.5)*10;
-  n.vx = (Math.random()-.5)*1.5;
-  n.vy = (Math.random()-.5)*1.5;
-  persist();
-  renderGraph();
-}
-function fitToView(){
-  // aqui é simples: só reorganiza para dentro do retângulo útil
-  if(state.nodes.length===0) return;
-  const pad = 80;
-  let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
-  state.nodes.forEach(n=>{
-    minX=Math.min(minX,n.x); minY=Math.min(minY,n.y);
-    maxX=Math.max(maxX,n.x); maxY=Math.max(maxY,n.y);
-  });
-  const cx=view.w/2, cy=view.h/2;
-  const bx=(minX+maxX)/2, by=(minY+maxY)/2;
-
-  state.nodes.forEach(n=>{
-    n.x = clamp(n.x + (cx-bx), pad, view.w-pad);
-    n.y = clamp(n.y + (cy-by), pad, view.h-pad);
-  });
-  persist();
-  renderGraph();
-}
-
-/* ==== auto-organize ==== */
+/* ==== Auto-organize ==== */
 function autoOrganize(force){
   if(state.nodes.length<=1) return;
-  // se estiver muito colado ou force=true, espalha em círculo
   let compact=true;
   for(let i=0;i<state.nodes.length;i++){
     for(let j=i+1;j<state.nodes.length;j++){
       const a=state.nodes[i], b=state.nodes[j];
       const dx=a.x-b.x, dy=a.y-b.y;
-      if(dx*dx+dy*dy > 140*140){ compact=false; break; }
+      if(dx*dx+dy*dy > 160*160){ compact=false; break; }
     }
     if(!compact) break;
   }
   if(!compact && !force) return;
 
   const cx=view.w/2, cy=view.h/2;
-  const R = Math.min(view.w, view.h)*0.28;
+  const R = Math.min(view.w, view.h)*0.30;
   state.nodes.forEach((n,idx)=>{
     const ang = (idx/state.nodes.length) * Math.PI*2;
     n.x = cx + Math.cos(ang)*R + (Math.random()-.5)*30;
@@ -1136,17 +1145,19 @@ function autoOrganize(force){
   });
 }
 
-/* ==== modal helpers ==== */
+/* ==== Modals ==== */
 function openModal(m){ m.setAttribute("open",""); }
 function closeModal(m){ m.removeAttribute("open"); }
 
-/* ==== pessoa CRUD ==== */
+modalPerson.addEventListener("click", (e)=>{ if(e.target===modalPerson) closeModal(modalPerson); });
+modalLink.addEventListener("click", (e)=>{ if(e.target===modalLink) closeModal(modalLink); });
+
+/* ==== Pessoa CRUD ==== */
 function openPersonModal(id){
   editingPersonId = id;
-
   if(id){
     const n=getNode(id);
-    modalPersonTitle.textContent = "Editar pessoa";
+    document.getElementById("modalPersonTitle").textContent = "Editar pessoa";
     p_name.value = n.name || "";
     p_level.value = n.level || "Graduação";
     p_area.value = n.area || "";
@@ -1156,19 +1167,12 @@ function openPersonModal(id){
     p_expected.value = n.expected || "";
     p_tags.value = (n.tags||[]).join(", ");
   }else{
-    modalPersonTitle.textContent = "Adicionar pessoa";
-    p_name.value = "";
-    p_level.value = "Graduação";
-    p_area.value = "";
-    p_color.value = "";
-    p_title.value = "";
-    p_objectives.value = "";
-    p_expected.value = "";
-    p_tags.value = "";
+    document.getElementById("modalPersonTitle").textContent = "Adicionar pessoa";
+    p_name.value=""; p_level.value="Graduação"; p_area.value=""; p_color.value="";
+    p_title.value=""; p_objectives.value=""; p_expected.value=""; p_tags.value="";
   }
   openModal(modalPerson);
 }
-
 function savePersonFromModal(){
   const name = p_name.value.trim();
   if(!name){ alert("Informe o nome."); return; }
@@ -1201,15 +1205,18 @@ function savePersonFromModal(){
 
   persist();
   closeModal(modalPerson);
+
   selectedNodeId = node.id;
   renderAll();
-  focusNow(node.id);
+  toggleDrawer(false);
+  focusNode(node.id);
 }
 
+/* ==== Delete person ==== */
 function deletePerson(id){
   const n=getNode(id);
   if(!n) return;
-  if(!confirm(`Excluir "${n.name}"? Isso apaga também as ligações dela.`)) return;
+  if(!confirm(`Excluir "${n.name}"? Isso apaga também as ligações.`)) return;
   state.nodes = state.nodes.filter(x=>x.id!==id);
   state.links = state.links.filter(l=>l.from!==id && l.to!==id);
   if(selectedNodeId===id) selectedNodeId=null;
@@ -1217,7 +1224,7 @@ function deletePerson(id){
   renderAll();
 }
 
-/* ==== ligação CRUD ==== */
+/* ==== Link CRUD ==== */
 function openLinkModal(linkId, defaultFrom){
   editingLinkId = linkId;
 
@@ -1227,7 +1234,7 @@ function openLinkModal(linkId, defaultFrom){
 
   if(linkId){
     const l = state.links.find(x=>x.id===linkId);
-    modalLinkTitle.textContent = "Editar ligação";
+    document.getElementById("modalLinkTitle").textContent = "Editar ligação";
     l_from.value = l.from;
     l_to.value = l.to;
     l_type.value = l.type || "dados";
@@ -1236,7 +1243,7 @@ function openLinkModal(linkId, defaultFrom){
     l_questions.value = l.questions || "";
     l_outputs.value = l.outputs || "";
   }else{
-    modalLinkTitle.textContent = "Criar ligação";
+    document.getElementById("modalLinkTitle").textContent = "Criar ligação";
     const from = defaultFrom || selectedNodeId || (state.nodes[0]?.id);
     const to = state.nodes.find(n=>n.id!==from)?.id || from;
     l_from.value = from;
@@ -1250,7 +1257,6 @@ function openLinkModal(linkId, defaultFrom){
 
   openModal(modalLink);
 }
-
 function saveLinkFromModal(){
   const from = l_from.value;
   const to = l_to.value;
@@ -1258,7 +1264,6 @@ function saveLinkFromModal(){
     alert("Escolha origem e destino diferentes.");
     return;
   }
-
   const link = {
     id: editingLinkId || uid(),
     from, to,
@@ -1269,24 +1274,16 @@ function saveLinkFromModal(){
     outputs: l_outputs.value.trim()
   };
 
-  // evita duplicata exata (from-to-type)
-  if(!editingLinkId){
-    const dup = state.links.find(l => l.from===from && l.to===to && l.type===link.type);
-    if(dup && !confirm("Já existe uma ligação igual. Quer criar mesmo assim?")) return;
-  }
-
   if(editingLinkId){
     const idx = state.links.findIndex(l=>l.id===editingLinkId);
     if(idx>=0) state.links[idx]=link;
   }else{
     state.links.push(link);
   }
-
   persist();
   closeModal(modalLink);
   renderAll();
 }
-
 function deleteLink(id){
   if(!confirm("Excluir esta ligação?")) return;
   state.links = state.links.filter(l=>l.id!==id);
@@ -1294,10 +1291,10 @@ function deleteLink(id){
   renderAll();
 }
 
-/* ==== export/import ==== */
+/* ==== Export/Import ==== */
 function exportJSON(){
   const out = {
-    meta: { app:"IntegraProjetos", version:2, exportedAt:new Date().toISOString() },
+    meta: { app:"IntegraProjetos", version:3, exportedAt:new Date().toISOString() },
     nodes: state.nodes.map(n=>({ ...n, x:Math.round(n.x), y:Math.round(n.y) })),
     links: state.links
   };
@@ -1316,7 +1313,7 @@ function importJSONFile(ev){
       persist();
       selectedNodeId=null;
       renderAll();
-      fitToView();
+      centerNow();
     }catch(e){
       alert("Falha ao importar: " + e.message);
     }finally{
@@ -1326,14 +1323,10 @@ function importJSONFile(ev){
   reader.readAsText(f);
 }
 
-/* ==== reset ==== */
+/* ==== Reset ==== */
 function resetClean(){
   if(!confirm("Reset limpo: apagar todas as pessoas e ligações?")) return;
-  state = {
-    meta:{ app:"IntegraProjetos", version:2, updatedAt:new Date().toISOString() },
-    nodes: [],
-    links: []
-  };
+  state = { meta:{ app:"IntegraProjetos", version:3, updatedAt:new Date().toISOString() }, nodes:[], links:[] };
   selectedNodeId=null;
   persist();
   renderAll();
@@ -1346,19 +1339,14 @@ function resetSeed(){
   selectedNodeId=null;
   persist();
   renderAll();
-  fitToView();
+  centerNow();
 }
 
-/* ==== anim toggle ==== */
+/* ==== Anim toggle ==== */
 function toggleAnim(){
   animOn = !animOn;
   document.getElementById("btnAnim").textContent = "Animar: " + (animOn ? "ON" : "OFF");
 }
-
-/* ==== safety: click outside modals closes ==== */
-modalPerson.addEventListener("click", (e)=>{ if(e.target===modalPerson) closeModal(modalPerson); });
-modalLink.addEventListener("click", (e)=>{ if(e.target===modalLink) closeModal(modalLink); });
-
 </script>
 </body>
 </html>
