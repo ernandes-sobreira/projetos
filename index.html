@@ -1,316 +1,334 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IntegraProjetos — Rede de Integração</title>
-  <meta name="theme-color" content="#0b1220"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>IntegraProjetos — Integração de Projetos</title>
+  <meta name="theme-color" content="#ffffff"/>
+
   <style>
     :root{
-      --bg:#0b1220;
-      --panel:rgba(15,26,46,.78);
-      --card:rgba(16,28,51,.62);
-      --stroke:rgba(255,255,255,.10);
-      --stroke2:rgba(255,255,255,.20);
-      --txt:#e5e7eb;
-      --muted:#a9b4c2;
-      --shadow: 0 18px 45px rgba(0,0,0,.35);
-      --radius: 18px;
-      --purple:rgba(124,58,237,.95);
-      --green:rgba(34,197,94,.95);
-      --orange:rgba(245,158,11,.95);
-      --blue:rgba(96,165,250,.95);
-      --red:rgba(239,68,68,.90);
+      --bg:#ffffff;
+      --panel:#ffffffcc;
+      --panel2:#ffffffee;
+      --stroke:#e6e8ef;
+      --stroke2:#cfd6e6;
+      --txt:#101828;
+      --muted:#667085;
+
+      --shadow: 0 18px 40px rgba(16,24,40,.12);
+      --shadow2: 0 10px 22px rgba(16,24,40,.10);
+      --radius:18px;
+
+      --purple:#7c3aed;
+      --green:#10b981;
+      --orange:#f59e0b;
+      --blue:#2563eb;
+      --pink:#ec4899;
+      --red:#ef4444;
+
+      --card:#f7f8fb;
+      --card2:#ffffff;
+
+      --btn:#ffffff;
+      --btnStroke:#d0d5dd;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(124,58,237,.22), transparent 55%),
-        radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.15), transparent 55%),
-        radial-gradient(900px 600px at 50% 85%, rgba(245,158,11,.10), transparent 60%),
-        var(--bg);
       color:var(--txt);
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(124,58,237,.10), transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, rgba(16,185,129,.10), transparent 60%),
+        radial-gradient(1000px 700px at 40% 90%, rgba(245,158,11,.08), transparent 60%),
+        var(--bg);
       overflow:hidden;
     }
 
     .topbar{
       position:fixed; inset:12px 12px auto 12px;
-      display:flex; gap:10px; align-items:center; justify-content:space-between;
-      background:var(--panel);
-      border:1px solid var(--stroke);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
       padding:10px 12px;
+      border:1px solid var(--stroke);
+      background:var(--panel);
+      backdrop-filter: blur(10px);
+      border-radius:16px;
       box-shadow: var(--shadow);
-      z-index:80;
-      flex-wrap:wrap;
+      z-index:50;
     }
-    .brand{display:flex; align-items:center; gap:10px; min-width:260px}
+    .brand{ display:flex; gap:10px; align-items:center; min-width:280px; }
     .logo{
-      width:36px; height:36px; border-radius:12px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 55%),
-        linear-gradient(135deg, rgba(124,58,237,.95), rgba(34,197,94,.85));
-      display:grid; place-items:center;
-      border:1px solid rgba(255,255,255,.15);
-      user-select:none;
+      width:38px; height:38px; border-radius:14px;
+      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(16,185,129,.90));
+      box-shadow: 0 10px 18px rgba(124,58,237,.22);
+      border: 1px solid rgba(255,255,255,.45);
     }
-    .brand h1{font-size:14px; margin:0}
-    .brand p{margin:0; font-size:12px; color:var(--muted)}
+    .brand h1{ margin:0; font-size:14px; font-weight:900; letter-spacing:.2px; }
+    .brand p{ margin:2px 0 0; font-size:12px; color:var(--muted); }
 
-    .actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .actions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 
     button{
-      appearance:none;
-      border:1px solid var(--stroke);
-      background:rgba(16,28,51,.70);
+      border:1px solid var(--btnStroke);
+      background:var(--btn);
       color:var(--txt);
       border-radius:12px;
       padding:9px 10px;
-      font-weight:750;
+      font-weight:850;
       font-size:12px;
       cursor:pointer;
-      transition: transform .05s ease, border-color .2s ease, background .2s ease;
+      box-shadow: var(--shadow2);
+      transition: transform .05s ease, box-shadow .15s ease;
       user-select:none;
       white-space:nowrap;
     }
-    button:hover{border-color:var(--stroke2)}
-    button:active{transform: translateY(1px)}
-    button:disabled{opacity:.55; cursor:not-allowed}
+    button:hover{ box-shadow: 0 14px 28px rgba(16,24,40,.12); }
+    button:active{ transform: translateY(1px); }
 
-    .btn-primary{
-      background: linear-gradient(135deg, rgba(124,58,237,.92), rgba(34,197,94,.72));
-      border-color: rgba(255,255,255,.18);
+    .primary{
+      border-color: transparent;
+      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(16,185,129,.88));
+      color:white;
     }
-    .btn-danger{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); }
-    .btn-warn{ border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); }
+    .warn{
+      border-color: rgba(245,158,11,.35);
+      background: rgba(245,158,11,.10);
+    }
+    .danger{
+      border-color: rgba(239,68,68,.35);
+      background: rgba(239,68,68,.10);
+    }
 
     .status{
       display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px;
+      padding:7px 10px;
       border-radius:999px;
       border:1px solid var(--stroke);
-      background:rgba(16,28,51,.45);
-      color:rgba(229,231,235,.85);
+      background: var(--panel2);
+      color:var(--muted);
       font-size:12px;
-      user-select:none;
+      box-shadow: var(--shadow2);
     }
-    .dot{ width:10px; height:10px; border-radius:999px; border:1px solid rgba(255,255,255,.18); }
+    .dot{ width:10px; height:10px; border-radius:999px; background:var(--green); border:1px solid rgba(16,24,40,.08); }
 
-    /* STAGE */
+    /* Layout main */
     #stage{
       position:fixed;
-      inset: 78px 12px 12px 12px;
-      border-radius: 18px;
+      inset: 78px 430px 12px 12px;
       border:1px solid var(--stroke);
-      background: rgba(8,14,26,.35);
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
       box-shadow: var(--shadow);
       overflow:hidden;
-      z-index:10;
     }
     #svg{ width:100%; height:100%; display:block; }
 
-    /* Legend overlay */
+    aside{
+      position:fixed;
+      top:78px; right:12px; bottom:12px;
+      width:410px;
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      background: var(--panel2);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      z-index:40;
+    }
+
+    aside header{
+      padding:12px;
+      border-bottom:1px solid var(--stroke);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      background: rgba(255,255,255,.92);
+    }
+    aside header h2{ margin:0; font-size:13px; font-weight:950; }
+    aside header .sub{ margin-top:2px; font-size:12px; color:var(--muted); line-height:1.25; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--stroke);
+      background: #fff;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      box-shadow: var(--shadow2);
+    }
+
+    .toolbar{
+      padding:10px 12px;
+      border-bottom:1px solid var(--stroke);
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      background: rgba(255,255,255,.92);
+    }
+
+    .content{
+      padding:12px;
+      overflow:auto;
+      flex:1;
+      background: rgba(255,255,255,.72);
+    }
+
+    .card{
+      background: var(--card2);
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:12px;
+      box-shadow: var(--shadow2);
+    }
+    .card .meta{ color:var(--muted); font-size:12px; }
+    .card b{ font-size:13px; }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+    .rowbtns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    input[type="text"], textarea, select{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--stroke2);
+      background:#fff;
+      padding:10px 10px;
+      font-size:13px;
+      outline:none;
+    }
+    textarea{ min-height:76px; resize:vertical; }
+
+    .sep{ height:1px; background:var(--stroke); margin:10px 0; }
+
     .legend{
-      position:absolute; left:12px; bottom:12px;
-      display:flex; gap:8px; flex-wrap:wrap;
-      z-index:20;
+      position:absolute;
+      left:12px; bottom:12px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      z-index:10;
       pointer-events:none;
     }
     .tag{
       display:inline-flex; align-items:center; gap:8px;
-      padding:7px 9px;
+      padding:7px 10px;
       border-radius:999px;
       border:1px solid var(--stroke);
-      background: rgba(15,26,46,.62);
-      font-size:12px;
+      background: rgba(255,255,255,.9);
       color:var(--muted);
-      backdrop-filter: blur(8px);
+      font-size:12px;
+      box-shadow: var(--shadow2);
     }
+    .tag .dot{ border:none; }
 
-    /* PANEL (drawer) */
-    .drawer{
-      position:fixed;
-      left:12px; right:12px;
-      bottom:12px;
-      height: 52vh;
-      border-radius: 18px;
-      border:1px solid var(--stroke);
-      background: var(--panel);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      z-index:70;
-      display:flex;
-      flex-direction:column;
-      transform: translateY(0);
-      transition: transform .18s ease;
-    }
-    .drawer.collapsed{ transform: translateY(calc(52vh - 64px)); }
-
-    .drawer header{
-      padding:10px 12px;
-      border-bottom:1px solid var(--stroke);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      background: rgba(15,26,46,.86);
-    }
-    .drawer header .left{
-      display:flex; flex-direction:column;
-    }
-    .drawer header h2{margin:0; font-size:13px}
-    .drawer header .small{font-size:12px; color:var(--muted); margin-top:2px}
-
-    .drawer .toolbar{
-      padding:10px 12px;
-      border-bottom:1px solid var(--stroke);
-      display:flex; gap:8px; flex-wrap:wrap;
-      background: rgba(15,26,46,.86);
-    }
-    .drawer .content{
-      padding:12px;
-      overflow:auto;
-      flex:1;
-    }
-    .pill{
-      display:inline-flex; gap:6px; align-items:center;
-      border:1px solid var(--stroke);
-      background:rgba(16,28,51,.55);
-      padding:6px 8px; border-radius:999px; font-size:12px; color:var(--muted);
-      white-space:nowrap;
-    }
-    .mini{
-      border:1px solid var(--stroke);
-      background: rgba(16,28,51,.45);
-      border-radius: 14px;
-      padding:10px;
-    }
-    .mini b{display:block; font-size:13px; margin-bottom:4px}
-    .mini .meta{font-size:12px; color:var(--muted)}
-    .actions2{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .grid{display:grid; gap:10px}
-    .sep{height:1px; background:var(--stroke); margin:10px 0}
-    .hint{font-size:12px; color:var(--muted); line-height:1.35}
-    .row{display:flex; gap:8px}
-    .row > *{flex:1}
-
-    input[type="text"], textarea, select{
-      width:100%;
-      border-radius: 12px;
-      border:1px solid var(--stroke);
-      background: rgba(16,28,51,.65);
-      color: var(--txt);
-      padding:10px 10px;
-      outline:none;
-      font-size:13px;
-    }
-    textarea{min-height:72px; resize: vertical;}
-
-    /* MODAL */
+    /* Modal */
     .modal{
       position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
+      background: rgba(16,24,40,.35);
       display:none;
       place-items:center;
-      z-index:120;
       padding:12px;
+      z-index:200;
     }
-    .modal[open]{display:grid}
+    .modal[open]{ display:grid; }
     .box{
-      width:min(860px, calc(100vw - 24px));
-      max-height: min(90vh, 940px);
+      width:min(900px, calc(100vw - 24px));
+      max-height: min(90vh, 920px);
       overflow:auto;
-      border-radius: 18px;
+      border-radius:18px;
       border:1px solid var(--stroke);
-      background: rgba(15,26,46,.92);
-      backdrop-filter: blur(10px);
+      background:#fff;
       box-shadow: var(--shadow);
       padding:12px;
     }
     .box header{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:6px 6px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:8px 8px 10px;
       border-bottom:1px solid var(--stroke);
     }
-    .box header h3{margin:0; font-size:14px}
-    .box .body{padding:10px 6px 6px}
+    .box header h3{ margin:0; font-size:14px; font-weight:950; }
+    .box .body{ padding:10px 8px 8px; }
 
-    /* Desktop: drawer vira sidebar */
-    @media (min-width: 980px){
-      #stage{ inset:78px 430px 12px 12px; }
-      .drawer{
-        top:78px; right:12px; left:auto; bottom:12px;
-        width:410px; height:auto;
-        transform:none !important;
-      }
+    /* Responsive */
+    @media (max-width: 980px){
+      #stage{ inset:78px 12px 52vh 12px; }
+      aside{ left:12px; right:12px; width:auto; top:auto; height:50vh; bottom:12px; }
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="topbar">
     <div class="brand">
-      <div class="logo">●</div>
+      <div class="logo"></div>
       <div>
         <h1>IntegraProjetos — Rede visual de integração</h1>
-        <p>Arraste bolinhas • toque para ver • crie ligações escolhendo origem e destino</p>
+        <p>Arraste bolinhas • clique para ver/editar • crie ligações (origem → destino) com motivo, perguntas e resultados</p>
       </div>
     </div>
 
     <div class="actions">
-      <button class="btn-primary" id="btnAdd">+ Adicionar pessoa</button>
+      <button class="primary" id="btnAdd">+ Adicionar pessoa</button>
       <button id="btnAddLink">+ Criar ligação</button>
-      <button id="btnCenter">Centralizar</button>
-      <button id="btnZoomIn">Zoom +</button>
-      <button id="btnZoomOut">Zoom -</button>
       <button id="btnAuto">Auto-organizar</button>
+      <button id="btnFit">Ver todos (Fit)</button>
       <button id="btnAnim">Animar: ON</button>
-      <button id="btnExportJson">Baixar JSON</button>
-      <button class="btn-warn" id="btnImport">Importar JSON</button>
+      <button id="btnExport">Baixar JSON</button>
+      <button class="warn" id="btnImport">Importar JSON</button>
 
-      <span class="status" id="saveStatus" title="Se ficar vermelho, o navegador bloqueou o armazenamento">
-        <span class="dot" id="saveDot" style="background:rgba(34,197,94,.95)"></span>
+      <span class="status" title="Se ficar vermelho, o navegador bloqueou o armazenamento. Use Baixar/Importar JSON.">
+        <span class="dot" id="saveDot"></span>
         <span id="saveText">Salvo ✓</span>
       </span>
 
-      <button class="btn-danger" id="btnResetClean">Reset limpo</button>
-      <button class="btn-danger" id="btnResetSeed">Reset modelo</button>
-      <button id="btnTogglePanel">Mostrar rede</button>
+      <button class="danger" id="btnResetClean">Reset limpo</button>
+      <button class="danger" id="btnResetSeed">Reset modelo</button>
     </div>
   </div>
 
   <div id="stage">
-    <svg id="svg" viewBox="0 0 1200 800" preserveAspectRatio="none"></svg>
+    <svg id="svg"></svg>
 
     <div class="legend" aria-hidden="true">
       <span class="tag"><span class="dot" style="background:var(--purple)"></span>Dados/integração</span>
       <span class="tag"><span class="dot" style="background:var(--green)"></span>Produto/jogo</span>
       <span class="tag"><span class="dot" style="background:var(--orange)"></span>Extensão/visibilidade</span>
       <span class="tag"><span class="dot" style="background:var(--blue)"></span>Análise científica</span>
+      <span class="tag"><span class="dot" style="background:var(--red)"></span>Campo/coleta</span>
     </div>
   </div>
 
-  <aside class="drawer" id="drawer">
+  <aside>
     <header>
-      <div class="left">
-        <h2 id="sideTitle">Gerenciar pessoas</h2>
-        <div class="small" id="sideSub">Toque numa pessoa para abrir. No mobile: use “Mostrar rede” se a rede sumir.</div>
+      <div>
+        <h2 id="sideTitle">Pessoas</h2>
+        <div class="sub" id="sideSub">Use “Ver todos (Fit)” se sumir. Clique numa bolinha para abrir detalhes.</div>
       </div>
       <span class="pill" id="countPill">0 pessoas</span>
     </header>
 
     <div class="toolbar">
-      <button id="tbOpen" disabled>Abrir</button>
-      <button id="tbEdit" disabled>Editar</button>
-      <button id="tbDelete" class="btn-danger" disabled>Excluir</button>
-      <button id="tbLink" disabled>Criar ligação</button>
-      <button id="tbFocus" disabled>Focar</button>
-      <button id="tbBack">Voltar p/ lista</button>
+      <input type="text" id="search" placeholder="Buscar pessoa..." />
+      <button id="btnShowList">Lista</button>
+      <button id="btnShowDetails" disabled>Detalhes</button>
     </div>
 
     <div class="content" id="sideContent"></div>
@@ -320,21 +338,21 @@
   <div class="modal" id="modalPerson">
     <div class="box">
       <header>
-        <h3 id="modalPersonTitle">Adicionar pessoa</h3>
-        <div style="display:flex; gap:8px">
-          <button id="btnClosePerson">Fechar</button>
-          <button class="btn-primary" id="btnSavePerson">Salvar</button>
+        <h3 id="personTitle">Adicionar pessoa</h3>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <button id="closePerson">Fechar</button>
+          <button class="primary" id="savePerson">Salvar</button>
         </div>
       </header>
       <div class="body">
-        <div class="grid">
-          <div class="row">
-            <div>
-              <div class="hint">Nome</div>
-              <input type="text" id="p_name" placeholder="Ex.: Letícia Zen" />
+        <div style="display:grid; gap:10px">
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <div style="flex:1; min-width:240px">
+              <div class="meta">Nome</div>
+              <input type="text" id="p_name" placeholder="Ex.: Letícia Zen"/>
             </div>
-            <div>
-              <div class="hint">Nível</div>
+            <div style="width:180px; min-width:180px">
+              <div class="meta">Nível</div>
               <select id="p_level">
                 <option>Graduação</option>
                 <option>Mestrado</option>
@@ -346,39 +364,42 @@
             </div>
           </div>
 
-          <div class="row">
-            <div>
-              <div class="hint">Área</div>
-              <input type="text" id="p_area" placeholder="Ex.: Clima & Saúde" />
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <div style="flex:1; min-width:240px">
+              <div class="meta">Área</div>
+              <input type="text" id="p_area" placeholder="Ex.: Clima & Saúde"/>
             </div>
-            <div>
-              <div class="hint">Cor da bolinha (opcional)</div>
-              <input type="text" id="p_color" placeholder="Ex.: #22c55e ou rgba(...)" />
+            <div style="width:220px; min-width:220px">
+              <div class="meta">Cor da bolinha</div>
+              <select id="p_color">
+                <option value="var(--blue)">Azul</option>
+                <option value="var(--purple)">Roxo</option>
+                <option value="var(--green)">Verde</option>
+                <option value="var(--orange)">Laranja</option>
+                <option value="var(--pink)">Rosa</option>
+                <option value="var(--red)">Vermelho</option>
+              </select>
             </div>
           </div>
 
           <div>
-            <div class="hint">Título do trabalho</div>
-            <input type="text" id="p_title" />
+            <div class="meta">Título do trabalho</div>
+            <input type="text" id="p_title"/>
           </div>
-
           <div>
-            <div class="hint">Objetivos</div>
-            <textarea id="p_objectives"></textarea>
+            <div class="meta">Objetivos</div>
+            <textarea id="p_obj"></textarea>
           </div>
-
           <div>
-            <div class="hint">Resultados esperados</div>
-            <textarea id="p_expected"></textarea>
+            <div class="meta">Resultados esperados</div>
+            <textarea id="p_exp"></textarea>
           </div>
-
           <div>
-            <div class="hint">Tags (vírgula)</div>
-            <input type="text" id="p_tags" placeholder="planilhas, gráficos, carbono..." />
+            <div class="meta">Tags (separadas por vírgula)</div>
+            <input type="text" id="p_tags" placeholder="planilhas, gráficos, carbono..."/>
           </div>
-
-          <div class="hint">
-            Se o teu navegador bloquear salvamento, o indicador vai ficar vermelho — aí use “Baixar JSON” e “Importar JSON”.
+          <div class="meta">
+            Dica: se “Salvo ✓” ficar vermelho, use Baixar/Importar JSON.
           </div>
         </div>
       </div>
@@ -389,39 +410,39 @@
   <div class="modal" id="modalLink">
     <div class="box">
       <header>
-        <h3 id="modalLinkTitle">Criar ligação</h3>
-        <div style="display:flex; gap:8px">
-          <button id="btnCloseLink">Fechar</button>
-          <button class="btn-primary" id="btnSaveLink">Salvar ligação</button>
+        <h3 id="linkTitle">Criar ligação</h3>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <button id="closeLink">Fechar</button>
+          <button class="primary" id="saveLink">Salvar ligação</button>
         </div>
       </header>
       <div class="body">
-        <div class="grid">
-          <div class="row">
-            <div>
-              <div class="hint">Origem</div>
+        <div style="display:grid; gap:10px">
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <div style="flex:1; min-width:240px">
+              <div class="meta">Origem</div>
               <select id="l_from"></select>
             </div>
-            <div>
-              <div class="hint">Destino</div>
+            <div style="flex:1; min-width:240px">
+              <div class="meta">Destino</div>
               <select id="l_to"></select>
             </div>
           </div>
 
-          <div class="row">
-            <div>
-              <div class="hint">Tipo</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <div style="flex:1; min-width:240px">
+              <div class="meta">Tipo</div>
               <select id="l_type">
-                <option value="dados">Dados / Integração</option>
+                <option value="dados">Dados/integração</option>
                 <option value="analise">Análise científica</option>
-                <option value="extensao">Extensão / Visibilidade</option>
-                <option value="produto">Produto / Jogo</option>
-                <option value="campo">Coleta / Campo</option>
+                <option value="extensao">Extensão/visibilidade</option>
+                <option value="produto">Produto/jogo</option>
+                <option value="campo">Campo/coleta</option>
                 <option value="outro">Outro</option>
               </select>
             </div>
-            <div>
-              <div class="hint">Intensidade</div>
+            <div style="width:180px; min-width:180px">
+              <div class="meta">Força</div>
               <select id="l_weight">
                 <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option>
               </select>
@@ -429,15 +450,15 @@
           </div>
 
           <div>
-            <div class="hint">Por que liga?</div>
+            <div class="meta">Por que liga?</div>
             <textarea id="l_reason"></textarea>
           </div>
           <div>
-            <div class="hint">Perguntas</div>
+            <div class="meta">Perguntas</div>
             <textarea id="l_questions"></textarea>
           </div>
           <div>
-            <div class="hint">Resultados esperados da ligação</div>
+            <div class="meta">Resultados esperados da ligação</div>
             <textarea id="l_outputs"></textarea>
           </div>
         </div>
@@ -448,35 +469,45 @@
   <input type="file" id="fileImport" accept="application/json" style="display:none"/>
 
 <script>
-/* =========================
-   IntegraProjetos v3
-   - Sem onclick inline (Android para de falhar)
-   - Drawer colapsável (rede sempre visível)
-   - Zoom / Centralizar
-   - Persistência com aviso se storage bloqueado
-========================= */
-const STORAGE_KEY = "integraprojetos_v3";
+/* ============================
+   IntegraProjetos v4 (FUNCIONAL + BRANCO)
+   - Física suave (flutuar)
+   - Animar ON/OFF real
+   - Auto-organizar real
+   - Fit/Ver todos bonito
+   - Reset limpo e Reset modelo funcionando
+   - Lista sempre mostrando todos
+============================ */
 
-function uid(){ return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16); }
-function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
-function escapeHTML(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+const STORAGE_KEY = "integraprojetos_v4";
+
+/* ---------- Utils ---------- */
+const uid = ()=> "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+const clone = (o)=> JSON.parse(JSON.stringify(o));
+const esc = (s)=> String(s ?? "")
+  .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+
+function cssVar(v){
+  // permite salvar "var(--blue)" etc.
+  const m = /^var\((--[a-z]+)\)$/i.exec(v || "");
+  if(!m) return v;
+  const computed = getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim();
+  return computed || v;
 }
-function clamp(v,a,b){ return Math.max(a, Math.min(b,v)); }
 
 function linkColor(type){
+  const root = getComputedStyle(document.documentElement);
   switch(type){
-    case "dados": return "rgba(124,58,237,.95)";
-    case "produto": return "rgba(34,197,94,.95)";
-    case "extensao": return "rgba(245,158,11,.95)";
-    case "analise": return "rgba(96,165,250,.95)";
-    case "campo": return "rgba(239,68,68,.85)";
-    default: return "rgba(229,231,235,.30)";
+    case "dados": return root.getPropertyValue("--purple").trim();
+    case "produto": return root.getPropertyValue("--green").trim();
+    case "extensao": return root.getPropertyValue("--orange").trim();
+    case "analise": return root.getPropertyValue("--blue").trim();
+    case "campo": return root.getPropertyValue("--red").trim();
+    default: return "rgba(16,24,40,.28)";
   }
 }
-function shortType(type){
+function typeLabel(type){
   switch(type){
     case "dados": return "dados";
     case "produto": return "produto";
@@ -486,81 +517,81 @@ function shortType(type){
     default: return "outro";
   }
 }
-function downloadBlob(text, filename, mime){
+function download(text, filename, mime){
   const blob = new Blob([text], {type:mime});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = filename;
-  document.body.appendChild(a);
-  a.click(); a.remove();
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 800);
 }
 
-/* ==== Seed: seus 7 alunos (sem ligações) ==== */
+/* ---------- Seed (seus 7 alunos) ---------- */
 const SEED = {
-  meta:{ app:"IntegraProjetos", version:3, updatedAt:new Date().toISOString() },
-  nodes: [
+  meta:{ app:"IntegraProjetos", version:4, updatedAt:new Date().toISOString() },
+  nodes:[
     { id: uid(), name:"Letícia Zen", level:"Graduação", area:"Clima & Saúde",
       title:"Impacto do calor na mortalidade em MT (dados secundários)",
-      objectives:"Trabalha com análise de dados secundários sobre o impacto do calor na mortalidade em MT.",
+      objectives:"Análise de dados secundários sobre o impacto do calor na mortalidade em MT.",
       expected:"Organização de planilhas e produção de gráficos comparativos e analíticos.",
-      tags:["mortalidade","calor","planilhas","gráficos","MT"], color:"rgba(96,165,250,.95)"
+      tags:["mortalidade","calor","planilhas","gráficos","MT"], color:"var(--blue)"
     },
     { id: uid(), name:"Cintya", level:"Graduação", area:"Extensão & Visibilidade",
       title:"Extensão na pós: visibilidade e identificação de projetos",
-      objectives:"Produção de dados sobre a extensão na pós-graduação, com análise e identificação de projetos para dar visibilidade à pós-graduação.",
+      objectives:"Produção de dados sobre a extensão na pós-graduação, com análise e identificação de projetos para dar visibilidade.",
       expected:"Identificação de projetos para a visibilidade da pós da UNEMAT.",
-      tags:["extensão","pós-graduação","visibilidade","mapeamento"], color:"rgba(245,158,11,.95)"
+      tags:["extensão","pós","visibilidade","mapeamento"], color:"var(--orange)"
     },
     { id: uid(), name:"Antônio", level:"Graduação", area:"Atividade Física & Ambiente",
       title:"Efeito da temperatura em atividade física (aberto/fechado/escolas)",
       objectives:"Avalia o efeito da temperatura em atividades físicas de áreas abertas, fechadas e em escolas.",
-      expected:"Coleta de dados em diferentes ambientes em Cáceres; organização de planilhas; análises e comparações térmicas entre ambientes.",
-      tags:["temperatura","atividade física","Cáceres","campo","comparação"], color:"rgba(34,197,94,.95)"
+      expected:"Coleta em ambientes em Cáceres; organização de planilhas; análises e comparações térmicas.",
+      tags:["temperatura","atividade física","Cáceres","campo"], color:"var(--green)"
     },
     { id: uid(), name:"Luan", level:"Graduação", area:"Jogos & Educação",
       title:"Jogo interativo sobre carbono (rumo ao 3D)",
-      objectives:"Produção de jogos interativos sobre o carbono; analisa itens necessários para produção do jogo.",
+      objectives:"Produção de jogos interativos sobre carbono; análise de itens necessários para produção.",
       expected:"Produzir um jogo 3D sobre carbono.",
-      tags:["jogos","carbono","3D","educação"], color:"rgba(124,58,237,.95)"
+      tags:["jogos","carbono","3D","educação"], color:"var(--purple)"
     },
     { id: uid(), name:"Matheus", level:"Graduação", area:"Carbono (dados)",
       title:"Inspetor/organizador de planilhas do laboratório (carbono)",
-      objectives:"Organização de dados de carbono em planilhas; atua como inspetor de dados e integração de planilhas do lab.",
-      expected:"Todas as planilhas deverão ser revisadas por ele para integração de dados.",
-      tags:["planilhas","carbono","integração","qualidade"], color:"rgba(16,185,129,.95)"
+      objectives:"Organiza dados de carbono e atua como inspetor de qualidade e integração de planilhas.",
+      expected:"Revisar planilhas para integração de dados do laboratório.",
+      tags:["planilhas","carbono","integração","qualidade"], color:"var(--green)"
     },
     { id: uid(), name:"Leandro", level:"Graduação", area:"Carbono (processos)",
       title:"ATTZ e dinâmica do carbono na praia de Cáceres",
       objectives:"Analisa a influência da ATTZ na dinâmica do carbono em praia de Cáceres.",
-      expected:"Identificar a dinâmica das águas e sua influência no fluxo de CO₂ de áreas alagáveis até secas.",
-      tags:["ATTZ","CO2","hidrodinâmica","Cáceres","alagável"], color:"rgba(59,130,246,.95)"
+      expected:"Identificar dinâmica das águas e influência no fluxo de CO₂ de áreas alagáveis até secas.",
+      tags:["ATTZ","CO2","hidrodinâmica","alagável"], color:"var(--blue)"
     },
     { id: uid(), name:"Vanessa", level:"Graduação", area:"Jogos & Educação",
       title:"Jogos físicos + Guardiões do Clima (ensino médio)",
-      objectives:"Produção de jogos físicos para integração com estudantes do ensino médio; monitora dos Guardiões do Clima.",
+      objectives:"Produção de jogos físicos para integração com estudantes; monitora dos Guardiões do Clima.",
       expected:"Produzir jogos sobre carbono e mudanças climáticas para crianças e adolescentes.",
-      tags:["jogos físicos","ensino médio","clima","carbono"], color:"rgba(236,72,153,.92)"
+      tags:["jogos físicos","ensino médio","clima","carbono"], color:"var(--pink)"
     }
   ],
   links:[]
 };
 
-/* ==== DOM ==== */
-const svg = document.getElementById("svg");
+/* ---------- DOM ---------- */
 const stage = document.getElementById("stage");
-
-const drawer = document.getElementById("drawer");
-const btnTogglePanel = document.getElementById("btnTogglePanel");
-
+const svg = document.getElementById("svg");
+const sideContent = document.getElementById("sideContent");
 const countPill = document.getElementById("countPill");
 const sideTitle = document.getElementById("sideTitle");
 const sideSub = document.getElementById("sideSub");
-const sideContent = document.getElementById("sideContent");
 
 const saveDot = document.getElementById("saveDot");
 const saveText = document.getElementById("saveText");
 
+const search = document.getElementById("search");
+const btnShowList = document.getElementById("btnShowList");
+const btnShowDetails = document.getElementById("btnShowDetails");
+
+/* modals */
 const modalPerson = document.getElementById("modalPerson");
 const modalLink = document.getElementById("modalLink");
 
@@ -569,8 +600,8 @@ const p_level = document.getElementById("p_level");
 const p_area = document.getElementById("p_area");
 const p_color = document.getElementById("p_color");
 const p_title = document.getElementById("p_title");
-const p_objectives = document.getElementById("p_objectives");
-const p_expected = document.getElementById("p_expected");
+const p_obj = document.getElementById("p_obj");
+const p_exp = document.getElementById("p_exp");
 const p_tags = document.getElementById("p_tags");
 
 const l_from = document.getElementById("l_from");
@@ -583,95 +614,107 @@ const l_outputs = document.getElementById("l_outputs");
 
 const fileImport = document.getElementById("fileImport");
 
-/* toolbar drawer */
-const tbOpen = document.getElementById("tbOpen");
-const tbEdit = document.getElementById("tbEdit");
-const tbDelete = document.getElementById("tbDelete");
-const tbLink = document.getElementById("tbLink");
-const tbFocus = document.getElementById("tbFocus");
-const tbBack = document.getElementById("tbBack");
-
-/* top buttons */
-document.getElementById("btnAdd").addEventListener("click", ()=> openPersonModal(null));
-document.getElementById("btnAddLink").addEventListener("click", ()=> openLinkModal(null));
-document.getElementById("btnAuto").addEventListener("click", ()=> { autoOrganize(true); persist(); centerNow(); });
+/* buttons */
+document.getElementById("btnAdd").addEventListener("click", ()=> openPerson(null));
+document.getElementById("btnAddLink").addEventListener("click", ()=> openLink(null));
+document.getElementById("btnAuto").addEventListener("click", ()=> { autoOrganize(); });
+document.getElementById("btnFit").addEventListener("click", ()=> fitToAll(true));
 document.getElementById("btnAnim").addEventListener("click", ()=> toggleAnim());
-document.getElementById("btnExportJson").addEventListener("click", exportJSON);
+document.getElementById("btnExport").addEventListener("click", exportJSON);
 document.getElementById("btnImport").addEventListener("click", ()=> fileImport.click());
 document.getElementById("btnResetClean").addEventListener("click", resetClean);
 document.getElementById("btnResetSeed").addEventListener("click", resetSeed);
 
-document.getElementById("btnCenter").addEventListener("click", ()=> centerNow());
-document.getElementById("btnZoomIn").addEventListener("click", ()=> setZoom(zoom*1.12));
-document.getElementById("btnZoomOut").addEventListener("click", ()=> setZoom(zoom/1.12));
-
-btnTogglePanel.addEventListener("click", ()=> toggleDrawer());
-
-document.getElementById("btnClosePerson").addEventListener("click", ()=> closeModal(modalPerson));
-document.getElementById("btnSavePerson").addEventListener("click", savePersonFromModal);
-
-document.getElementById("btnCloseLink").addEventListener("click", ()=> closeModal(modalLink));
-document.getElementById("btnSaveLink").addEventListener("click", saveLinkFromModal);
+document.getElementById("closePerson").addEventListener("click", ()=> closeModal(modalPerson));
+document.getElementById("savePerson").addEventListener("click", savePerson);
+document.getElementById("closeLink").addEventListener("click", ()=> closeModal(modalLink));
+document.getElementById("saveLink").addEventListener("click", saveLink);
 
 fileImport.addEventListener("change", importJSONFile);
 
-/* toolbar actions */
-tbOpen.addEventListener("click", ()=> { if(selectedNodeId) openDetails(selectedNodeId); });
-tbEdit.addEventListener("click", ()=> { if(selectedNodeId) openPersonModal(selectedNodeId); });
-tbDelete.addEventListener("click", ()=> { if(selectedNodeId) deletePerson(selectedNodeId); });
-tbLink.addEventListener("click", ()=> { if(selectedNodeId) openLinkModal(null, selectedNodeId); });
-tbFocus.addEventListener("click", ()=> { if(selectedNodeId) focusNode(selectedNodeId); });
-tbBack.addEventListener("click", ()=> { selectedNodeId = null; renderAll(); });
+btnShowList.addEventListener("click", ()=> { viewMode="list"; renderSide(); });
+btnShowDetails.addEventListener("click", ()=> { if(selectedId) { viewMode="details"; renderSide(); } });
 
-/* ==== SVG layers ==== */
+search.addEventListener("input", ()=> renderSide());
+
+modalPerson.addEventListener("click", (e)=> { if(e.target===modalPerson) closeModal(modalPerson); });
+modalLink.addEventListener("click", (e)=> { if(e.target===modalLink) closeModal(modalLink); });
+
+/* ---------- SVG setup ---------- */
 function makeSvg(tag, attrs={}){
   const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for(const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
   return el;
 }
-const gRoot = makeSvg("g", { id:"gRoot" });
-const gLinks = makeSvg("g", { id:"gLinks" });
-const gNodes = makeSvg("g", { id:"gNodes" });
+svg.innerHTML = "";
+const gRoot = makeSvg("g", {id:"root"});
+const gLinks = makeSvg("g", {id:"links"});
+const gNodes = makeSvg("g", {id:"nodes"});
 gRoot.appendChild(gLinks);
 gRoot.appendChild(gNodes);
 svg.appendChild(gRoot);
 
-/* ==== State ==== */
+/* ---------- State ---------- */
 let state = loadState();
-let selectedNodeId = null;
-let editingPersonId = null;
-let editingLinkId = null;
+state = normalize(state);
 
-let view = { w:1200, h:800 };
-let animOn = true;
+let selectedId = null;
+let editPersonId = null;
+let editLinkId = null;
+
+let viewMode = "list"; // list | details
+
+let W=1200, H=800;
+let pan = {x:0, y:0};
+let zoom = 1.0;
+
+let anim = true;
+let raf = null;
+let lastT = performance.now();
+
 let dragging = null;
 
-let zoom = 1.0;
-let pan = { x:0, y:0 };
+/* ---------- Resize ---------- */
+function resize(){
+  const r = stage.getBoundingClientRect();
+  W = Math.max(700, Math.floor(r.width));
+  H = Math.max(520, Math.floor(r.height));
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+}
+window.addEventListener("resize", ()=> { resize(); fitToAll(false); renderGraph(); });
+resize();
 
-resizeSVG();
-window.addEventListener("resize", ()=> { resizeSVG(); renderGraph(); });
-
-initPositionsIfNeeded();
-autoOrganize(false);
-centerNow();
-startSim();
-renderAll();
-
-/* ==== persistence ==== */
+/* ---------- Storage ---------- */
+let saveTimer = null;
+function setSaved(ok, msg){
+  if(saveTimer) clearTimeout(saveTimer);
+  saveDot.style.background = ok ? "var(--green)" : "var(--red)";
+  saveText.textContent = msg || (ok ? "Salvo ✓" : "Não salvou");
+  saveTimer = setTimeout(()=> {
+    if(ok){ saveDot.style.background="var(--green)"; saveText.textContent="Salvo ✓"; }
+  }, 2500);
+}
+function persist(){
+  try{
+    state.meta.updatedAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    setSaved(true);
+  }catch(e){
+    setSaved(false, "Storage bloqueado — use JSON");
+  }
+}
 function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return deepClone(SEED);
-    const obj = JSON.parse(raw);
-    return normalize(obj);
-  }catch(e){
-    return deepClone(SEED);
+    if(!raw) return clone(SEED);
+    return JSON.parse(raw);
+  }catch{
+    return clone(SEED);
   }
 }
 function normalize(obj){
   return {
-    meta: obj.meta || { app:"IntegraProjetos", version:3, updatedAt:new Date().toISOString() },
+    meta: obj.meta || {app:"IntegraProjetos", version:4, updatedAt:new Date().toISOString()},
     nodes: (obj.nodes||[]).map(n=>({
       id: n.id || uid(),
       name: n.name || "Sem nome",
@@ -680,13 +723,15 @@ function normalize(obj){
       title: n.title || "",
       objectives: n.objectives || "",
       expected: n.expected || "",
-      tags: Array.isArray(n.tags)? n.tags : [],
-      color: n.color || "rgba(124,58,237,.95)",
-      x: Number.isFinite(n.x)? n.x : 0,
-      y: Number.isFinite(n.y)? n.y : 0,
-      vx: Number.isFinite(n.vx)? n.vx : 0,
-      vy: Number.isFinite(n.vy)? n.vy : 0,
-      fx: null, fy: null
+      tags: Array.isArray(n.tags) ? n.tags : [],
+      color: n.color || "var(--blue)",
+      // physics:
+      x: Number.isFinite(n.x) ? n.x : 0,
+      y: Number.isFinite(n.y) ? n.y : 0,
+      vx: Number.isFinite(n.vx) ? n.vx : 0,
+      vy: Number.isFinite(n.vy) ? n.vy : 0,
+      fx: null,
+      fy: null
     })),
     links: (obj.links||[]).map(l=>({
       id: l.id || uid(),
@@ -699,552 +744,393 @@ function normalize(obj){
     }))
   };
 }
-function persist(){
-  try{
-    state.meta.updatedAt = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    setSaved(true);
-  }catch(e){
-    // storage bloqueado -> avisa vermelho
-    setSaved(false, "Storage bloqueado — use Baixar JSON");
-  }
-}
-let saveTimer=null;
-function setSaved(ok, msg){
-  if(saveTimer) clearTimeout(saveTimer);
-  if(ok){
-    saveDot.style.background = "rgba(34,197,94,.95)";
-    saveText.textContent = msg || "Salvo ✓";
-  }else{
-    saveDot.style.background = "rgba(239,68,68,.90)";
-    saveText.textContent = msg || "Não salvou";
-  }
-  saveTimer = setTimeout(()=>{
-    if(ok){
-      saveDot.style.background = "rgba(34,197,94,.95)";
-      saveText.textContent = "Salvo ✓";
-    }
-  }, 2500);
-}
-
-/* ==== helpers ==== */
 function getNode(id){ return state.nodes.find(n=>n.id===id); }
 
-function initPositionsIfNeeded(){
-  state.nodes.forEach(n=>{
-    const bad = !Number.isFinite(n.x) || !Number.isFinite(n.y) || (n.x===0 && n.y===0);
-    if(bad){
-      n.x = view.w/2 + (Math.random()-.5)*420;
-      n.y = view.h/2 + (Math.random()-.5)*320;
-      n.vx = (Math.random()-.5)*2;
-      n.vy = (Math.random()-.5)*2;
+/* ---------- Init positions ---------- */
+function initPositions(){
+  const cx=W/2, cy=H/2;
+  const R = Math.min(W,H)*0.28;
+  state.nodes.forEach((n,i)=>{
+    if(!Number.isFinite(n.x) || !Number.isFinite(n.y) || (n.x===0 && n.y===0)){
+      const a = (i/state.nodes.length)*Math.PI*2;
+      n.x = cx + Math.cos(a)*R + (Math.random()-.5)*40;
+      n.y = cy + Math.sin(a)*R + (Math.random()-.5)*40;
     }
   });
 }
-function resizeSVG(){
-  const rect = stage.getBoundingClientRect();
-  view.w = Math.max(700, Math.floor(rect.width));
-  view.h = Math.max(520, Math.floor(rect.height));
-  svg.setAttribute("viewBox", `0 0 ${view.w} ${view.h}`);
-}
+initPositions();
+fitToAll(false);
+renderAll();
+start();
 
-/* ==== Drawer ==== */
-function toggleDrawer(force){
-  if(typeof force === "boolean"){
-    drawer.classList.toggle("collapsed", force);
-  }else{
-    drawer.classList.toggle("collapsed");
-  }
-  const collapsed = drawer.classList.contains("collapsed");
-  btnTogglePanel.textContent = collapsed ? "Mostrar painel" : "Mostrar rede";
-}
-
-/* ==== Rendering ==== */
+/* ---------- Graph rendering ---------- */
 function renderAll(){
   countPill.textContent = `${state.nodes.length} pessoas`;
   renderSide();
   renderGraph();
-  updateToolbar();
 }
-
-function updateToolbar(){
-  const has = !!selectedNodeId && !!getNode(selectedNodeId);
-  tbOpen.disabled = !has;
-  tbEdit.disabled = !has;
-  tbDelete.disabled = !has;
-  tbLink.disabled = !has;
-  tbFocus.disabled = !has;
-}
-
-function renderSide(){
-  if(!selectedNodeId){
-    sideTitle.textContent = "Gerenciar pessoas";
-    sideSub.textContent = "Toque em “Abrir” na pessoa. Se a rede sumir, toque “Mostrar rede”.";
-    sideContent.innerHTML = `
-      <div class="hint">
-        Lista com botões reais (sem bug de Android). Você sempre consegue abrir/editar/excluir.
-      </div>
-      <div class="sep"></div>
-      <div class="grid" id="peopleList"></div>
-    `;
-    const list = document.getElementById("peopleList");
-    const sorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
-    sorted.forEach(n=>{
-      const box = document.createElement("div");
-      box.className = "mini";
-      box.innerHTML = `
-        <b>${escapeHTML(n.name)}</b>
-        <div class="meta">${escapeHTML(n.level)} • ${escapeHTML(n.area)}</div>
-        <div class="meta" style="margin-top:6px">${escapeHTML(n.title||"")}</div>
-        <div class="actions2">
-          <button data-act="open">Abrir</button>
-          <button data-act="focus">Focar</button>
-          <button data-act="edit">Editar</button>
-          <button class="btn-danger" data-act="del">Excluir</button>
-        </div>
-      `;
-      box.querySelector('[data-act="open"]').addEventListener("click", ()=>{
-        selectedNodeId = n.id; openDetails(n.id);
-      });
-      box.querySelector('[data-act="focus"]').addEventListener("click", ()=> focusNode(n.id));
-      box.querySelector('[data-act="edit"]').addEventListener("click", ()=> openPersonModal(n.id));
-      box.querySelector('[data-act="del"]').addEventListener("click", ()=> deletePerson(n.id));
-      list.appendChild(box);
-    });
-    return;
-  }
-  openDetails(selectedNodeId);
-}
-
-function openDetails(id){
-  const n = getNode(id);
-  if(!n){ selectedNodeId=null; renderAll(); return; }
-
-  sideTitle.textContent = n.name;
-  sideSub.textContent = `${n.level} • ${n.area}`;
-
-  const rel = state.links.filter(l => l.from===n.id || l.to===n.id);
-
-  sideContent.innerHTML = `
-    <div class="grid">
-      <div class="mini">
-        <b>${escapeHTML(n.title || "Sem título")}</b>
-        <div class="meta">${escapeHTML(n.level)} • ${escapeHTML(n.area)}</div>
-      </div>
-
-      <div class="mini">
-        <div class="meta">Objetivos</div>
-        <div style="white-space:pre-wrap; margin-top:6px">${escapeHTML(n.objectives||"")}</div>
-      </div>
-
-      <div class="mini">
-        <div class="meta">Resultados esperados</div>
-        <div style="white-space:pre-wrap; margin-top:6px">${escapeHTML(n.expected||"")}</div>
-      </div>
-
-      <div class="mini">
-        <div class="meta">Tags</div>
-        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
-          ${(n.tags||[]).map(t=>`<span class="pill">${escapeHTML(t)}</span>`).join("") || `<span class="hint">Sem tags.</span>`}
-        </div>
-      </div>
-
-      <div class="mini">
-        <b>Ligações (${rel.length})</b>
-        <div class="hint" style="margin-top:4px">Use “Criar ligação” e escolha origem/destino.</div>
-        <div class="sep"></div>
-        <div class="grid" id="relList"></div>
-      </div>
-    </div>
-  `;
-
-  const relList = document.getElementById("relList");
-  rel.forEach(l=>{
-    const otherId = (l.from===n.id) ? l.to : l.from;
-    const other = getNode(otherId);
-    const box = document.createElement("div");
-    box.className = "mini";
-    box.innerHTML = `
-      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px">
-        <div>
-          <b>${escapeHTML(other ? other.name : "—")}</b>
-          <div class="meta">${escapeHTML(shortType(l.type))} • intensidade ${escapeHTML(String(l.weight||3))}</div>
-        </div>
-        <span class="pill" style="border-color:${linkColor(l.type)}; color:rgba(229,231,235,.88)">${escapeHTML(shortType(l.type))}</span>
-      </div>
-      <div class="meta" style="margin-top:10px">Por quê</div>
-      <div style="white-space:pre-wrap; margin-top:4px">${escapeHTML(l.reason||"")}</div>
-      <div class="actions2">
-        <button data-act="edit">Editar ligação</button>
-        <button class="btn-danger" data-act="del">Excluir ligação</button>
-      </div>
-    `;
-    box.querySelector('[data-act="edit"]').addEventListener("click", ()=> openLinkModal(l.id));
-    box.querySelector('[data-act="del"]').addEventListener("click", ()=> deleteLink(l.id));
-    relList.appendChild(box);
-  });
-
-  updateToolbar();
-  renderGraph();
-  focusNode(id);
-}
-
-/* ==== Graph render (com pan/zoom) ==== */
 function renderGraph(){
-  gLinks.innerHTML = "";
-  gNodes.innerHTML = "";
-
+  // transform
   gRoot.setAttribute("transform", `translate(${pan.x} ${pan.y}) scale(${zoom})`);
 
-  state.links.forEach(link=>{
-    const a = getNode(link.from);
-    const b = getNode(link.to);
-    if(!a || !b) return;
+  // links
+  gLinks.innerHTML = "";
+  state.links.forEach(l=>{
+    const a = getNode(l.from), b = getNode(l.to);
+    if(!a||!b) return;
 
-    const line = makeSvg("line", {
+    const line = makeSvg("line",{
       x1:a.x, y1:a.y, x2:b.x, y2:b.y,
-      stroke: linkColor(link.type),
-      "stroke-width": Math.max(2.0, Number(link.weight||3) * 1.5),
-      "stroke-opacity": selectedNodeId ? ((link.from===selectedNodeId || link.to===selectedNodeId) ? .90 : .20) : .55
+      stroke: linkColor(l.type),
+      "stroke-width": 2 + (l.weight||3)*1.6,
+      "stroke-linecap":"round",
+      "stroke-opacity": selectedId ? ((l.from===selectedId||l.to===selectedId)? .9 : .25) : .65
     });
-    line.style.cursor = "pointer";
-    line.addEventListener("click", (e)=>{ e.stopPropagation(); openLinkModal(link.id); });
+    line.style.cursor="pointer";
+    line.addEventListener("click",(e)=>{ e.stopPropagation(); openLink(l.id); });
     gLinks.appendChild(line);
 
     const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
-    const t = makeSvg("text", {
-      x:mx, y:my-6,
-      fill:"rgba(229,231,235,.78)",
+    const label = makeSvg("text",{
+      x:mx, y:my-8,
+      fill:"rgba(16,24,40,.70)",
       "font-size":"12",
-      "text-anchor":"middle"
+      "text-anchor":"middle",
+      "font-weight":"800"
     });
-    t.textContent = shortType(link.type);
-    t.style.pointerEvents = "none";
-    gLinks.appendChild(t);
+    label.textContent = typeLabel(l.type);
+    label.style.pointerEvents="none";
+    gLinks.appendChild(label);
   });
 
-  state.nodes.forEach(node=>{
-    const base = 22;
-    const r = base + Math.min(10, (node.tags||[]).length);
-    const isSel = node.id === selectedNodeId;
+  // nodes
+  gNodes.innerHTML = "";
+  state.nodes.forEach(n=>{
+    const isSel = n.id===selectedId;
 
-    const group = makeSvg("g", {"data-id": node.id});
-    group.style.cursor = "grab";
+    const tagsBoost = Math.min(10, (n.tags||[]).length);
+    const r = 22 + tagsBoost;
 
-    const halo = makeSvg("circle", {
-      cx:node.x, cy:node.y, r:r+14,
-      fill:"transparent",
-      stroke: isSel ? "rgba(255,255,255,.45)" : "rgba(255,255,255,.10)",
-      "stroke-width": isSel ? 2.8 : 1.2
+    const group = makeSvg("g", {"data-id":n.id});
+    group.style.cursor="grab";
+
+    // soft glow ring
+    const glow = makeSvg("circle",{
+      cx:n.x, cy:n.y, r:r+16,
+      fill:"rgba(124,58,237,.07)",
+      stroke: isSel ? "rgba(16,185,129,.60)" : "rgba(16,24,40,.10)",
+      "stroke-width": isSel ? 2.6 : 1.2
     });
-    group.appendChild(halo);
+    gNodes.appendChild(glow);
 
-    const c = makeSvg("circle", {
-      cx:node.x, cy:node.y, r,
-      fill: node.color || "rgba(124,58,237,.95)",
-      stroke:"rgba(255,255,255,.18)",
-      "stroke-width": isSel ? 2.6 : 1.3
+    // main circle
+    const c = makeSvg("circle",{
+      cx:n.x, cy:n.y, r:r,
+      fill: cssVar(n.color),
+      stroke:"rgba(255,255,255,.85)",
+      "stroke-width": 2
     });
+    c.style.filter = "drop-shadow(0 10px 16px rgba(16,24,40,.14))";
     group.appendChild(c);
 
-    const name = makeSvg("text", {
-      x: node.x, y: node.y + r + 18,
-      fill: isSel ? "rgba(255,255,255,.95)" : "rgba(229,231,235,.82)",
+    // name
+    const name = makeSvg("text",{
+      x:n.x, y:n.y + r + 18,
+      fill:"rgba(16,24,40,.86)",
       "font-size":"13",
+      "font-weight":"900",
       "text-anchor":"middle"
     });
-    name.textContent = node.name;
+    name.textContent = n.name;
     group.appendChild(name);
 
-    const sub = makeSvg("text", {
-      x: node.x, y: node.y + r + 34,
-      fill:"rgba(169,180,194,.85)",
+    // area
+    const area = makeSvg("text",{
+      x:n.x, y:n.y + r + 34,
+      fill:"rgba(102,112,133,.92)",
       "font-size":"11",
+      "font-weight":"700",
       "text-anchor":"middle"
     });
-    sub.textContent = node.area;
-    group.appendChild(sub);
+    area.textContent = n.area;
+    group.appendChild(area);
 
-    group.addEventListener("mousedown", (e)=>startDrag(e,node.id));
-    group.addEventListener("touchstart", (e)=>startDrag(e,node.id), {passive:false});
-    group.addEventListener("click", (e)=>{
+    // events
+    group.addEventListener("mousedown",(e)=> startDrag(e,n.id));
+    group.addEventListener("touchstart",(e)=> startDrag(e,n.id), {passive:false});
+    group.addEventListener("click",(e)=>{
       e.stopPropagation();
-      selectedNodeId = node.id;
-      renderAll();
-      // no mobile, abre painel e foca
-      toggleDrawer(false);
-      focusNode(node.id);
+      selectedId = n.id;
+      viewMode="details";
+      btnShowDetails.disabled = false;
+      renderSide();
+      renderGraph();
     });
 
     gNodes.appendChild(group);
   });
 
-  // clique no fundo limpa seleção
-  svg.onclick = ()=> { selectedNodeId = null; renderAll(); };
-}
-
-/* ==== Pan/Zoom ==== */
-function setZoom(z){
-  zoom = clamp(z, 0.55, 1.9);
-  renderGraph();
-}
-function centerNow(){
-  pan.x = 0; pan.y = 0;
-  // centraliza o “bbox” da rede no meio do stage
-  if(state.nodes.length){
-    let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
-    state.nodes.forEach(n=>{
-      minX=Math.min(minX,n.x); minY=Math.min(minY,n.y);
-      maxX=Math.max(maxX,n.x); maxY=Math.max(maxY,n.y);
-    });
-    const bx=(minX+maxX)/2, by=(minY+maxY)/2;
-    const cx=view.w/2, cy=view.h/2;
-    pan.x = (cx - bx) * zoom;
-    pan.y = (cy - by) * zoom;
-  }
-  renderGraph();
-}
-function focusNode(id){
-  const n = getNode(id); if(!n) return;
-  const cx=view.w/2, cy=view.h/2;
-  pan.x = (cx - n.x) * zoom;
-  pan.y = (cy - n.y) * zoom;
-  persist();
-  renderGraph();
-}
-
-/* ==== Drag ==== */
-function getPointer(ev){
-  const rect = svg.getBoundingClientRect();
-  const isTouch = ev.touches && ev.touches[0];
-  const clientX = isTouch ? ev.touches[0].clientX : ev.clientX;
-  const clientY = isTouch ? ev.touches[0].clientY : ev.clientY;
-  const x = (clientX - rect.left) * (view.w / rect.width);
-  const y = (clientY - rect.top) * (view.h / rect.height);
-  // ajustar para pan/zoom
-  const gx = (x - pan.x/zoom);
-  const gy = (y - pan.y/zoom);
-  return {x: gx, y: gy};
-}
-function startDrag(ev, nodeId){
-  ev.preventDefault();
-  const n = getNode(nodeId); if(!n) return;
-  dragging = { id:nodeId };
-  n.fx = n.x; n.fy = n.y;
-
-  window.addEventListener("mousemove", onDragMove);
-  window.addEventListener("mouseup", onDragEnd);
-  window.addEventListener("touchmove", onDragMove, {passive:false});
-  window.addEventListener("touchend", onDragEnd);
-}
-function onDragMove(ev){
-  if(!dragging) return;
-  ev.preventDefault();
-  const pt = getPointer(ev);
-  const n = getNode(dragging.id); if(!n) return;
-  n.fx = clamp(pt.x, 30, view.w-30);
-  n.fy = clamp(pt.y, 30, view.h-30);
-  renderGraph();
-}
-function onDragEnd(){
-  if(!dragging) return;
-  const n = getNode(dragging.id);
-  if(n){
-    n.x = n.fx; n.y = n.fy;
-    n.fx = null; n.fy = null;
-    persist();
-  }
-  dragging = null;
-  window.removeEventListener("mousemove", onDragMove);
-  window.removeEventListener("mouseup", onDragEnd);
-  window.removeEventListener("touchmove", onDragMove);
-  window.removeEventListener("touchend", onDragEnd);
-}
-
-/* ==== Simulation ==== */
-let sim=null;
-function startSim(){
-  if(sim) cancelAnimationFrame(sim);
-  const step = ()=>{
-    if(animOn) tick();
-    renderGraph();
-    sim = requestAnimationFrame(step);
+  // background click: clear selection
+  svg.onclick = ()=>{
+    selectedId=null;
+    viewMode="list";
+    btnShowDetails.disabled = true;
+    renderAll();
   };
-  sim = requestAnimationFrame(step);
 }
-function tick(){
-  const repel = 15000;
-  const linkK = 0.012;
-  const centerPull = 0.0026;
-  const damping = 0.90;
 
-  for(let i=0;i<state.nodes.length;i++){
-    for(let j=i+1;j<state.nodes.length;j++){
-      const a=state.nodes[i], b=state.nodes[j];
-      const dx=a.x-b.x, dy=a.y-b.y;
-      let d2=dx*dx+dy*dy; if(d2<0.01) d2=0.01;
-      const d=Math.sqrt(d2);
-      const f=repel/d2;
-      const fx=(dx/d)*f, fy=(dy/d)*f;
-      if(a.fx==null){ a.vx += fx; a.vy += fy; }
-      if(b.fx==null){ b.vx -= fx; b.vy -= fy; }
-    }
+/* ---------- Side panel ---------- */
+function renderSide(){
+  if(viewMode==="details" && selectedId && getNode(selectedId)){
+    const n = getNode(selectedId);
+    sideTitle.textContent = n.name;
+    sideSub.textContent = `${n.level} • ${n.area}`;
+
+    const rel = state.links.filter(l=>l.from===n.id || l.to===n.id);
+
+    sideContent.innerHTML = `
+      <div class="card">
+        <b>${esc(n.title || "Sem título")}</b>
+        <div class="meta" style="margin-top:6px">${esc(n.level)} • ${esc(n.area)}</div>
+        <div class="sep"></div>
+
+        <div class="meta">Objetivos</div>
+        <div style="white-space:pre-wrap; margin-top:6px">${esc(n.objectives||"")}</div>
+
+        <div class="sep"></div>
+
+        <div class="meta">Resultados esperados</div>
+        <div style="white-space:pre-wrap; margin-top:6px">${esc(n.expected||"")}</div>
+
+        <div class="sep"></div>
+
+        <div class="meta">Tags</div>
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
+          ${(n.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join("") || `<span class="meta">Sem tags.</span>`}
+        </div>
+
+        <div class="rowbtns" style="margin-top:12px">
+          <button id="d_focus">Focar</button>
+          <button id="d_edit">Editar</button>
+          <button class="danger" id="d_del">Excluir</button>
+          <button id="d_link">Criar ligação</button>
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <div class="card">
+        <b>Ligações (${rel.length})</b>
+        <div class="meta" style="margin-top:4px">Clique para editar ou excluir a ligação.</div>
+        <div class="sep"></div>
+        <div class="list" id="relList"></div>
+      </div>
+    `;
+
+    document.getElementById("d_focus").onclick = ()=> focusNode(n.id, true);
+    document.getElementById("d_edit").onclick = ()=> openPerson(n.id);
+    document.getElementById("d_del").onclick = ()=> deletePerson(n.id);
+    document.getElementById("d_link").onclick = ()=> openLink(null, n.id);
+
+    const relList = document.getElementById("relList");
+    rel.forEach(l=>{
+      const otherId = (l.from===n.id)? l.to : l.from;
+      const other = getNode(otherId);
+      const div = document.createElement("div");
+      div.className="card";
+      div.innerHTML = `
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px">
+          <div>
+            <b>${esc(other? other.name : "—")}</b>
+            <div class="meta">${esc(typeLabel(l.type))} • força ${esc(String(l.weight||3))}</div>
+          </div>
+          <span class="pill" style="border-color:${linkColor(l.type)}; color:#475467">${esc(typeLabel(l.type))}</span>
+        </div>
+        <div class="meta" style="margin-top:10px">Por quê</div>
+        <div style="white-space:pre-wrap; margin-top:4px">${esc(l.reason||"")}</div>
+        <div class="rowbtns">
+          <button class="warn" data-edit="1">Editar ligação</button>
+          <button class="danger" data-del="1">Excluir ligação</button>
+        </div>
+      `;
+      div.querySelector('[data-edit="1"]').onclick = ()=> openLink(l.id);
+      div.querySelector('[data-del="1"]').onclick = ()=> deleteLink(l.id);
+      relList.appendChild(div);
+    });
+
+    return;
   }
 
-  state.links.forEach(l=>{
-    const a=getNode(l.from), b=getNode(l.to);
-    if(!a||!b) return;
-    const dx=b.x-a.x, dy=b.y-a.y;
-    const dist=Math.sqrt(dx*dx+dy*dy)||1;
-    const target=240 - (Number(l.weight||3)-3)*25;
-    const k=linkK*Number(l.weight||3);
-    const diff=(dist-target);
-    const fx=(dx/dist)*diff*k;
-    const fy=(dy/dist)*diff*k;
-    if(a.fx==null){ a.vx += fx; a.vy += fy; }
-    if(b.fx==null){ b.vx -= fx; b.vy -= fy; }
+  // LIST MODE
+  sideTitle.textContent = "Pessoas";
+  sideSub.textContent = "Buscar, abrir, editar, excluir. Use “Ver todos (Fit)” para recuperar a rede.";
+  const q = (search.value||"").trim().toLowerCase();
+
+  const nodes = [...state.nodes]
+    .filter(n=>{
+      if(!q) return true;
+      return (n.name||"").toLowerCase().includes(q) ||
+             (n.area||"").toLowerCase().includes(q) ||
+             (n.title||"").toLowerCase().includes(q);
+    })
+    .sort((a,b)=> (a.name||"").localeCompare((b.name||""), "pt-BR"));
+
+  sideContent.innerHTML = `
+    <div class="card">
+      <b>Atalhos rápidos</b>
+      <div class="meta" style="margin-top:6px">Se sumiu, clique: <b>Ver todos (Fit)</b>.</div>
+      <div class="rowbtns">
+        <button id="quick_fit">Ver todos (Fit)</button>
+        <button id="quick_auto">Auto-organizar</button>
+        <button id="quick_anim">${anim ? "Animar: ON" : "Animar: OFF"}</button>
+      </div>
+    </div>
+    <div style="height:10px"></div>
+    <div class="list" id="peopleList"></div>
+  `;
+
+  document.getElementById("quick_fit").onclick = ()=> fitToAll(true);
+  document.getElementById("quick_auto").onclick = ()=> autoOrganize();
+  document.getElementById("quick_anim").onclick = ()=> toggleAnim(true);
+
+  const list = document.getElementById("peopleList");
+  nodes.forEach(n=>{
+    const div = document.createElement("div");
+    div.className="card";
+    div.innerHTML = `
+      <b>${esc(n.name)}</b>
+      <div class="meta" style="margin-top:4px">${esc(n.level)} • ${esc(n.area)}</div>
+      <div class="meta" style="margin-top:6px">${esc(n.title||"")}</div>
+      <div class="rowbtns">
+        <button data-open="1">Abrir</button>
+        <button data-focus="1">Focar</button>
+        <button data-edit="1">Editar</button>
+        <button class="danger" data-del="1">Excluir</button>
+      </div>
+    `;
+    div.querySelector('[data-open="1"]').onclick = ()=>{
+      selectedId = n.id;
+      viewMode="details";
+      btnShowDetails.disabled = false;
+      renderAll();
+      focusNode(n.id, true);
+    };
+    div.querySelector('[data-focus="1"]').onclick = ()=> focusNode(n.id, true);
+    div.querySelector('[data-edit="1"]').onclick = ()=> openPerson(n.id);
+    div.querySelector('[data-del="1"]').onclick = ()=> deletePerson(n.id);
+    list.appendChild(div);
   });
 
-  const cx=view.w/2, cy=view.h/2;
-  state.nodes.forEach(n=>{
-    if(n.fx!=null && n.fy!=null){
-      n.x=n.fx; n.y=n.fy;
-      n.vx*=0.25; n.vy*=0.25;
-      return;
-    }
-    n.vx += (cx-n.x)*centerPull;
-    n.vy += (cy-n.y)*centerPull;
-    n.vx *= damping; n.vy *= damping;
-    n.x = clamp(n.x + n.vx, 30, view.w-30);
-    n.y = clamp(n.y + n.vy, 30, view.h-30);
-  });
+  btnShowDetails.disabled = !(selectedId && getNode(selectedId));
 }
 
-/* ==== Auto-organize ==== */
-function autoOrganize(force){
-  if(state.nodes.length<=1) return;
-  let compact=true;
-  for(let i=0;i<state.nodes.length;i++){
-    for(let j=i+1;j<state.nodes.length;j++){
-      const a=state.nodes[i], b=state.nodes[j];
-      const dx=a.x-b.x, dy=a.y-b.y;
-      if(dx*dx+dy*dy > 160*160){ compact=false; break; }
-    }
-    if(!compact) break;
-  }
-  if(!compact && !force) return;
-
-  const cx=view.w/2, cy=view.h/2;
-  const R = Math.min(view.w, view.h)*0.30;
-  state.nodes.forEach((n,idx)=>{
-    const ang = (idx/state.nodes.length) * Math.PI*2;
-    n.x = cx + Math.cos(ang)*R + (Math.random()-.5)*30;
-    n.y = cy + Math.sin(ang)*R + (Math.random()-.5)*30;
-    n.vx = (Math.random()-.5)*2;
-    n.vy = (Math.random()-.5)*2;
-  });
-}
-
-/* ==== Modals ==== */
+/* ---------- Modal helpers ---------- */
 function openModal(m){ m.setAttribute("open",""); }
 function closeModal(m){ m.removeAttribute("open"); }
 
-modalPerson.addEventListener("click", (e)=>{ if(e.target===modalPerson) closeModal(modalPerson); });
-modalLink.addEventListener("click", (e)=>{ if(e.target===modalLink) closeModal(modalLink); });
-
-/* ==== Pessoa CRUD ==== */
-function openPersonModal(id){
-  editingPersonId = id;
+/* ---------- Pessoa CRUD ---------- */
+function openPerson(id){
+  editPersonId = id;
   if(id){
-    const n=getNode(id);
-    document.getElementById("modalPersonTitle").textContent = "Editar pessoa";
-    p_name.value = n.name || "";
-    p_level.value = n.level || "Graduação";
-    p_area.value = n.area || "";
-    p_color.value = n.color || "";
-    p_title.value = n.title || "";
-    p_objectives.value = n.objectives || "";
-    p_expected.value = n.expected || "";
+    const n = getNode(id);
+    document.getElementById("personTitle").textContent = "Editar pessoa";
+    p_name.value = n.name||"";
+    p_level.value = n.level||"Graduação";
+    p_area.value = n.area||"";
+    p_color.value = n.color || "var(--blue)";
+    p_title.value = n.title||"";
+    p_obj.value = n.objectives||"";
+    p_exp.value = n.expected||"";
     p_tags.value = (n.tags||[]).join(", ");
   }else{
-    document.getElementById("modalPersonTitle").textContent = "Adicionar pessoa";
-    p_name.value=""; p_level.value="Graduação"; p_area.value=""; p_color.value="";
-    p_title.value=""; p_objectives.value=""; p_expected.value=""; p_tags.value="";
+    document.getElementById("personTitle").textContent = "Adicionar pessoa";
+    p_name.value="";
+    p_level.value="Graduação";
+    p_area.value="";
+    p_color.value="var(--blue)";
+    p_title.value="";
+    p_obj.value="";
+    p_exp.value="";
+    p_tags.value="";
   }
   openModal(modalPerson);
 }
-function savePersonFromModal(){
+function savePerson(){
   const name = p_name.value.trim();
   if(!name){ alert("Informe o nome."); return; }
 
   const node = {
-    id: editingPersonId || uid(),
+    id: editPersonId || uid(),
     name,
     level: p_level.value,
     area: p_area.value.trim(),
-    color: p_color.value.trim() || "rgba(124,58,237,.95)",
     title: p_title.value.trim(),
-    objectives: p_objectives.value.trim(),
-    expected: p_expected.value.trim(),
-    tags: p_tags.value.split(",").map(s=>s.trim()).filter(Boolean)
+    objectives: p_obj.value.trim(),
+    expected: p_exp.value.trim(),
+    tags: p_tags.value.split(",").map(s=>s.trim()).filter(Boolean),
+    color: p_color.value
   };
 
-  if(editingPersonId){
-    const idx = state.nodes.findIndex(n=>n.id===editingPersonId);
+  if(editPersonId){
+    const idx = state.nodes.findIndex(n=>n.id===editPersonId);
     if(idx>=0){
       const old = state.nodes[idx];
       state.nodes[idx] = {...old, ...node};
     }
   }else{
-    node.x = view.w/2 + (Math.random()-.5)*220;
-    node.y = view.h/2 + (Math.random()-.5)*160;
-    node.vx = (Math.random()-.5)*2;
-    node.vy = (Math.random()-.5)*2;
+    // coloca perto do centro e solta pra "flutuar"
+    node.x = (W/2) + (Math.random()-.5)*120;
+    node.y = (H/2) + (Math.random()-.5)*90;
+    node.vx = (Math.random()-.5)*2.2;
+    node.vy = (Math.random()-.5)*2.2;
+    node.fx = null; node.fy = null;
     state.nodes.push(node);
   }
 
   persist();
   closeModal(modalPerson);
 
-  selectedNodeId = node.id;
+  selectedId = node.id;
+  viewMode="details";
+  btnShowDetails.disabled = false;
   renderAll();
-  toggleDrawer(false);
-  focusNode(node.id);
+  focusNode(node.id, true);
 }
-
-/* ==== Delete person ==== */
 function deletePerson(id){
-  const n=getNode(id);
+  const n = getNode(id);
   if(!n) return;
   if(!confirm(`Excluir "${n.name}"? Isso apaga também as ligações.`)) return;
   state.nodes = state.nodes.filter(x=>x.id!==id);
   state.links = state.links.filter(l=>l.from!==id && l.to!==id);
-  if(selectedNodeId===id) selectedNodeId=null;
+  if(selectedId===id) selectedId=null;
   persist();
+  viewMode="list";
+  btnShowDetails.disabled = true;
   renderAll();
+  fitToAll(true);
 }
 
-/* ==== Link CRUD ==== */
-function openLinkModal(linkId, defaultFrom){
-  editingLinkId = linkId;
+/* ---------- Link CRUD ---------- */
+function openLink(linkId, defaultFrom){
+  editLinkId = linkId;
 
-  const nodesSorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
-  l_from.innerHTML = nodesSorted.map(n=>`<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
-  l_to.innerHTML = nodesSorted.map(n=>`<option value="${n.id}">${escapeHTML(n.name)}</option>`).join("");
+  const sorted = [...state.nodes].sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+  l_from.innerHTML = sorted.map(n=>`<option value="${n.id}">${esc(n.name)}</option>`).join("");
+  l_to.innerHTML = sorted.map(n=>`<option value="${n.id}">${esc(n.name)}</option>`).join("");
 
   if(linkId){
     const l = state.links.find(x=>x.id===linkId);
-    document.getElementById("modalLinkTitle").textContent = "Editar ligação";
+    document.getElementById("linkTitle").textContent = "Editar ligação";
     l_from.value = l.from;
     l_to.value = l.to;
     l_type.value = l.type || "dados";
     l_weight.value = String(l.weight||3);
-    l_reason.value = l.reason || "";
-    l_questions.value = l.questions || "";
-    l_outputs.value = l.outputs || "";
+    l_reason.value = l.reason||"";
+    l_questions.value = l.questions||"";
+    l_outputs.value = l.outputs||"";
   }else{
-    document.getElementById("modalLinkTitle").textContent = "Criar ligação";
-    const from = defaultFrom || selectedNodeId || (state.nodes[0]?.id);
+    document.getElementById("linkTitle").textContent = "Criar ligação";
+    const from = defaultFrom || selectedId || state.nodes[0]?.id;
     const to = state.nodes.find(n=>n.id!==from)?.id || from;
     l_from.value = from;
     l_to.value = to;
@@ -1257,15 +1143,13 @@ function openLinkModal(linkId, defaultFrom){
 
   openModal(modalLink);
 }
-function saveLinkFromModal(){
+function saveLink(){
   const from = l_from.value;
   const to = l_to.value;
-  if(!from || !to || from===to){
-    alert("Escolha origem e destino diferentes.");
-    return;
-  }
+  if(!from || !to || from===to){ alert("Escolha origem e destino diferentes."); return; }
+
   const link = {
-    id: editingLinkId || uid(),
+    id: editLinkId || uid(),
     from, to,
     type: l_type.value,
     weight: Number(l_weight.value||3),
@@ -1274,12 +1158,13 @@ function saveLinkFromModal(){
     outputs: l_outputs.value.trim()
   };
 
-  if(editingLinkId){
-    const idx = state.links.findIndex(l=>l.id===editingLinkId);
+  if(editLinkId){
+    const idx = state.links.findIndex(x=>x.id===editLinkId);
     if(idx>=0) state.links[idx]=link;
   }else{
     state.links.push(link);
   }
+
   persist();
   closeModal(modalLink);
   renderAll();
@@ -1291,14 +1176,19 @@ function deleteLink(id){
   renderAll();
 }
 
-/* ==== Export/Import ==== */
+/* ---------- JSON export/import ---------- */
 function exportJSON(){
   const out = {
-    meta: { app:"IntegraProjetos", version:3, exportedAt:new Date().toISOString() },
-    nodes: state.nodes.map(n=>({ ...n, x:Math.round(n.x), y:Math.round(n.y) })),
+    meta:{ app:"IntegraProjetos", version:4, exportedAt:new Date().toISOString() },
+    nodes: state.nodes.map(n=>({
+      ...n,
+      x: Math.round(n.x), y: Math.round(n.y),
+      vx: Math.round(n.vx*1000)/1000,
+      vy: Math.round(n.vy*1000)/1000
+    })),
     links: state.links
   };
-  downloadBlob(JSON.stringify(out, null, 2), "integraprojetos.json", "application/json");
+  download(JSON.stringify(out,null,2), "integraprojetos.json", "application/json");
 }
 function importJSONFile(ev){
   const f = ev.target.files[0];
@@ -1308,45 +1198,320 @@ function importJSONFile(ev){
     try{
       const obj = JSON.parse(reader.result);
       state = normalize(obj);
-      initPositionsIfNeeded();
-      autoOrganize(true);
+      initPositions();
       persist();
-      selectedNodeId=null;
+      selectedId=null;
+      viewMode="list";
+      btnShowDetails.disabled = true;
       renderAll();
-      centerNow();
+      fitToAll(true);
     }catch(e){
       alert("Falha ao importar: " + e.message);
     }finally{
-      ev.target.value = "";
+      ev.target.value="";
     }
   };
   reader.readAsText(f);
 }
 
-/* ==== Reset ==== */
+/* ---------- Reset ---------- */
 function resetClean(){
-  if(!confirm("Reset limpo: apagar todas as pessoas e ligações?")) return;
-  state = { meta:{ app:"IntegraProjetos", version:3, updatedAt:new Date().toISOString() }, nodes:[], links:[] };
-  selectedNodeId=null;
+  if(!confirm("Reset limpo: apagar TODAS as pessoas e ligações?")) return;
+  state = normalize({ meta:{app:"IntegraProjetos", version:4}, nodes:[], links:[] });
+  try{ localStorage.removeItem(STORAGE_KEY); }catch{}
   persist();
+  selectedId=null;
+  viewMode="list";
+  btnShowDetails.disabled = true;
   renderAll();
 }
 function resetSeed(){
-  if(!confirm("Reset modelo: voltar para os 7 alunos iniciais (sem ligações)?")) return;
-  state = deepClone(SEED);
-  initPositionsIfNeeded();
-  autoOrganize(true);
-  selectedNodeId=null;
+  if(!confirm("Reset modelo: voltar para os 7 alunos iniciais?")) return;
+  state = normalize(clone(SEED));
+  try{ localStorage.removeItem(STORAGE_KEY); }catch{}
+  initPositions();
   persist();
+  selectedId=null;
+  viewMode="list";
+  btnShowDetails.disabled = true;
   renderAll();
-  centerNow();
+  fitToAll(true);
 }
 
-/* ==== Anim toggle ==== */
-function toggleAnim(){
-  animOn = !animOn;
-  document.getElementById("btnAnim").textContent = "Animar: " + (animOn ? "ON" : "OFF");
+/* ---------- Anim + Physics (FLUTUAR SUAVE) ---------- */
+function toggleAnim(fromQuick){
+  anim = !anim;
+  document.getElementById("btnAnim").textContent = "Animar: " + (anim ? "ON" : "OFF");
+  if(fromQuick){
+    renderSide();
+  }
 }
+function autoOrganize(){
+  // organiza em círculo e solta com velocidades suaves
+  const cx=W/2, cy=H/2;
+  const R = Math.min(W,H)*0.30;
+  const n = state.nodes.length || 1;
+  state.nodes.forEach((node,i)=>{
+    const a = (i/n)*Math.PI*2;
+    node.x = cx + Math.cos(a)*R + (Math.random()-.5)*30;
+    node.y = cy + Math.sin(a)*R + (Math.random()-.5)*30;
+    node.vx = (Math.random()-.5)*1.6;
+    node.vy = (Math.random()-.5)*1.6;
+    node.fx=null; node.fy=null;
+  });
+  persist();
+  fitToAll(true);
+  renderAll();
+}
+
+/* Physics tuned to be “floaty” not rigid */
+function tick(dt){
+  if(state.nodes.length===0) return;
+
+  // parameters
+  const repelK = 12000;      // repulsão
+  const repelMin = 70;       // distância mínima
+  const springK = 0.010;     // força das ligações (mola)
+  const springLen = 240;     // comprimento base
+  const centerK = 0.0018;    // atração suave ao centro
+  const damping = 0.92;      // amortecimento (mais alto = mais suave)
+  const maxV = 6.0;          // limitar velocidade
+
+  // repulsão
+  for(let i=0;i<state.nodes.length;i++){
+    for(let j=i+1;j<state.nodes.length;j++){
+      const a=state.nodes[i], b=state.nodes[j];
+      const dx=a.x-b.x, dy=a.y-b.y;
+      let d2 = dx*dx+dy*dy;
+      if(d2 < 0.0001) d2 = 0.0001;
+      const d = Math.sqrt(d2);
+
+      const min = repelMin;
+      const strength = (d < min) ? repelK*1.8 : repelK;
+
+      const f = strength / d2;
+      const fx = (dx/d)*f;
+      const fy = (dy/d)*f;
+
+      if(a.fx==null){ a.vx += fx*dt; a.vy += fy*dt; }
+      if(b.fx==null){ b.vx -= fx*dt; b.vy -= fy*dt; }
+    }
+  }
+
+  // springs (links)
+  state.links.forEach(l=>{
+    const a=getNode(l.from), b=getNode(l.to);
+    if(!a||!b) return;
+    const dx=b.x-a.x, dy=b.y-a.y;
+    const dist = Math.sqrt(dx*dx+dy*dy) || 1;
+
+    // peso muda o “aperto” da mola
+    const w = Number(l.weight||3);
+    const target = springLen - (w-3)*20;
+    const k = springK * (0.7 + w*0.25);
+
+    const diff = dist - target;
+    const fx = (dx/dist) * diff * k;
+    const fy = (dy/dist) * diff * k;
+
+    if(a.fx==null){ a.vx += fx*dt; a.vy += fy*dt; }
+    if(b.fx==null){ b.vx -= fx*dt; b.vy -= fy*dt; }
+  });
+
+  // center pull + integrate
+  const cx=W/2, cy=H/2;
+  state.nodes.forEach(n=>{
+    if(n.fx!=null && n.fy!=null){
+      n.x = n.fx; n.y = n.fy;
+      n.vx *= 0.45; n.vy *= 0.45;
+      return;
+    }
+
+    // gentle center gravity
+    n.vx += (cx - n.x) * centerK * dt;
+    n.vy += (cy - n.y) * centerK * dt;
+
+    // damping
+    n.vx *= damping;
+    n.vy *= damping;
+
+    // cap velocity
+    n.vx = Math.max(-maxV, Math.min(maxV, n.vx));
+    n.vy = Math.max(-maxV, Math.min(maxV, n.vy));
+
+    // integrate
+    n.x += n.vx;
+    n.y += n.vy;
+
+    // bounds bounce (soft)
+    const pad = 40;
+    if(n.x < pad){ n.x=pad; n.vx *= -0.55; }
+    if(n.x > W-pad){ n.x=W-pad; n.vx *= -0.55; }
+    if(n.y < pad){ n.y=pad; n.vy *= -0.55; }
+    if(n.y > H-pad){ n.y=H-pad; n.vy *= -0.55; }
+  });
+}
+
+/* main loop */
+function start(){
+  if(raf) cancelAnimationFrame(raf);
+  lastT = performance.now();
+  const loop = (t)=>{
+    const rawDt = (t - lastT);
+    lastT = t;
+    // dt normalizado (0.9–1.2 ok)
+    const dt = Math.max(0.6, Math.min(1.6, rawDt/16.6));
+    if(anim) tick(dt);
+    renderGraph();
+    raf = requestAnimationFrame(loop);
+  };
+  raf = requestAnimationFrame(loop);
+}
+
+/* ---------- Fit / focus ---------- */
+function fitToAll(animate){
+  if(state.nodes.length===0){
+    zoom=1; pan.x=0; pan.y=0;
+    return;
+  }
+  let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+  state.nodes.forEach(n=>{
+    minX=Math.min(minX, n.x);
+    minY=Math.min(minY, n.y);
+    maxX=Math.max(maxX, n.x);
+    maxY=Math.max(maxY, n.y);
+  });
+
+  const pad = 80;
+  const bw = (maxX-minX) + pad*2;
+  const bh = (maxY-minY) + pad*2;
+
+  const zx = W / bw;
+  const zy = H / bh;
+  const z = Math.max(0.55, Math.min(1.7, Math.min(zx, zy)));
+
+  const cx = (minX+maxX)/2;
+  const cy = (minY+maxY)/2;
+
+  const targetPanX = (W/2 - cx) * z;
+  const targetPanY = (H/2 - cy) * z;
+
+  if(!animate){
+    zoom = z;
+    pan.x = targetPanX;
+    pan.y = targetPanY;
+    return;
+  }
+
+  // smooth interpolate
+  const z0=zoom, px0=pan.x, py0=pan.y;
+  const steps = 16;
+  let i=0;
+  const it = ()=>{
+    i++;
+    const k = i/steps;
+    const ease = 1 - Math.pow(1-k, 3);
+    zoom = z0 + (z - z0)*ease;
+    pan.x = px0 + (targetPanX - px0)*ease;
+    pan.y = py0 + (targetPanY - py0)*ease;
+    renderGraph();
+    if(i<steps) requestAnimationFrame(it);
+  };
+  it();
+}
+function focusNode(id, animate){
+  const n = getNode(id);
+  if(!n) return;
+  const targetPanX = (W/2 - n.x) * zoom;
+  const targetPanY = (H/2 - n.y) * zoom;
+
+  if(!animate){
+    pan.x = targetPanX; pan.y = targetPanY;
+    return;
+  }
+  const px0=pan.x, py0=pan.y;
+  const steps=14;
+  let i=0;
+  const it=()=>{
+    i++;
+    const k=i/steps;
+    const ease = 1 - Math.pow(1-k, 3);
+    pan.x = px0 + (targetPanX - px0)*ease;
+    pan.y = py0 + (targetPanY - py0)*ease;
+    renderGraph();
+    if(i<steps) requestAnimationFrame(it);
+  };
+  it();
+}
+
+/* ---------- Dragging ---------- */
+function pointerToGraph(ev){
+  const rect = svg.getBoundingClientRect();
+  const isTouch = ev.touches && ev.touches[0];
+  const clientX = isTouch ? ev.touches[0].clientX : ev.clientX;
+  const clientY = isTouch ? ev.touches[0].clientY : ev.clientY;
+  const x = (clientX - rect.left) * (W / rect.width);
+  const y = (clientY - rect.top) * (H / rect.height);
+  const gx = (x - pan.x) / zoom;
+  const gy = (y - pan.y) / zoom;
+  return {x:gx, y:gy};
+}
+function startDrag(ev, id){
+  ev.preventDefault();
+  const n = getNode(id);
+  if(!n) return;
+  dragging = {id};
+
+  const pt = pointerToGraph(ev);
+  n.fx = pt.x;
+  n.fy = pt.y;
+
+  window.addEventListener("mousemove", onDragMove);
+  window.addEventListener("mouseup", onDragEnd);
+  window.addEventListener("touchmove", onDragMove, {passive:false});
+  window.addEventListener("touchend", onDragEnd);
+}
+function onDragMove(ev){
+  if(!dragging) return;
+  ev.preventDefault();
+  const n = getNode(dragging.id);
+  if(!n) return;
+  const pt = pointerToGraph(ev);
+  n.fx = pt.x;
+  n.fy = pt.y;
+}
+function onDragEnd(){
+  if(!dragging) return;
+  const n = getNode(dragging.id);
+  if(n){
+    n.x = n.fx;
+    n.y = n.fy;
+    n.fx = null; n.fy = null;
+    persist();
+  }
+  dragging = null;
+  window.removeEventListener("mousemove", onDragMove);
+  window.removeEventListener("mouseup", onDragEnd);
+  window.removeEventListener("touchmove", onDragMove);
+  window.removeEventListener("touchend", onDragEnd);
+}
+
+/* ---------- Initial render ---------- */
+btnShowDetails.disabled = true;
+document.getElementById("btnAnim").textContent = "Animar: ON";
+renderAll();
+
+/* ensure save indicator initializes */
+try{
+  localStorage.setItem("__t","1");
+  localStorage.removeItem("__t");
+  setSaved(true);
+}catch{
+  setSaved(false, "Storage bloqueado — use JSON");
+}
+
+/* persist once to normalize storage */
+persist();
 </script>
 </body>
 </html>
