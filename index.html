@@ -32,6 +32,9 @@
 
       --btn:#ffffff;
       --btnStroke:#d0d5dd;
+
+      /* layout dynamic */
+      --topH: 78px;
     }
 
     *{ box-sizing:border-box; }
@@ -49,7 +52,8 @@
     }
 
     .topbar{
-      position:fixed; inset:12px 12px auto 12px;
+      position:fixed;
+      left:12px; right:12px; top:12px;
       display:flex; align-items:center; justify-content:space-between;
       gap:12px; flex-wrap:wrap;
       padding:10px 12px;
@@ -115,10 +119,24 @@
     }
     .dot{ width:10px; height:10px; border-radius:999px; background:var(--green); border:1px solid rgba(16,24,40,.08); }
 
-    /* Layout main */
+    /* slider */
+    .sliderWrap{
+      display:flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow2);
+    }
+    .sliderWrap label{ font-size:12px; color:var(--muted); font-weight:800; }
+    input[type="range"]{ width:120px; }
+
+    /* Layout main — TOP is dynamic */
     #stage{
       position:fixed;
-      inset: 78px 430px 12px 12px;
+      left:12px; bottom:12px;
+      top: calc(var(--topH) + 12px);
+      right: 430px;
       border:1px solid var(--stroke);
       border-radius:18px;
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
@@ -129,7 +147,8 @@
 
     aside{
       position:fixed;
-      top:78px; right:12px; bottom:12px;
+      right:12px; bottom:12px;
+      top: calc(var(--topH) + 12px);
       width:410px;
       border:1px solid var(--stroke);
       border-radius:18px;
@@ -191,16 +210,8 @@
     .card .meta{ color:var(--muted); font-size:12px; }
     .card b{ font-size:13px; }
 
-    .list{
-      display:grid;
-      gap:10px;
-    }
-    .rowbtns{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
+    .list{ display:grid; gap:10px; }
+    .rowbtns{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
 
     input[type="text"], textarea, select{
       width:100%;
@@ -212,7 +223,6 @@
       outline:none;
     }
     textarea{ min-height:76px; resize:vertical; }
-
     .sep{ height:1px; background:var(--stroke); margin:10px 0; }
 
     .legend{
@@ -269,14 +279,16 @@
 
     /* Responsive */
     @media (max-width: 980px){
-      #stage{ inset:78px 12px 52vh 12px; }
-      aside{ left:12px; right:12px; width:auto; top:auto; height:50vh; bottom:12px; }
+      #stage{ right:12px; bottom:52vh; }
+      aside{ left:12px; right:12px; width:auto; top:auto; height:50vh; }
+      .sliderWrap{ width:100%; justify-content:space-between; }
+      input[type="range"]{ width:160px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="topbar">
+  <div class="topbar" id="topbar">
     <div class="brand">
       <div class="logo"></div>
       <div>
@@ -289,8 +301,18 @@
       <button class="primary" id="btnAdd">+ Adicionar pessoa</button>
       <button id="btnAddLink">+ Criar ligação</button>
       <button id="btnAuto">Auto-organizar</button>
+      <button id="btnGroup">Organizar por grupos</button>
       <button id="btnFit">Ver todos (Fit)</button>
       <button id="btnAnim">Animar: ON</button>
+
+      <div class="sliderWrap" title="Ajuste ideal pra quando você tiver 52 pessoas">
+        <label for="nodeSize">Tamanho</label>
+        <input id="nodeSize" type="range" min="12" max="30" step="1"/>
+        <span class="pill" id="nodeSizeLabel">22</span>
+      </div>
+
+      <button id="btnExportPNG">Baixar PNG</button>
+      <button id="btnExportSVG">Baixar SVG</button>
       <button id="btnExport">Baixar JSON</button>
       <button class="warn" id="btnImport">Importar JSON</button>
 
@@ -383,6 +405,11 @@
           </div>
 
           <div>
+            <div class="meta">Grupo (opcional — ex.: “Carbono”, “Clima & Saúde”, “Extensão”)</div>
+            <input type="text" id="p_group" placeholder="Se preencher, o botão ‘Organizar por grupos’ cria círculos por grupo."/>
+          </div>
+
+          <div>
             <div class="meta">Título do trabalho</div>
             <input type="text" id="p_title"/>
           </div>
@@ -470,16 +497,14 @@
 
 <script>
 /* ============================
-   IntegraProjetos v4 (FUNCIONAL + BRANCO)
-   - Física suave (flutuar)
-   - Animar ON/OFF real
-   - Auto-organizar real
-   - Fit/Ver todos bonito
-   - Reset limpo e Reset modelo funcionando
-   - Lista sempre mostrando todos
+   IntegraProjetos v5
+   - Layout dinâmico (menu não cobre nada)
+   - Slider de tamanho das bolinhas (ideal 52 pessoas)
+   - Organizar por grupos (círculos por grupo + halos)
+   - Exportar PNG e SVG
 ============================ */
 
-const STORAGE_KEY = "integraprojetos_v4";
+const STORAGE_KEY = "integraprojetos_v5";
 
 /* ---------- Utils ---------- */
 const uid = ()=> "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
@@ -489,7 +514,6 @@ const esc = (s)=> String(s ?? "")
   .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
 function cssVar(v){
-  // permite salvar "var(--blue)" etc.
   const m = /^var\((--[a-z]+)\)$/i.exec(v || "");
   if(!m) return v;
   const computed = getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim();
@@ -526,47 +550,47 @@ function download(text, filename, mime){
   setTimeout(()=>URL.revokeObjectURL(url), 800);
 }
 
-/* ---------- Seed (seus 7 alunos) ---------- */
+/* ---------- Seed (7 alunos) ---------- */
 const SEED = {
-  meta:{ app:"IntegraProjetos", version:4, updatedAt:new Date().toISOString() },
+  meta:{ app:"IntegraProjetos", version:5, updatedAt:new Date().toISOString(), nodeSize:22 },
   nodes:[
-    { id: uid(), name:"Letícia Zen", level:"Graduação", area:"Clima & Saúde",
+    { id: uid(), name:"Letícia Zen", level:"Graduação", area:"Clima & Saúde", group:"Clima & Saúde",
       title:"Impacto do calor na mortalidade em MT (dados secundários)",
       objectives:"Análise de dados secundários sobre o impacto do calor na mortalidade em MT.",
       expected:"Organização de planilhas e produção de gráficos comparativos e analíticos.",
       tags:["mortalidade","calor","planilhas","gráficos","MT"], color:"var(--blue)"
     },
-    { id: uid(), name:"Cintya", level:"Graduação", area:"Extensão & Visibilidade",
+    { id: uid(), name:"Cintya", level:"Graduação", area:"Extensão & Visibilidade", group:"Extensão",
       title:"Extensão na pós: visibilidade e identificação de projetos",
       objectives:"Produção de dados sobre a extensão na pós-graduação, com análise e identificação de projetos para dar visibilidade.",
       expected:"Identificação de projetos para a visibilidade da pós da UNEMAT.",
       tags:["extensão","pós","visibilidade","mapeamento"], color:"var(--orange)"
     },
-    { id: uid(), name:"Antônio", level:"Graduação", area:"Atividade Física & Ambiente",
+    { id: uid(), name:"Antônio", level:"Graduação", area:"Atividade Física & Ambiente", group:"Campo/Temperatura",
       title:"Efeito da temperatura em atividade física (aberto/fechado/escolas)",
       objectives:"Avalia o efeito da temperatura em atividades físicas de áreas abertas, fechadas e em escolas.",
       expected:"Coleta em ambientes em Cáceres; organização de planilhas; análises e comparações térmicas.",
       tags:["temperatura","atividade física","Cáceres","campo"], color:"var(--green)"
     },
-    { id: uid(), name:"Luan", level:"Graduação", area:"Jogos & Educação",
+    { id: uid(), name:"Luan", level:"Graduação", area:"Jogos & Educação", group:"Jogos",
       title:"Jogo interativo sobre carbono (rumo ao 3D)",
       objectives:"Produção de jogos interativos sobre carbono; análise de itens necessários para produção.",
       expected:"Produzir um jogo 3D sobre carbono.",
       tags:["jogos","carbono","3D","educação"], color:"var(--purple)"
     },
-    { id: uid(), name:"Matheus", level:"Graduação", area:"Carbono (dados)",
+    { id: uid(), name:"Matheus", level:"Graduação", area:"Carbono (dados)", group:"Carbono",
       title:"Inspetor/organizador de planilhas do laboratório (carbono)",
       objectives:"Organiza dados de carbono e atua como inspetor de qualidade e integração de planilhas.",
       expected:"Revisar planilhas para integração de dados do laboratório.",
       tags:["planilhas","carbono","integração","qualidade"], color:"var(--green)"
     },
-    { id: uid(), name:"Leandro", level:"Graduação", area:"Carbono (processos)",
+    { id: uid(), name:"Leandro", level:"Graduação", area:"Carbono (processos)", group:"Carbono",
       title:"ATTZ e dinâmica do carbono na praia de Cáceres",
       objectives:"Analisa a influência da ATTZ na dinâmica do carbono em praia de Cáceres.",
       expected:"Identificar dinâmica das águas e influência no fluxo de CO₂ de áreas alagáveis até secas.",
       tags:["ATTZ","CO2","hidrodinâmica","alagável"], color:"var(--blue)"
     },
-    { id: uid(), name:"Vanessa", level:"Graduação", area:"Jogos & Educação",
+    { id: uid(), name:"Vanessa", level:"Graduação", area:"Jogos & Educação", group:"Jogos",
       title:"Jogos físicos + Guardiões do Clima (ensino médio)",
       objectives:"Produção de jogos físicos para integração com estudantes; monitora dos Guardiões do Clima.",
       expected:"Produzir jogos sobre carbono e mudanças climáticas para crianças e adolescentes.",
@@ -577,6 +601,7 @@ const SEED = {
 };
 
 /* ---------- DOM ---------- */
+const topbar = document.getElementById("topbar");
 const stage = document.getElementById("stage");
 const svg = document.getElementById("svg");
 const sideContent = document.getElementById("sideContent");
@@ -591,6 +616,9 @@ const search = document.getElementById("search");
 const btnShowList = document.getElementById("btnShowList");
 const btnShowDetails = document.getElementById("btnShowDetails");
 
+const nodeSizeRange = document.getElementById("nodeSize");
+const nodeSizeLabel = document.getElementById("nodeSizeLabel");
+
 /* modals */
 const modalPerson = document.getElementById("modalPerson");
 const modalLink = document.getElementById("modalLink");
@@ -599,6 +627,7 @@ const p_name = document.getElementById("p_name");
 const p_level = document.getElementById("p_level");
 const p_area = document.getElementById("p_area");
 const p_color = document.getElementById("p_color");
+const p_group = document.getElementById("p_group");
 const p_title = document.getElementById("p_title");
 const p_obj = document.getElementById("p_obj");
 const p_exp = document.getElementById("p_exp");
@@ -618,9 +647,12 @@ const fileImport = document.getElementById("fileImport");
 document.getElementById("btnAdd").addEventListener("click", ()=> openPerson(null));
 document.getElementById("btnAddLink").addEventListener("click", ()=> openLink(null));
 document.getElementById("btnAuto").addEventListener("click", ()=> { autoOrganize(); });
+document.getElementById("btnGroup").addEventListener("click", ()=> { organizeByGroups(); });
 document.getElementById("btnFit").addEventListener("click", ()=> fitToAll(true));
 document.getElementById("btnAnim").addEventListener("click", ()=> toggleAnim());
 document.getElementById("btnExport").addEventListener("click", exportJSON);
+document.getElementById("btnExportSVG").addEventListener("click", exportSVG);
+document.getElementById("btnExportPNG").addEventListener("click", exportPNG);
 document.getElementById("btnImport").addEventListener("click", ()=> fileImport.click());
 document.getElementById("btnResetClean").addEventListener("click", resetClean);
 document.getElementById("btnResetSeed").addEventListener("click", resetSeed);
@@ -636,6 +668,12 @@ btnShowList.addEventListener("click", ()=> { viewMode="list"; renderSide(); });
 btnShowDetails.addEventListener("click", ()=> { if(selectedId) { viewMode="details"; renderSide(); } });
 
 search.addEventListener("input", ()=> renderSide());
+nodeSizeRange.addEventListener("input", ()=>{
+  const v = Number(nodeSizeRange.value);
+  nodeSizeLabel.textContent = String(v);
+  state.meta.nodeSize = v;
+  persist();
+});
 
 modalPerson.addEventListener("click", (e)=> { if(e.target===modalPerson) closeModal(modalPerson); });
 modalLink.addEventListener("click", (e)=> { if(e.target===modalLink) closeModal(modalLink); });
@@ -648,8 +686,10 @@ function makeSvg(tag, attrs={}){
 }
 svg.innerHTML = "";
 const gRoot = makeSvg("g", {id:"root"});
+const gGroup = makeSvg("g", {id:"groups"});
 const gLinks = makeSvg("g", {id:"links"});
 const gNodes = makeSvg("g", {id:"nodes"});
+gRoot.appendChild(gGroup);
 gRoot.appendChild(gLinks);
 gRoot.appendChild(gNodes);
 svg.appendChild(gRoot);
@@ -673,6 +713,15 @@ let raf = null;
 let lastT = performance.now();
 
 let dragging = null;
+
+/* ---------- Dynamic topbar height -> CSS var --topH ---------- */
+function updateTopH(){
+  const h = topbar.getBoundingClientRect().height;
+  document.documentElement.style.setProperty("--topH", Math.ceil(h) + "px");
+}
+const ro = new ResizeObserver(updateTopH);
+ro.observe(topbar);
+updateTopH();
 
 /* ---------- Resize ---------- */
 function resize(){
@@ -713,19 +762,20 @@ function loadState(){
   }
 }
 function normalize(obj){
+  const meta = obj.meta || {app:"IntegraProjetos", version:5, updatedAt:new Date().toISOString(), nodeSize:22};
   return {
-    meta: obj.meta || {app:"IntegraProjetos", version:4, updatedAt:new Date().toISOString()},
+    meta: { ...meta, nodeSize: Number(meta.nodeSize||22) },
     nodes: (obj.nodes||[]).map(n=>({
       id: n.id || uid(),
       name: n.name || "Sem nome",
       level: n.level || "Graduação",
       area: n.area || "",
+      group: n.group || "",
       title: n.title || "",
       objectives: n.objectives || "",
       expected: n.expected || "",
       tags: Array.isArray(n.tags) ? n.tags : [],
       color: n.color || "var(--blue)",
-      // physics:
       x: Number.isFinite(n.x) ? n.x : 0,
       y: Number.isFinite(n.y) ? n.y : 0,
       vx: Number.isFinite(n.vx) ? n.vx : 0,
@@ -752,13 +802,18 @@ function initPositions(){
   const R = Math.min(W,H)*0.28;
   state.nodes.forEach((n,i)=>{
     if(!Number.isFinite(n.x) || !Number.isFinite(n.y) || (n.x===0 && n.y===0)){
-      const a = (i/state.nodes.length)*Math.PI*2;
+      const a = (i/Math.max(1,state.nodes.length))*Math.PI*2;
       n.x = cx + Math.cos(a)*R + (Math.random()-.5)*40;
       n.y = cy + Math.sin(a)*R + (Math.random()-.5)*40;
     }
   });
 }
 initPositions();
+
+/* slider init */
+nodeSizeRange.value = String(state.meta.nodeSize || 22);
+nodeSizeLabel.textContent = String(state.meta.nodeSize || 22);
+
 fitToAll(false);
 renderAll();
 start();
@@ -769,9 +824,56 @@ function renderAll(){
   renderSide();
   renderGraph();
 }
+
+function getBaseRadius(){
+  // usuário controla via slider; também compacta automaticamente se tiver muita gente
+  const manual = Number(state.meta.nodeSize || 22);
+  const n = state.nodes.length;
+  const auto = (n > 30) ? Math.max(12, manual - Math.floor((n-30)*0.15)) : manual;
+  return Math.max(12, Math.min(30, auto));
+}
+
 function renderGraph(){
-  // transform
   gRoot.setAttribute("transform", `translate(${pan.x} ${pan.y}) scale(${zoom})`);
+
+  // group halos
+  gGroup.innerHTML = "";
+  const groups = groupMap();
+  if(groups.size > 0){
+    for(const [gname, ids] of groups.entries()){
+      if(!gname.trim()) continue;
+      const pts = ids.map(id=>getNode(id)).filter(Boolean);
+      if(pts.length < 2) continue;
+
+      // compute centroid + radius
+      const cx = pts.reduce((a,n)=>a+n.x,0)/pts.length;
+      const cy = pts.reduce((a,n)=>a+n.y,0)/pts.length;
+      let maxD = 0;
+      for(const n of pts){
+        const dx=n.x-cx, dy=n.y-cy;
+        maxD = Math.max(maxD, Math.sqrt(dx*dx+dy*dy));
+      }
+      const ringR = maxD + 90;
+
+      const ring = makeSvg("circle",{
+        cx, cy, r: ringR,
+        fill:"rgba(124,58,237,.04)",
+        stroke:"rgba(16,24,40,.10)",
+        "stroke-width":"2"
+      });
+      gGroup.appendChild(ring);
+
+      const label = makeSvg("text",{
+        x: cx, y: cy - ringR - 12,
+        fill:"rgba(16,24,40,.72)",
+        "font-size":"13",
+        "font-weight":"900",
+        "text-anchor":"middle"
+      });
+      label.textContent = gname;
+      gGroup.appendChild(label);
+    }
+  }
 
   // links
   gLinks.innerHTML = "";
@@ -782,9 +884,9 @@ function renderGraph(){
     const line = makeSvg("line",{
       x1:a.x, y1:a.y, x2:b.x, y2:b.y,
       stroke: linkColor(l.type),
-      "stroke-width": 2 + (l.weight||3)*1.6,
+      "stroke-width": 2 + (l.weight||3)*1.4,
       "stroke-linecap":"round",
-      "stroke-opacity": selectedId ? ((l.from===selectedId||l.to===selectedId)? .9 : .25) : .65
+      "stroke-opacity": selectedId ? ((l.from===selectedId||l.to===selectedId)? .9 : .22) : .62
     });
     line.style.cursor="pointer";
     line.addEventListener("click",(e)=>{ e.stopPropagation(); openLink(l.id); });
@@ -793,7 +895,7 @@ function renderGraph(){
     const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
     const label = makeSvg("text",{
       x:mx, y:my-8,
-      fill:"rgba(16,24,40,.70)",
+      fill:"rgba(16,24,40,.62)",
       "font-size":"12",
       "text-anchor":"middle",
       "font-weight":"800"
@@ -805,46 +907,45 @@ function renderGraph(){
 
   // nodes
   gNodes.innerHTML = "";
+  const baseR = getBaseRadius();
+
   state.nodes.forEach(n=>{
     const isSel = n.id===selectedId;
 
-    const tagsBoost = Math.min(10, (n.tags||[]).length);
-    const r = 22 + tagsBoost;
+    // tags affect slightly, but not huge
+    const tagsBoost = Math.min(6, (n.tags||[]).length);
+    const r = baseR + Math.floor(tagsBoost*0.6);
 
     const group = makeSvg("g", {"data-id":n.id});
     group.style.cursor="grab";
 
-    // soft glow ring
     const glow = makeSvg("circle",{
       cx:n.x, cy:n.y, r:r+16,
-      fill:"rgba(124,58,237,.07)",
+      fill:"rgba(124,58,237,.06)",
       stroke: isSel ? "rgba(16,185,129,.60)" : "rgba(16,24,40,.10)",
       "stroke-width": isSel ? 2.6 : 1.2
     });
     gNodes.appendChild(glow);
 
-    // main circle
     const c = makeSvg("circle",{
       cx:n.x, cy:n.y, r:r,
       fill: cssVar(n.color),
-      stroke:"rgba(255,255,255,.85)",
+      stroke:"rgba(255,255,255,.90)",
       "stroke-width": 2
     });
     c.style.filter = "drop-shadow(0 10px 16px rgba(16,24,40,.14))";
     group.appendChild(c);
 
-    // name
     const name = makeSvg("text",{
       x:n.x, y:n.y + r + 18,
       fill:"rgba(16,24,40,.86)",
-      "font-size":"13",
+      "font-size": (state.nodes.length>40 ? "12" : "13"),
       "font-weight":"900",
       "text-anchor":"middle"
     });
     name.textContent = n.name;
     group.appendChild(name);
 
-    // area
     const area = makeSvg("text",{
       x:n.x, y:n.y + r + 34,
       fill:"rgba(102,112,133,.92)",
@@ -855,7 +956,6 @@ function renderGraph(){
     area.textContent = n.area;
     group.appendChild(area);
 
-    // events
     group.addEventListener("mousedown",(e)=> startDrag(e,n.id));
     group.addEventListener("touchstart",(e)=> startDrag(e,n.id), {passive:false});
     group.addEventListener("click",(e)=>{
@@ -870,7 +970,6 @@ function renderGraph(){
     gNodes.appendChild(group);
   });
 
-  // background click: clear selection
   svg.onclick = ()=>{
     selectedId=null;
     viewMode="list";
@@ -884,14 +983,14 @@ function renderSide(){
   if(viewMode==="details" && selectedId && getNode(selectedId)){
     const n = getNode(selectedId);
     sideTitle.textContent = n.name;
-    sideSub.textContent = `${n.level} • ${n.area}`;
+    sideSub.textContent = `${n.level} • ${n.area}${n.group? " • Grupo: "+n.group:""}`;
 
     const rel = state.links.filter(l=>l.from===n.id || l.to===n.id);
 
     sideContent.innerHTML = `
       <div class="card">
         <b>${esc(n.title || "Sem título")}</b>
-        <div class="meta" style="margin-top:6px">${esc(n.level)} • ${esc(n.area)}</div>
+        <div class="meta" style="margin-top:6px">${esc(n.level)} • ${esc(n.area)}${n.group? " • "+esc(n.group):""}</div>
         <div class="sep"></div>
 
         <div class="meta">Objetivos</div>
@@ -961,7 +1060,6 @@ function renderSide(){
     return;
   }
 
-  // LIST MODE
   sideTitle.textContent = "Pessoas";
   sideSub.textContent = "Buscar, abrir, editar, excluir. Use “Ver todos (Fit)” para recuperar a rede.";
   const q = (search.value||"").trim().toLowerCase();
@@ -971,6 +1069,7 @@ function renderSide(){
       if(!q) return true;
       return (n.name||"").toLowerCase().includes(q) ||
              (n.area||"").toLowerCase().includes(q) ||
+             (n.group||"").toLowerCase().includes(q) ||
              (n.title||"").toLowerCase().includes(q);
     })
     .sort((a,b)=> (a.name||"").localeCompare((b.name||""), "pt-BR"));
@@ -982,6 +1081,7 @@ function renderSide(){
       <div class="rowbtns">
         <button id="quick_fit">Ver todos (Fit)</button>
         <button id="quick_auto">Auto-organizar</button>
+        <button id="quick_group">Organizar por grupos</button>
         <button id="quick_anim">${anim ? "Animar: ON" : "Animar: OFF"}</button>
       </div>
     </div>
@@ -991,6 +1091,7 @@ function renderSide(){
 
   document.getElementById("quick_fit").onclick = ()=> fitToAll(true);
   document.getElementById("quick_auto").onclick = ()=> autoOrganize();
+  document.getElementById("quick_group").onclick = ()=> organizeByGroups();
   document.getElementById("quick_anim").onclick = ()=> toggleAnim(true);
 
   const list = document.getElementById("peopleList");
@@ -999,7 +1100,7 @@ function renderSide(){
     div.className="card";
     div.innerHTML = `
       <b>${esc(n.name)}</b>
-      <div class="meta" style="margin-top:4px">${esc(n.level)} • ${esc(n.area)}</div>
+      <div class="meta" style="margin-top:4px">${esc(n.level)} • ${esc(n.area)}${n.group? " • "+esc(n.group):""}</div>
       <div class="meta" style="margin-top:6px">${esc(n.title||"")}</div>
       <div class="rowbtns">
         <button data-open="1">Abrir</button>
@@ -1038,6 +1139,7 @@ function openPerson(id){
     p_level.value = n.level||"Graduação";
     p_area.value = n.area||"";
     p_color.value = n.color || "var(--blue)";
+    p_group.value = n.group || "";
     p_title.value = n.title||"";
     p_obj.value = n.objectives||"";
     p_exp.value = n.expected||"";
@@ -1048,6 +1150,7 @@ function openPerson(id){
     p_level.value="Graduação";
     p_area.value="";
     p_color.value="var(--blue)";
+    p_group.value="";
     p_title.value="";
     p_obj.value="";
     p_exp.value="";
@@ -1064,6 +1167,7 @@ function savePerson(){
     name,
     level: p_level.value,
     area: p_area.value.trim(),
+    group: p_group.value.trim(),
     title: p_title.value.trim(),
     objectives: p_obj.value.trim(),
     expected: p_exp.value.trim(),
@@ -1078,7 +1182,6 @@ function savePerson(){
       state.nodes[idx] = {...old, ...node};
     }
   }else{
-    // coloca perto do centro e solta pra "flutuar"
     node.x = (W/2) + (Math.random()-.5)*120;
     node.y = (H/2) + (Math.random()-.5)*90;
     node.vx = (Math.random()-.5)*2.2;
@@ -1179,7 +1282,7 @@ function deleteLink(id){
 /* ---------- JSON export/import ---------- */
 function exportJSON(){
   const out = {
-    meta:{ app:"IntegraProjetos", version:4, exportedAt:new Date().toISOString() },
+    meta:{ app:"IntegraProjetos", version:5, exportedAt:new Date().toISOString(), nodeSize: state.meta.nodeSize },
     nodes: state.nodes.map(n=>({
       ...n,
       x: Math.round(n.x), y: Math.round(n.y),
@@ -1198,6 +1301,8 @@ function importJSONFile(ev){
     try{
       const obj = JSON.parse(reader.result);
       state = normalize(obj);
+      nodeSizeRange.value = String(state.meta.nodeSize || 22);
+      nodeSizeLabel.textContent = String(state.meta.nodeSize || 22);
       initPositions();
       persist();
       selectedId=null;
@@ -1214,10 +1319,67 @@ function importJSONFile(ev){
   reader.readAsText(f);
 }
 
+/* ---------- Export SVG/PNG ---------- */
+function serializedSVG(){
+  // Clone SVG and inject background + proper xmlns
+  const s = svg.cloneNode(true);
+  s.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  s.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
+  // white background rect
+  const bg = document.createElementNS("http://www.w3.org/2000/svg","rect");
+  bg.setAttribute("x","0"); bg.setAttribute("y","0");
+  bg.setAttribute("width", String(W));
+  bg.setAttribute("height", String(H));
+  bg.setAttribute("fill","#ffffff");
+  s.insertBefore(bg, s.firstChild);
+
+  // ensure viewBox is present
+  s.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  return new XMLSerializer().serializeToString(s);
+}
+function exportSVG(){
+  const xml = serializedSVG();
+  download(xml, "integraprojetos.svg", "image/svg+xml");
+}
+function exportPNG(){
+  const xml = serializedSVG();
+  const blob = new Blob([xml], {type:"image/svg+xml;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+
+  const img = new Image();
+  img.onload = ()=>{
+    const canvas = document.createElement("canvas");
+    canvas.width = W * 2; // 2x for sharpness
+    canvas.height = H * 2;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0,0, canvas.width, canvas.height);
+
+    canvas.toBlob((b)=>{
+      const u = URL.createObjectURL(b);
+      const a = document.createElement("a");
+      a.href = u;
+      a.download = "integraprojetos.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(u), 800);
+    }, "image/png");
+
+    URL.revokeObjectURL(url);
+  };
+  img.onerror = ()=>{
+    alert("Falha ao gerar PNG. Tente Baixar SVG.");
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+}
+
 /* ---------- Reset ---------- */
 function resetClean(){
   if(!confirm("Reset limpo: apagar TODAS as pessoas e ligações?")) return;
-  state = normalize({ meta:{app:"IntegraProjetos", version:4}, nodes:[], links:[] });
+  state = normalize({ meta:{app:"IntegraProjetos", version:5, nodeSize: state.meta.nodeSize||22}, nodes:[], links:[] });
   try{ localStorage.removeItem(STORAGE_KEY); }catch{}
   persist();
   selectedId=null;
@@ -1227,7 +1389,9 @@ function resetClean(){
 }
 function resetSeed(){
   if(!confirm("Reset modelo: voltar para os 7 alunos iniciais?")) return;
-  state = normalize(clone(SEED));
+  const seed = clone(SEED);
+  seed.meta.nodeSize = state.meta.nodeSize || 22;
+  state = normalize(seed);
   try{ localStorage.removeItem(STORAGE_KEY); }catch{}
   initPositions();
   persist();
@@ -1238,16 +1402,13 @@ function resetSeed(){
   fitToAll(true);
 }
 
-/* ---------- Anim + Physics (FLUTUAR SUAVE) ---------- */
+/* ---------- Anim + Physics ---------- */
 function toggleAnim(fromQuick){
   anim = !anim;
   document.getElementById("btnAnim").textContent = "Animar: " + (anim ? "ON" : "OFF");
-  if(fromQuick){
-    renderSide();
-  }
+  if(fromQuick) renderSide();
 }
 function autoOrganize(){
-  // organiza em círculo e solta com velocidades suaves
   const cx=W/2, cy=H/2;
   const R = Math.min(W,H)*0.30;
   const n = state.nodes.length || 1;
@@ -1264,20 +1425,78 @@ function autoOrganize(){
   renderAll();
 }
 
-/* Physics tuned to be “floaty” not rigid */
+function groupMap(){
+  const map = new Map();
+  for(const n of state.nodes){
+    const g = (n.group || "").trim();
+    if(!g) continue;
+    if(!map.has(g)) map.set(g, []);
+    map.get(g).push(n.id);
+  }
+  return map;
+}
+
+function organizeByGroups(){
+  const groups = groupMap();
+  if(groups.size === 0){
+    alert("Nenhum ‘Grupo’ preenchido ainda. Edite as pessoas e preencha o campo Grupo.");
+    return;
+  }
+  const cx=W/2, cy=H/2;
+  const G = [...groups.keys()];
+  const bigR = Math.min(W,H)*0.30;
+  const gCenters = new Map();
+
+  // place group centers in a big ring
+  G.forEach((g,i)=>{
+    const a = (i/G.length)*Math.PI*2;
+    gCenters.set(g, {
+      x: cx + Math.cos(a)*bigR,
+      y: cy + Math.sin(a)*bigR
+    });
+  });
+
+  // place nodes around each group center
+  for(const [g, ids] of groups.entries()){
+    const center = gCenters.get(g);
+    const localR = Math.min(220, 90 + ids.length*12);
+    ids.forEach((id, i)=>{
+      const n = getNode(id);
+      if(!n) return;
+      const a = (i/ids.length)*Math.PI*2;
+      n.x = center.x + Math.cos(a)*localR + (Math.random()-.5)*12;
+      n.y = center.y + Math.sin(a)*localR + (Math.random()-.5)*12;
+      n.vx = (Math.random()-.5)*1.2;
+      n.vy = (Math.random()-.5)*1.2;
+      n.fx=null; n.fy=null;
+    });
+  }
+
+  // nodes without group: push them to center
+  state.nodes.filter(n=>!(n.group||"").trim()).forEach((n,i)=>{
+    n.x = cx + (Math.random()-.5)*160;
+    n.y = cy + (Math.random()-.5)*120;
+    n.vx = (Math.random()-.5)*1.2;
+    n.vy = (Math.random()-.5)*1.2;
+  });
+
+  persist();
+  fitToAll(true);
+  renderAll();
+}
+
+/* physics tuned */
 function tick(dt){
   if(state.nodes.length===0) return;
 
-  // parameters
-  const repelK = 12000;      // repulsão
-  const repelMin = 70;       // distância mínima
-  const springK = 0.010;     // força das ligações (mola)
-  const springLen = 240;     // comprimento base
-  const centerK = 0.0018;    // atração suave ao centro
-  const damping = 0.92;      // amortecimento (mais alto = mais suave)
-  const maxV = 6.0;          // limitar velocidade
+  const repelK = 12000;
+  const repelMin = (state.nodes.length>40) ? 55 : 70;
+  const springK = 0.010;
+  const springLen = (state.nodes.length>40) ? 210 : 240;
+  const centerK = 0.0018;
+  const damping = 0.92;
+  const maxV = 6.0;
 
-  // repulsão
   for(let i=0;i<state.nodes.length;i++){
     for(let j=i+1;j<state.nodes.length;j++){
       const a=state.nodes[i], b=state.nodes[j];
@@ -1298,16 +1517,14 @@ function tick(dt){
     }
   }
 
-  // springs (links)
   state.links.forEach(l=>{
     const a=getNode(l.from), b=getNode(l.to);
     if(!a||!b) return;
     const dx=b.x-a.x, dy=b.y-a.y;
     const dist = Math.sqrt(dx*dx+dy*dy) || 1;
 
-    // peso muda o “aperto” da mola
     const w = Number(l.weight||3);
-    const target = springLen - (w-3)*20;
+    const target = springLen - (w-3)*18;
     const k = springK * (0.7 + w*0.25);
 
     const diff = dist - target;
@@ -1318,7 +1535,6 @@ function tick(dt){
     if(b.fx==null){ b.vx -= fx*dt; b.vy -= fy*dt; }
   });
 
-  // center pull + integrate
   const cx=W/2, cy=H/2;
   state.nodes.forEach(n=>{
     if(n.fx!=null && n.fy!=null){
@@ -1327,23 +1543,18 @@ function tick(dt){
       return;
     }
 
-    // gentle center gravity
     n.vx += (cx - n.x) * centerK * dt;
     n.vy += (cy - n.y) * centerK * dt;
 
-    // damping
     n.vx *= damping;
     n.vy *= damping;
 
-    // cap velocity
     n.vx = Math.max(-maxV, Math.min(maxV, n.vx));
     n.vy = Math.max(-maxV, Math.min(maxV, n.vy));
 
-    // integrate
     n.x += n.vx;
     n.y += n.vy;
 
-    // bounds bounce (soft)
     const pad = 40;
     if(n.x < pad){ n.x=pad; n.vx *= -0.55; }
     if(n.x > W-pad){ n.x=W-pad; n.vx *= -0.55; }
@@ -1359,7 +1570,6 @@ function start(){
   const loop = (t)=>{
     const rawDt = (t - lastT);
     lastT = t;
-    // dt normalizado (0.9–1.2 ok)
     const dt = Math.max(0.6, Math.min(1.6, rawDt/16.6));
     if(anim) tick(dt);
     renderGraph();
@@ -1382,13 +1592,13 @@ function fitToAll(animate){
     maxY=Math.max(maxY, n.y);
   });
 
-  const pad = 80;
+  const pad = 90;
   const bw = (maxX-minX) + pad*2;
   const bh = (maxY-minY) + pad*2;
 
   const zx = W / bw;
   const zy = H / bh;
-  const z = Math.max(0.55, Math.min(1.7, Math.min(zx, zy)));
+  const z = Math.max(0.55, Math.min(1.9, Math.min(zx, zy)));
 
   const cx = (minX+maxX)/2;
   const cy = (minY+maxY)/2;
@@ -1397,13 +1607,10 @@ function fitToAll(animate){
   const targetPanY = (H/2 - cy) * z;
 
   if(!animate){
-    zoom = z;
-    pan.x = targetPanX;
-    pan.y = targetPanY;
+    zoom = z; pan.x = targetPanX; pan.y = targetPanY;
     return;
   }
 
-  // smooth interpolate
   const z0=zoom, px0=pan.x, py0=pan.y;
   const steps = 16;
   let i=0;
@@ -1484,8 +1691,7 @@ function onDragEnd(){
   if(!dragging) return;
   const n = getNode(dragging.id);
   if(n){
-    n.x = n.fx;
-    n.y = n.fy;
+    n.x = n.fx; n.y = n.fy;
     n.fx = null; n.fy = null;
     persist();
   }
@@ -1496,12 +1702,9 @@ function onDragEnd(){
   window.removeEventListener("touchend", onDragEnd);
 }
 
-/* ---------- Initial render ---------- */
+/* ---------- init save indicator ---------- */
 btnShowDetails.disabled = true;
 document.getElementById("btnAnim").textContent = "Animar: ON";
-renderAll();
-
-/* ensure save indicator initializes */
 try{
   localStorage.setItem("__t","1");
   localStorage.removeItem("__t");
@@ -1509,8 +1712,6 @@ try{
 }catch{
   setSaved(false, "Storage bloqueado — use JSON");
 }
-
-/* persist once to normalize storage */
 persist();
 </script>
 </body>
