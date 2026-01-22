@@ -305,6 +305,11 @@
       <button id="btnFit">Ver todos (Fit)</button>
       <button id="btnAnim">Animar: ON</button>
 
+      <!-- ✅ ZOOM: botões zoom -->
+      <button id="btnZoomOut" title="Zoom -">−</button>
+      <button id="btnZoomIn" title="Zoom +">+</button>
+      <button id="btnZoomReset" title="Reset zoom (Fit)">Reset zoom</button>
+
       <div class="sliderWrap" title="Ajuste ideal pra quando você tiver 52 pessoas">
         <label for="nodeSize">Tamanho</label>
         <input id="nodeSize" type="range" min="12" max="30" step="1"/>
@@ -498,10 +503,6 @@
 <script>
 /* ============================
    IntegraProjetos v5
-   - Layout dinâmico (menu não cobre nada)
-   - Slider de tamanho das bolinhas (ideal 52 pessoas)
-   - Organizar por grupos (círculos por grupo + halos)
-   - Exportar PNG e SVG
 ============================ */
 
 const STORAGE_KEY = "integraprojetos_v5";
@@ -818,6 +819,74 @@ fitToAll(false);
 renderAll();
 start();
 
+/* ---------- ✅ ZOOM: wheel + buttons + pan drag ---------- */
+const ZOOM_MIN = 0.25;
+const ZOOM_MAX = 4.0;
+
+function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+function zoomAt(clientEvent, factor){
+  const rect = svg.getBoundingClientRect();
+  const x = (clientEvent.clientX - rect.left) * (W / rect.width);
+  const y = (clientEvent.clientY - rect.top) * (H / rect.height);
+
+  // graph coords under cursor before zoom:
+  const gx = (x - pan.x) / zoom;
+  const gy = (y - pan.y) / zoom;
+
+  const newZoom = clamp(zoom * factor, ZOOM_MIN, ZOOM_MAX);
+  if(newZoom === zoom) return;
+
+  // keep (gx,gy) pinned under cursor:
+  pan.x = x - gx * newZoom;
+  pan.y = y - gy * newZoom;
+  zoom = newZoom;
+
+  renderGraph();
+}
+
+stage.addEventListener("wheel", (e)=>{
+  e.preventDefault();
+  // scroll pra zoom: trackpad/mouse wheel
+  const dir = e.deltaY > 0 ? 0.92 : 1.08;
+  zoomAt(e, dir);
+}, {passive:false});
+
+// botões
+document.getElementById("btnZoomIn").addEventListener("click", ()=>{
+  const fake = {clientX: svg.getBoundingClientRect().left + svg.getBoundingClientRect().width/2,
+                clientY: svg.getBoundingClientRect().top + svg.getBoundingClientRect().height/2};
+  zoomAt(fake, 1.12);
+});
+document.getElementById("btnZoomOut").addEventListener("click", ()=>{
+  const fake = {clientX: svg.getBoundingClientRect().left + svg.getBoundingClientRect().width/2,
+                clientY: svg.getBoundingClientRect().top + svg.getBoundingClientRect().height/2};
+  zoomAt(fake, 0.88);
+});
+document.getElementById("btnZoomReset").addEventListener("click", ()=> fitToAll(true));
+
+// pan arrastando o fundo (quando não está pegando numa bolinha)
+let panning = null;
+svg.addEventListener("mousedown", (e)=>{
+  // só inicia pan se clicar no fundo do SVG (não nos nós/linhas)
+  if(e.target !== svg) return;
+  panning = { x:e.clientX, y:e.clientY, px:pan.x, py:pan.y };
+  svg.style.cursor = "grabbing";
+});
+window.addEventListener("mousemove", (e)=>{
+  if(!panning) return;
+  const dx = e.clientX - panning.x;
+  const dy = e.clientY - panning.y;
+  pan.x = panning.px + dx;
+  pan.y = panning.py + dy;
+  renderGraph();
+});
+window.addEventListener("mouseup", ()=>{
+  if(!panning) return;
+  panning = null;
+  svg.style.cursor = "";
+});
+
 /* ---------- Graph rendering ---------- */
 function renderAll(){
   countPill.textContent = `${state.nodes.length} pessoas`;
@@ -826,7 +895,6 @@ function renderAll(){
 }
 
 function getBaseRadius(){
-  // usuário controla via slider; também compacta automaticamente se tiver muita gente
   const manual = Number(state.meta.nodeSize || 22);
   const n = state.nodes.length;
   const auto = (n > 30) ? Math.max(12, manual - Math.floor((n-30)*0.15)) : manual;
@@ -845,7 +913,6 @@ function renderGraph(){
       const pts = ids.map(id=>getNode(id)).filter(Boolean);
       if(pts.length < 2) continue;
 
-      // compute centroid + radius
       const cx = pts.reduce((a,n)=>a+n.x,0)/pts.length;
       const cy = pts.reduce((a,n)=>a+n.y,0)/pts.length;
       let maxD = 0;
@@ -892,17 +959,8 @@ function renderGraph(){
     line.addEventListener("click",(e)=>{ e.stopPropagation(); openLink(l.id); });
     gLinks.appendChild(line);
 
-    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
-    const label = makeSvg("text",{
-      x:mx, y:my-8,
-      fill:"rgba(16,24,40,.62)",
-      "font-size":"12",
-      "text-anchor":"middle",
-      "font-weight":"800"
-    });
-    label.textContent = typeLabel(l.type);
-    label.style.pointerEvents="none";
-    gLinks.appendChild(label);
+    /* ✅ REMOVE LABELS: removemos o texto “dados/análise...” no meio da linha */
+    // (se um dia você quiser opcional, dá pra botar toggle)
   });
 
   // nodes
@@ -912,7 +970,6 @@ function renderGraph(){
   state.nodes.forEach(n=>{
     const isSel = n.id===selectedId;
 
-    // tags affect slightly, but not huge
     const tagsBoost = Math.min(6, (n.tags||[]).length);
     const r = baseR + Math.floor(tagsBoost*0.6);
 
@@ -958,12 +1015,16 @@ function renderGraph(){
 
     group.addEventListener("mousedown",(e)=> startDrag(e,n.id));
     group.addEventListener("touchstart",(e)=> startDrag(e,n.id), {passive:false});
+
     group.addEventListener("click",(e)=>{
       e.stopPropagation();
       selectedId = n.id;
       viewMode="details";
       btnShowDetails.disabled = false;
+
+      /* ✅ CLICK = FOCUS: ao clicar na bolinha, já centraliza e destaca */
       renderSide();
+      focusNode(n.id, true);
       renderGraph();
     });
 
@@ -1321,19 +1382,15 @@ function importJSONFile(ev){
 
 /* ---------- Export SVG/PNG ---------- */
 function serializedSVG(){
-  // Clone SVG and inject background + proper xmlns
   const s = svg.cloneNode(true);
   s.setAttribute("xmlns","http://www.w3.org/2000/svg");
   s.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
-  // white background rect
   const bg = document.createElementNS("http://www.w3.org/2000/svg","rect");
   bg.setAttribute("x","0"); bg.setAttribute("y","0");
   bg.setAttribute("width", String(W));
   bg.setAttribute("height", String(H));
   bg.setAttribute("fill","#ffffff");
   s.insertBefore(bg, s.firstChild);
-
-  // ensure viewBox is present
   s.setAttribute("viewBox", `0 0 ${W} ${H}`);
   return new XMLSerializer().serializeToString(s);
 }
@@ -1349,7 +1406,7 @@ function exportPNG(){
   const img = new Image();
   img.onload = ()=>{
     const canvas = document.createElement("canvas");
-    canvas.width = W * 2; // 2x for sharpness
+    canvas.width = W * 2;
     canvas.height = H * 2;
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = "#ffffff";
@@ -1447,7 +1504,6 @@ function organizeByGroups(){
   const bigR = Math.min(W,H)*0.30;
   const gCenters = new Map();
 
-  // place group centers in a big ring
   G.forEach((g,i)=>{
     const a = (i/G.length)*Math.PI*2;
     gCenters.set(g, {
@@ -1456,7 +1512,6 @@ function organizeByGroups(){
     });
   });
 
-  // place nodes around each group center
   for(const [g, ids] of groups.entries()){
     const center = gCenters.get(g);
     const localR = Math.min(220, 90 + ids.length*12);
@@ -1472,7 +1527,6 @@ function organizeByGroups(){
     });
   }
 
-  // nodes without group: push them to center
   state.nodes.filter(n=>!(n.group||"").trim()).forEach((n,i)=>{
     n.x = cx + (Math.random()-.5)*160;
     n.y = cy + (Math.random()-.5)*120;
@@ -1608,6 +1662,7 @@ function fitToAll(animate){
 
   if(!animate){
     zoom = z; pan.x = targetPanX; pan.y = targetPanY;
+    renderGraph();
     return;
   }
 
@@ -1634,6 +1689,7 @@ function focusNode(id, animate){
 
   if(!animate){
     pan.x = targetPanX; pan.y = targetPanY;
+    renderGraph();
     return;
   }
   const px0=pan.x, py0=pan.y;
